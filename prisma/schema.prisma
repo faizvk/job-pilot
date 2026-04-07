@@ -1,0 +1,227 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  phone     String?
+  location  String?
+  linkedin  String?
+  github    String?
+  portfolio String?
+  summary   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  workHistory  WorkHistory[]
+  education    Education[]
+  skills       Skill[]
+  applications Application[]
+  resumes      Resume[]
+  coverLetters CoverLetterTemplate[]
+  followUps    FollowUp[]
+  weeklyGoals  WeeklyGoal[]
+}
+
+model WorkHistory {
+  id          String    @id @default(cuid())
+  userId      String
+  company     String
+  title       String
+  startDate   DateTime
+  endDate     DateTime?
+  current     Boolean   @default(false)
+  description String
+  createdAt   DateTime  @default(now())
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Education {
+  id          String    @id @default(cuid())
+  userId      String
+  institution String
+  degree      String
+  field       String
+  startDate   DateTime
+  endDate     DateTime?
+  gpa         String?
+  createdAt   DateTime  @default(now())
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Skill {
+  id       String @id @default(cuid())
+  userId   String
+  name     String
+  category String
+  level    String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, name])
+}
+
+model Application {
+  id              String    @id @default(cuid())
+  userId          String
+  companyName     String
+  jobTitle        String
+  jobUrl          String?
+  jobDescription  String?
+  status          String    @default("saved")
+  salaryMin       Int?
+  salaryMax       Int?
+  salaryCurrency  String    @default("USD")
+  location        String?
+  workType        String?
+  contactName     String?
+  contactEmail    String?
+  notes           String?
+  matchScore      Int?
+  extractedSkills String?
+  appliedAt       DateTime?
+  deadline        DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  user           User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  statusHistory  StatusChange[]
+  tailoredResume TailoredResume?
+  coverLetter    GeneratedCoverLetter?
+  interviewPrep  InterviewPrep?
+  followUps      FollowUp[]
+}
+
+model StatusChange {
+  id            String      @id @default(cuid())
+  applicationId String
+  fromStatus    String
+  toStatus      String
+  changedAt     DateTime    @default(now())
+  note          String?
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+}
+
+model Resume {
+  id             String           @id @default(cuid())
+  userId         String
+  name           String
+  content        String
+  isBase         Boolean          @default(false)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tailoredCopies TailoredResume[]
+}
+
+model TailoredResume {
+  id              String      @id @default(cuid())
+  baseResumeId    String
+  applicationId   String      @unique
+  content         String
+  matchedKeywords String
+  missingKeywords String
+  createdAt       DateTime    @default(now())
+  baseResume      Resume      @relation(fields: [baseResumeId], references: [id], onDelete: Cascade)
+  application     Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+}
+
+model CoverLetterTemplate {
+  id               String                 @id @default(cuid())
+  userId           String
+  name             String
+  content          String
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime               @updatedAt
+  user             User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  generatedLetters GeneratedCoverLetter[]
+}
+
+model GeneratedCoverLetter {
+  id            String              @id @default(cuid())
+  templateId    String
+  applicationId String              @unique
+  content       String
+  createdAt     DateTime            @default(now())
+  template      CoverLetterTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  application   Application         @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+}
+
+model InterviewPrep {
+  id            String      @id @default(cuid())
+  applicationId String      @unique
+  notes         String?
+  questions     String?
+  researchLinks String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+}
+
+model FollowUp {
+  id            String      @id @default(cuid())
+  userId        String
+  applicationId String
+  dueDate       DateTime
+  type          String
+  status        String      @default("pending")
+  emailDraft    String?
+  sentAt        DateTime?
+  createdAt     DateTime    @default(now())
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+}
+
+model WeeklyGoal {
+  id        String   @id @default(cuid())
+  userId    String
+  weekStart DateTime
+  target    Int      @default(5)
+  achieved  Int      @default(0)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, weekStart])
+}
+
+model SearchPreference {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  jobTitles      String   // JSON array of target titles
+  locations      String   // JSON array of locations
+  workTypes      String   // JSON array: remote, hybrid, onsite
+  experienceMin  Int      @default(0)
+  experienceMax  Int      @default(2)
+  keywords       String?  // comma-separated must-have keywords
+  excludeKeywords String? // comma-separated exclude terms
+  salaryMin      Int?
+  platforms      String   // JSON array of platforms to search
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model JobListing {
+  id              String   @id @default(cuid())
+  externalId      String?  @unique
+  title           String
+  company         String
+  location        String?
+  workType        String?
+  description     String?
+  url             String
+  salary          String?
+  experienceLevel String?
+  postedAt        String?
+  platform        String
+  skills          String?  // JSON array of detected skills
+  matchScore      Int?
+  imported        Boolean  @default(false)
+  hidden          Boolean  @default(false)
+  fetchedAt       DateTime @default(now())
+}
