@@ -6,6 +6,7 @@ import { WorkHistoryForm } from "@/components/profile/work-history-form";
 import { EducationForm } from "@/components/profile/education-form";
 import { SkillsManager } from "@/components/profile/skills-manager";
 import { QuickCopyPanel } from "@/components/profile/quick-copy-panel";
+import { IntegrationsPanel } from "@/components/profile/integrations-panel";
 import { Copy } from "lucide-react";
 
 export default function ProfilePage() {
@@ -42,6 +43,7 @@ export default function ProfilePage() {
     { id: "work", label: "Work History" },
     { id: "education", label: "Education" },
     { id: "skills", label: "Skills" },
+    { id: "integrations", label: "Integrations" },
   ];
 
   return (
@@ -105,6 +107,9 @@ export default function ProfilePage() {
             skills={profile?.skills || []}
             onRefresh={fetchProfile}
           />
+        )}
+        {activeTab === "integrations" && (
+          <IntegrationsPanel />
         )}
       </div>
     </div>

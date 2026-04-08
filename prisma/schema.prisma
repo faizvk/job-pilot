@@ -16,9 +16,10 @@ model User {
   linkedin  String?
   github    String?
   portfolio String?
-  summary   String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  summary     String?
+  gmailTokens String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   workHistory  WorkHistory[]
   education    Education[]
