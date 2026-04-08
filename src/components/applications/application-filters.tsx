@@ -20,13 +20,13 @@ export function ApplicationFilters({ search, onSearchChange, status, onStatusCha
           placeholder="Search applications..."
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="w-full pl-9 pr-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          className="w-full pl-9 pr-3 py-2 border border-gray-200 rounded-lg text-sm shadow-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 focus:outline-none transition-all"
         />
       </div>
       <select
         value={status}
         onChange={(e) => onStatusChange(e.target.value)}
-        className="border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        className="border border-gray-200 rounded-lg px-3 py-2 text-sm shadow-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 focus:outline-none transition-all"
       >
         <option value="">All Statuses</option>
         {APPLICATION_STATUSES.map((s) => (

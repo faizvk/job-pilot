@@ -2,36 +2,52 @@
 
 export function WeeklyGoalRing({ goal }: { goal: { target: number; achieved: number } }) {
   const percentage = goal.target > 0 ? Math.min((goal.achieved / goal.target) * 100, 100) : 0;
-  const radius = 45;
+  const radius = 42;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
   return (
-    <div className="bg-white rounded-lg border p-6">
-      <h2 className="font-semibold mb-4">Weekly Goal</h2>
+    <div className="bg-white rounded-xl border border-gray-200/80 shadow-card p-5">
+      <h2 className="text-[15px] font-semibold text-gray-900 mb-5">Weekly Goal</h2>
       <div className="flex flex-col items-center">
-        <svg width="120" height="120" viewBox="0 0 120 120">
-          <circle
-            cx="60" cy="60" r={radius}
-            fill="none" stroke="#e2e8f0" strokeWidth="8"
+        <div className="relative">
+          <svg width="110" height="110" viewBox="0 0 110 110">
+            <circle
+              cx="55" cy="55" r={radius}
+              fill="none" stroke="#f3f4f6" strokeWidth="7"
+            />
+            <circle
+              cx="55" cy="55" r={radius}
+              fill="none"
+              stroke="url(#goalGradient)"
+              strokeWidth="7"
+              strokeLinecap="round"
+              strokeDasharray={circumference}
+              strokeDashoffset={strokeDashoffset}
+              transform="rotate(-90 55 55)"
+              className="transition-all duration-700 ease-out"
+            />
+            <defs>
+              <linearGradient id="goalGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#6366f1" />
+                <stop offset="100%" stopColor="#8b5cf6" />
+              </linearGradient>
+            </defs>
+            <text x="55" y="50" textAnchor="middle" className="text-[22px] font-bold" fill="#111827">
+              {goal.achieved}
+            </text>
+            <text x="55" y="68" textAnchor="middle" className="text-[11px]" fill="#9ca3af">
+              of {goal.target}
+            </text>
+          </svg>
+        </div>
+        <p className="text-xs text-gray-500 mt-3">Applications this week</p>
+        <div className="w-full mt-3 bg-gray-100 rounded-full h-1.5">
+          <div
+            className="bg-gradient-to-r from-indigo-500 to-purple-500 h-1.5 rounded-full transition-all duration-500"
+            style={{ width: `${percentage}%` }}
           />
-          <circle
-            cx="60" cy="60" r={radius}
-            fill="none" stroke="#2563eb" strokeWidth="8"
-            strokeLinecap="round"
-            strokeDasharray={circumference}
-            strokeDashoffset={strokeDashoffset}
-            transform="rotate(-90 60 60)"
-            className="transition-all duration-500"
-          />
-          <text x="60" y="55" textAnchor="middle" className="text-2xl font-bold fill-gray-900">
-            {goal.achieved}
-          </text>
-          <text x="60" y="72" textAnchor="middle" className="text-xs fill-gray-500">
-            of {goal.target}
-          </text>
-        </svg>
-        <p className="text-sm text-gray-500 mt-2">Applications this week</p>
+        </div>
       </div>
     </div>
   );

@@ -41,7 +41,6 @@ export default function BatchApplyPage() {
   const [startTime, setStartTime] = useState<number | null>(null);
   const [elapsedTime, setElapsedTime] = useState(0);
 
-  // Timer
   useEffect(() => {
     if (startTime) {
       const interval = setInterval(() => {
@@ -57,7 +56,6 @@ export default function BatchApplyPage() {
     return `${m}:${s.toString().padStart(2, "0")}`;
   };
 
-  // Load resumes and stats
   useEffect(() => {
     fetch("/api/resumes").then((r) => r.json()).then((data) => {
       setResumes(data);
@@ -67,16 +65,11 @@ export default function BatchApplyPage() {
     fetch("/api/batch/daily-stats").then((r) => r.json()).then(setDailyStats);
   }, []);
 
-  // Parse bulk text into job entries
   const parseBulkJobs = useCallback(() => {
     if (!bulkText.trim()) return;
-
-    // Split by double newlines or "---" separator
     const blocks = bulkText.split(/\n{3,}|---+/).filter((b) => b.trim());
     const newJobs: JobEntry[] = blocks.map((block, i) => {
       const lines = block.trim().split("\n").filter((l) => l.trim());
-
-      // Try to parse structured format: Company | Title | URL | Location
       const pipeFormat = lines[0]?.includes("|");
       if (pipeFormat) {
         const parts = lines[0].split("|").map((p) => p.trim());
@@ -92,11 +85,8 @@ export default function BatchApplyPage() {
           status: "pending" as const,
         };
       }
-
-      // Try URL detection
       const urlLine = lines.find((l) => l.trim().startsWith("http"));
       const nonUrlLines = lines.filter((l) => !l.trim().startsWith("http"));
-
       return {
         id: `job-${Date.now()}-${i}`,
         companyName: nonUrlLines[1]?.trim() || "",
@@ -109,7 +99,6 @@ export default function BatchApplyPage() {
         status: "pending" as const,
       };
     });
-
     setJobs((prev) => [...prev, ...newJobs]);
     setBulkText("");
     setShowBulkInput(false);
@@ -126,7 +115,6 @@ export default function BatchApplyPage() {
     return "";
   };
 
-  // Add single job
   const addJob = () => {
     setJobs((prev) => [
       ...prev,
@@ -169,19 +157,14 @@ export default function BatchApplyPage() {
     }
   };
 
-  // BATCH IMPORT - The main action
   const handleBatchImport = async () => {
     const jobsToImport = jobs.filter((j) => j.status === "pending" && j.companyName && j.jobTitle);
     if (jobsToImport.length === 0) return;
-
     setProcessing(true);
     if (!startTime) setStartTime(Date.now());
-
-    // Mark as importing
     for (const job of jobsToImport) {
       updateJob(job.id, { status: "importing" });
     }
-
     try {
       const res = await fetch("/api/batch/import", {
         method: "POST",
@@ -201,10 +184,7 @@ export default function BatchApplyPage() {
           baseResumeId: selectedResumeId,
         }),
       });
-
       const result = await res.json();
-
-      // Update individual job statuses
       result.applications?.forEach((app: any, i: number) => {
         const job = jobsToImport[i];
         if (job) {
@@ -215,8 +195,6 @@ export default function BatchApplyPage() {
           });
         }
       });
-
-      // Handle errors
       result.errors?.forEach((err: string) => {
         const match = err.match(/^(.+?) - (.+?):/);
         if (match) {
@@ -224,8 +202,6 @@ export default function BatchApplyPage() {
           if (job) updateJob(job.id, { status: "error", error: err });
         }
       });
-
-      // Refresh daily stats
       fetch("/api/batch/daily-stats").then((r) => r.json()).then(setDailyStats);
     } catch (err: any) {
       jobsToImport.forEach((j) => updateJob(j.id, { status: "error", error: err.message }));
@@ -234,23 +210,19 @@ export default function BatchApplyPage() {
     }
   };
 
-  // Bulk mark as applied
   const handleBulkMarkApplied = async () => {
     const ids = jobs.filter((j) => selectedJobs.has(j.id) && j.appId).map((j) => j.appId!);
     if (ids.length === 0) return;
-
     await fetch("/api/batch/status", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ applicationIds: ids, status: "applied" }),
     });
-
     jobs.forEach((j) => {
       if (selectedJobs.has(j.id) && j.appId) {
         updateJob(j.id, { status: "applied" });
       }
     });
-
     fetch("/api/batch/daily-stats").then((r) => r.json()).then(setDailyStats);
     setSelectedJobs(new Set());
   };
@@ -260,64 +232,54 @@ export default function BatchApplyPage() {
   const pendingCount = jobs.filter((j) => j.status === "pending").length;
 
   return (
-    <div className="space-y-6">
-      {/* Header with stats */}
+    <div className="space-y-5 animate-fade-in">
+      {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
-            <Zap className="w-6 h-6 text-yellow-500" /> Batch Apply
-          </h1>
-          <p className="text-gray-500 mt-1">Import 50+ jobs, auto-tailor resumes, track everything</p>
+          <h1 className="text-[22px] font-bold text-gray-900">Batch Apply</h1>
+          <p className="text-sm text-gray-500 mt-0.5">Import jobs, auto-tailor resumes, track everything</p>
         </div>
         {startTime && (
-          <div className="text-right">
-            <div className="flex items-center gap-2 text-lg font-mono font-bold">
-              <Clock className="w-5 h-5 text-blue-600" />
+          <div className="text-right bg-white border border-gray-200/80 rounded-xl shadow-card px-4 py-2.5">
+            <div className="flex items-center gap-2 text-lg font-mono font-bold text-indigo-600">
+              <Clock className="w-4 h-4" />
               {formatTime(elapsedTime)}
             </div>
-            <p className="text-xs text-gray-500">{importedCount} imported, {appliedCount} applied</p>
+            <p className="text-[11px] text-gray-400 mt-0.5">{importedCount} imported, {appliedCount} applied</p>
           </div>
         )}
       </div>
 
-      {/* Daily Stats Bar */}
+      {/* Daily Stats */}
       {dailyStats && (
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-          <div className="bg-white border rounded-lg p-3 text-center">
-            <p className="text-2xl font-bold text-blue-600">{dailyStats.todayCount}</p>
-            <p className="text-xs text-gray-500">Today</p>
-          </div>
-          <div className="bg-white border rounded-lg p-3 text-center">
-            <p className="text-2xl font-bold text-green-600">{dailyStats.todayApplied}</p>
-            <p className="text-xs text-gray-500">Applied Today</p>
-          </div>
-          <div className="bg-white border rounded-lg p-3 text-center">
-            <div className="flex items-center justify-center gap-1">
-              <Flame className="w-4 h-4 text-orange-500" />
-              <p className="text-2xl font-bold text-orange-600">{dailyStats.currentStreak}</p>
+          {[
+            { label: "Today", value: dailyStats.todayCount, color: "text-indigo-600", accent: "border-l-indigo-400" },
+            { label: "Applied Today", value: dailyStats.todayApplied, color: "text-emerald-600", accent: "border-l-emerald-400" },
+            { label: "Day Streak", value: dailyStats.currentStreak, color: "text-orange-600", accent: "border-l-orange-400", icon: true },
+            { label: "Last 30 Days", value: dailyStats.totalLast30Days, color: "text-gray-900", accent: "border-l-gray-400" },
+            { label: "Avg/Day", value: dailyStats.avgPerDay, color: "text-gray-900", accent: "border-l-gray-400" },
+          ].map((stat) => (
+            <div key={stat.label} className={`bg-white border border-gray-200/80 rounded-xl shadow-card p-3.5 border-l-[3px] ${stat.accent}`}>
+              <div className="flex items-center justify-center gap-1">
+                {stat.icon && <Flame className="w-4 h-4 text-orange-500" />}
+                <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>
+              </div>
+              <p className="text-[11px] text-gray-400 text-center mt-0.5">{stat.label}</p>
             </div>
-            <p className="text-xs text-gray-500">Day Streak</p>
-          </div>
-          <div className="bg-white border rounded-lg p-3 text-center">
-            <p className="text-2xl font-bold">{dailyStats.totalLast30Days}</p>
-            <p className="text-xs text-gray-500">Last 30 Days</p>
-          </div>
-          <div className="bg-white border rounded-lg p-3 text-center">
-            <p className="text-2xl font-bold">{dailyStats.avgPerDay}</p>
-            <p className="text-xs text-gray-500">Avg/Day</p>
-          </div>
+          ))}
         </div>
       )}
 
       {/* Controls */}
-      <div className="bg-white border rounded-lg p-4 space-y-4">
+      <div className="bg-white border border-gray-200/80 rounded-xl shadow-card p-4 space-y-4">
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex items-center gap-2">
-            <label className="text-sm font-medium">Base Resume:</label>
+            <label className="text-[13px] font-medium text-gray-700">Base Resume:</label>
             <select
               value={selectedResumeId}
               onChange={(e) => setSelectedResumeId(e.target.value)}
-              className="border rounded-lg px-3 py-1.5 text-sm"
+              className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
             >
               <option value="">None</option>
               {resumes.map((r: any) => (
@@ -326,41 +288,41 @@ export default function BatchApplyPage() {
             </select>
           </div>
 
-          <label className="flex items-center gap-2 text-sm">
-            <input type="checkbox" checked={autoAnalyze} onChange={(e) => setAutoAnalyze(e.target.checked)} className="rounded" />
-            Auto-Analyze JDs
+          <label className="flex items-center gap-2 text-sm cursor-pointer">
+            <input type="checkbox" checked={autoAnalyze} onChange={(e) => setAutoAnalyze(e.target.checked)} className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
+            <span className="text-gray-600">Auto-Analyze JDs</span>
           </label>
 
-          <label className="flex items-center gap-2 text-sm">
-            <input type="checkbox" checked={autoTailor} onChange={(e) => setAutoTailor(e.target.checked)} className="rounded" disabled={!selectedResumeId} />
-            Auto-Tailor Resumes
+          <label className="flex items-center gap-2 text-sm cursor-pointer">
+            <input type="checkbox" checked={autoTailor} onChange={(e) => setAutoTailor(e.target.checked)} className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" disabled={!selectedResumeId} />
+            <span className="text-gray-600">Auto-Tailor Resumes</span>
           </label>
 
           <div className="flex-1" />
 
           <button
             onClick={() => setShowBulkInput(!showBulkInput)}
-            className="inline-flex items-center gap-2 border px-3 py-1.5 rounded-lg text-sm hover:bg-gray-50"
+            className="inline-flex items-center gap-2 border border-gray-200 px-3 py-1.5 rounded-lg text-sm text-gray-600 hover:bg-gray-50 hover:border-gray-300 shadow-xs transition-all"
           >
             <Upload className="w-4 h-4" /> Bulk Paste
           </button>
 
           <button
             onClick={addJob}
-            className="inline-flex items-center gap-2 border px-3 py-1.5 rounded-lg text-sm hover:bg-gray-50"
+            className="inline-flex items-center gap-2 border border-gray-200 px-3 py-1.5 rounded-lg text-sm text-gray-600 hover:bg-gray-50 hover:border-gray-300 shadow-xs transition-all"
           >
             + Add Job
           </button>
         </div>
 
-        {/* Bulk paste area */}
+        {/* Bulk paste */}
         {showBulkInput && (
-          <div className="border-t pt-4 space-y-3">
-            <div className="text-sm text-gray-600 bg-blue-50 border border-blue-200 rounded-lg p-3">
-              <p className="font-medium mb-1">Paste jobs in any of these formats:</p>
+          <div className="border-t border-gray-100 pt-4 space-y-3">
+            <div className="text-sm text-gray-600 bg-indigo-50/50 border border-indigo-200/50 rounded-xl p-3">
+              <p className="font-medium text-indigo-900 mb-1.5 text-[13px]">Paste jobs in any format:</p>
               <ul className="list-disc list-inside text-xs space-y-1 text-gray-500">
-                <li><strong>Pipe format:</strong> Company | Job Title | URL | Location</li>
-                <li><strong>Block format:</strong> Job Title on line 1, Company on line 2, URL on any line</li>
+                <li><span className="font-medium text-gray-700">Pipe format:</span> Company | Job Title | URL | Location</li>
+                <li><span className="font-medium text-gray-700">Block format:</span> Job Title on line 1, Company on line 2, URL on any line</li>
                 <li>Separate multiple jobs with a blank line or ---</li>
                 <li>Include full job description after the header for best auto-tailoring</li>
               </ul>
@@ -369,19 +331,14 @@ export default function BatchApplyPage() {
               value={bulkText}
               onChange={(e) => setBulkText(e.target.value)}
               rows={10}
-              className="w-full border rounded-lg p-3 text-sm font-mono resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-200 rounded-xl p-3 text-sm font-mono resize-none shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all"
               placeholder={`Google | Senior Frontend Engineer | https://linkedin.com/jobs/123 | Mountain View, CA
 We're looking for a Senior Frontend Engineer with 5+ years experience in React...
 
 ---
 
 Amazon | Software Development Engineer II | https://indeed.com/job/456 | Seattle, WA
-Join our team building next-gen cloud services. Requirements: Java, AWS, distributed systems...
-
----
-
-Meta | Full Stack Developer | https://lever.co/meta/789
-Building social infrastructure at scale. Must have: React, Node.js, GraphQL...`}
+Join our team building next-gen cloud services. Requirements: Java, AWS, distributed systems...`}
             />
             <div className="flex items-center justify-between">
               <p className="text-xs text-gray-400">
@@ -390,7 +347,7 @@ Building social infrastructure at scale. Must have: React, Node.js, GraphQL...`}
               <button
                 onClick={parseBulkJobs}
                 disabled={!bulkText.trim()}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 disabled:opacity-50"
+                className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 disabled:opacity-50 shadow-sm shadow-indigo-600/20 transition-all active:scale-[0.98]"
               >
                 Parse & Add Jobs
               </button>
@@ -403,68 +360,67 @@ Building social infrastructure at scale. Must have: React, Node.js, GraphQL...`}
       {jobs.length > 0 && (
         <div className="space-y-3">
           {/* Batch action bar */}
-          <div className="flex items-center justify-between bg-white border rounded-lg p-3">
+          <div className="flex items-center justify-between bg-white border border-gray-200/80 rounded-xl shadow-card p-3">
             <div className="flex items-center gap-3">
-              <label className="flex items-center gap-2 text-sm">
+              <label className="flex items-center gap-2 text-sm cursor-pointer">
                 <input
                   type="checkbox"
                   checked={selectedJobs.size === jobs.length && jobs.length > 0}
                   onChange={selectAll}
-                  className="rounded"
+                  className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                 />
-                Select All ({selectedJobs.size}/{jobs.length})
+                <span className="text-gray-600">Select All</span>
+                <span className="text-xs text-gray-400">({selectedJobs.size}/{jobs.length})</span>
               </label>
 
               {selectedJobs.size > 0 && (
-                <>
+                <div className="flex items-center gap-1.5 ml-2 pl-3 border-l border-gray-200">
                   <button
                     onClick={() => {
                       const selected = jobs.filter((j) => selectedJobs.has(j.id) && j.jobUrl);
                       selected.forEach((j) => window.open(j.jobUrl, "_blank"));
                       handleBulkMarkApplied();
                     }}
-                    className="inline-flex items-center gap-1 bg-green-600 text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-green-700"
+                    className="inline-flex items-center gap-1 bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-emerald-700 shadow-sm transition-all active:scale-[0.97]"
                   >
-                    <ExternalLink className="w-3.5 h-3.5" /> Apply Now ({selectedJobs.size})
+                    <ExternalLink className="w-3 h-3" /> Apply Now ({selectedJobs.size})
                   </button>
                   <button
                     onClick={() => {
-                      const urls = jobs
-                        .filter((j) => selectedJobs.has(j.id) && j.jobUrl)
-                        .map((j) => j.jobUrl);
+                      const urls = jobs.filter((j) => selectedJobs.has(j.id) && j.jobUrl).map((j) => j.jobUrl);
                       urls.forEach((url) => window.open(url, "_blank"));
                     }}
-                    className="inline-flex items-center gap-1 text-blue-600 px-3 py-1.5 rounded-lg text-xs hover:bg-blue-50 border border-blue-200"
+                    className="inline-flex items-center gap-1 text-indigo-600 px-2.5 py-1.5 rounded-lg text-xs hover:bg-indigo-50 border border-indigo-200 transition-all"
                   >
-                    <ExternalLink className="w-3.5 h-3.5" /> Open URLs Only
+                    <ExternalLink className="w-3 h-3" /> Open URLs
                   </button>
                   <button
                     onClick={handleBulkMarkApplied}
-                    className="inline-flex items-center gap-1 text-green-600 px-3 py-1.5 rounded-lg text-xs hover:bg-green-50 border border-green-200"
+                    className="inline-flex items-center gap-1 text-emerald-600 px-2.5 py-1.5 rounded-lg text-xs hover:bg-emerald-50 border border-emerald-200 transition-all"
                   >
-                    <CheckCircle className="w-3.5 h-3.5" /> Mark Applied
+                    <CheckCircle className="w-3 h-3" /> Mark Applied
                   </button>
                   <button
                     onClick={() => {
                       setJobs((prev) => prev.filter((j) => !selectedJobs.has(j.id)));
                       setSelectedJobs(new Set());
                     }}
-                    className="inline-flex items-center gap-1 text-red-600 px-3 py-1.5 rounded-lg text-xs hover:bg-red-50 border border-red-200"
+                    className="inline-flex items-center gap-1 text-red-500 px-2.5 py-1.5 rounded-lg text-xs hover:bg-red-50 border border-red-200 transition-all"
                   >
-                    <Trash2 className="w-3.5 h-3.5" /> Remove
+                    <Trash2 className="w-3 h-3" /> Remove
                   </button>
-                </>
+                </div>
               )}
             </div>
 
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-500">
-                {pendingCount} pending · {importedCount} imported · {appliedCount} applied
+            <div className="flex items-center gap-3">
+              <span className="text-xs text-gray-400">
+                {pendingCount} pending &middot; {importedCount} imported &middot; {appliedCount} applied
               </span>
               <button
                 onClick={handleBatchImport}
                 disabled={processing || pendingCount === 0}
-                className="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-50"
+                className="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 disabled:opacity-50 shadow-sm shadow-indigo-600/20 transition-all active:scale-[0.98]"
               >
                 {processing ? (
                   <><Loader2 className="w-4 h-4 animate-spin" /> Processing...</>
@@ -480,11 +436,11 @@ Building social infrastructure at scale. Must have: React, Node.js, GraphQL...`}
             {jobs.map((job, index) => (
               <div
                 key={job.id}
-                className={`bg-white border rounded-lg overflow-hidden transition-colors ${
+                className={`bg-white border rounded-xl overflow-hidden transition-all duration-150 shadow-card ${
                   job.status === "error" ? "border-red-200" :
-                  job.status === "applied" ? "border-green-200 bg-green-50/30" :
-                  job.status === "imported" || job.status === "tailored" ? "border-blue-200" :
-                  ""
+                  job.status === "applied" ? "border-emerald-200 bg-emerald-50/20" :
+                  job.status === "imported" || job.status === "tailored" ? "border-indigo-200" :
+                  "border-gray-200/80"
                 }`}
               >
                 <div className="flex items-center gap-3 p-3">
@@ -492,66 +448,62 @@ Building social infrastructure at scale. Must have: React, Node.js, GraphQL...`}
                     type="checkbox"
                     checked={selectedJobs.has(job.id)}
                     onChange={() => toggleSelect(job.id)}
-                    className="rounded flex-shrink-0"
+                    className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 flex-shrink-0"
                   />
-                  <span className="text-xs text-gray-400 w-6">{index + 1}</span>
+                  <span className="text-[11px] text-gray-400 w-6 font-mono">{index + 1}</span>
 
                   {job.status === "pending" ? (
-                    // Editable row
                     <>
                       <input
                         value={job.companyName}
                         onChange={(e) => updateJob(job.id, { companyName: e.target.value })}
                         placeholder="Company"
-                        className="border rounded px-2 py-1.5 text-sm w-40 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                        className="border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm w-40 shadow-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 focus:outline-none transition-all"
                       />
                       <input
                         value={job.jobTitle}
                         onChange={(e) => updateJob(job.id, { jobTitle: e.target.value })}
                         placeholder="Job Title"
-                        className="border rounded px-2 py-1.5 text-sm flex-1 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                        className="border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm flex-1 shadow-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 focus:outline-none transition-all"
                       />
                       <input
                         value={job.jobUrl}
                         onChange={(e) => updateJob(job.id, { jobUrl: e.target.value, platform: detectPlatform(e.target.value) })}
                         placeholder="URL (optional)"
-                        className="border rounded px-2 py-1.5 text-sm w-48 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                        className="border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm w-48 shadow-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 focus:outline-none transition-all"
                       />
                       <input
                         value={job.location}
                         onChange={(e) => updateJob(job.id, { location: e.target.value })}
                         placeholder="Location"
-                        className="border rounded px-2 py-1.5 text-sm w-32 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                        className="border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm w-32 shadow-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 focus:outline-none transition-all"
                       />
                     </>
                   ) : (
-                    // Display row
-                    <>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <span className="font-medium text-sm truncate">{job.jobTitle}</span>
-                          <span className="text-xs text-gray-500">at {job.companyName}</span>
-                          {job.platform && (
-                            <span className="text-xs bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">{job.platform}</span>
-                          )}
-                          {job.matchScore != null && (
-                            <span className={`text-xs font-medium ${job.matchScore >= 70 ? "text-green-600" : job.matchScore >= 40 ? "text-yellow-600" : "text-red-500"}`}>
-                              {job.matchScore}% match
-                            </span>
-                          )}
-                        </div>
-                        {job.location && <p className="text-xs text-gray-400">{job.location}</p>}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium text-sm text-gray-900 truncate">{job.jobTitle}</span>
+                        <span className="text-xs text-gray-400">at {job.companyName}</span>
+                        {job.platform && (
+                          <span className="text-[11px] bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded-md font-medium">{job.platform}</span>
+                        )}
+                        {job.matchScore != null && (
+                          <span className={`text-xs font-bold ${job.matchScore >= 70 ? "text-emerald-600" : job.matchScore >= 40 ? "text-amber-600" : "text-red-500"}`}>
+                            {job.matchScore}% match
+                          </span>
+                        )}
                       </div>
-                    </>
+                      {job.location && <p className="text-xs text-gray-400 mt-0.5">{job.location}</p>}
+                    </div>
                   )}
 
                   {/* Status */}
                   <div className="flex items-center gap-2 flex-shrink-0">
-                    {job.status === "importing" && <Loader2 className="w-4 h-4 animate-spin text-blue-500" />}
-                    {job.status === "imported" && <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">Imported</span>}
-                    {job.status === "tailored" && <span className="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full">Tailored</span>}
-                    {job.status === "applied" && <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">Applied</span>}
-                    {job.status === "error" && <span className="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full">Error</span>}
+                    {job.status === "importing" && <Loader2 className="w-4 h-4 animate-spin text-indigo-500" />}
+                    {job.status === "imported" && <span className="text-[11px] bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-md font-medium ring-1 ring-inset ring-indigo-600/10">Imported</span>}
+                    {job.status === "tailored" && <span className="text-[11px] bg-violet-50 text-violet-700 px-2 py-0.5 rounded-md font-medium ring-1 ring-inset ring-violet-600/10">Tailored</span>}
+                    {job.status === "applied" && <span className="text-[11px] bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-md font-medium ring-1 ring-inset ring-emerald-600/10">Applied</span>}
+                    {job.status === "error" && <span className="text-[11px] bg-red-50 text-red-700 px-2 py-0.5 rounded-md font-medium ring-1 ring-inset ring-red-600/10">Error</span>}
 
                     {job.jobUrl && (job.status === "imported" || job.status === "tailored") && (
                       <button
@@ -567,30 +519,30 @@ Building social infrastructure at scale. Must have: React, Node.js, GraphQL...`}
                             fetch("/api/batch/daily-stats").then((r) => r.json()).then(setDailyStats);
                           }
                         }}
-                        className="inline-flex items-center gap-1 bg-green-600 text-white px-2.5 py-1 rounded text-xs hover:bg-green-700"
+                        className="inline-flex items-center gap-1 bg-emerald-600 text-white px-2.5 py-1 rounded-lg text-xs font-medium hover:bg-emerald-700 shadow-sm transition-all active:scale-[0.97]"
                       >
                         <ExternalLink className="w-3 h-3" /> Apply
                       </button>
                     )}
 
                     {job.jobUrl && job.status !== "imported" && job.status !== "tailored" && (
-                      <a href={job.jobUrl} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-600">
+                      <a href={job.jobUrl} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-indigo-600 transition-colors">
                         <ExternalLink className="w-3.5 h-3.5" />
                       </a>
                     )}
 
                     {job.appId && (
-                      <a href={`/applications/${job.appId}`} className="text-xs text-blue-600 hover:underline">View</a>
+                      <a href={`/applications/${job.appId}`} className="text-xs text-indigo-600 hover:underline font-medium">View</a>
                     )}
 
                     <button
                       onClick={() => updateJob(job.id, { expanded: !job.expanded })}
-                      className="text-gray-400 hover:text-gray-600"
+                      className="text-gray-400 hover:text-gray-600 p-0.5 hover:bg-gray-100 rounded transition-all"
                     >
                       {job.expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                     </button>
 
-                    <button onClick={() => removeJob(job.id)} className="text-gray-400 hover:text-red-500">
+                    <button onClick={() => removeJob(job.id)} className="text-gray-400 hover:text-red-500 transition-colors p-0.5">
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
                   </div>
@@ -598,13 +550,13 @@ Building social infrastructure at scale. Must have: React, Node.js, GraphQL...`}
 
                 {/* Expanded: Job Description */}
                 {job.expanded && (
-                  <div className="border-t px-3 py-3 bg-gray-50">
+                  <div className="border-t border-gray-100 px-4 py-3 bg-gray-50/50">
                     <textarea
                       value={job.jobDescription}
                       onChange={(e) => updateJob(job.id, { jobDescription: e.target.value })}
                       rows={4}
                       placeholder="Paste job description here for better resume tailoring..."
-                      className="w-full border rounded px-3 py-2 text-sm resize-none focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm resize-none shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all"
                     />
                     {job.error && <p className="text-xs text-red-500 mt-2">{job.error}</p>}
                   </div>
@@ -617,25 +569,27 @@ Building social infrastructure at scale. Must have: React, Node.js, GraphQL...`}
 
       {/* Empty state */}
       {jobs.length === 0 && !showBulkInput && (
-        <div className="text-center py-16 text-gray-500">
-          <Zap className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-          <p className="text-lg font-medium">Ready to speed up your applications?</p>
-          <p className="text-sm mt-1">Paste jobs in bulk or add them one by one</p>
-          <div className="flex items-center justify-center gap-3 mt-4">
-            <button onClick={() => setShowBulkInput(true)} className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700">
+        <div className="text-center py-20">
+          <div className="w-16 h-16 rounded-2xl bg-amber-50 flex items-center justify-center mx-auto mb-4">
+            <Zap className="w-7 h-7 text-amber-500" />
+          </div>
+          <p className="text-lg font-semibold text-gray-900">Ready to speed up your applications?</p>
+          <p className="text-sm text-gray-500 mt-1.5">Paste jobs in bulk or add them one by one</p>
+          <div className="flex items-center justify-center gap-3 mt-5">
+            <button onClick={() => setShowBulkInput(true)} className="bg-indigo-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-indigo-700 shadow-sm shadow-indigo-600/20 transition-all active:scale-[0.98]">
               Bulk Paste Jobs
             </button>
-            <button onClick={addJob} className="border px-4 py-2 rounded-lg text-sm hover:bg-gray-50">
+            <button onClick={addJob} className="border border-gray-200 px-5 py-2.5 rounded-lg text-sm text-gray-600 hover:bg-gray-50 hover:border-gray-300 shadow-xs transition-all">
               Add Single Job
             </button>
           </div>
         </div>
       )}
 
-      {/* Keyboard shortcut hints */}
-      <div className="text-xs text-gray-400 text-center">
+      {/* Tip */}
+      <p className="text-xs text-gray-400 text-center">
         Tip: Use &ldquo;Company | Title | URL | Location&rdquo; format for fastest bulk import. Separate jobs with blank lines.
-      </div>
+      </p>
     </div>
   );
 }

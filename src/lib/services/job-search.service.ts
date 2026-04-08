@@ -205,7 +205,7 @@ export const jobSearchService = {
           /(\d+)\s*(?:to|-)\s*(\d+)\s*(?:years?|yrs?)/g,
         ];
         for (const pattern of yearsPatterns) {
-          const matches = [...text.matchAll(pattern)];
+          const matches = Array.from(text.matchAll(pattern));
           for (const m of matches) {
             const years = parseInt(m[1]);
             if (years > params.experienceMax + 1) return false;
