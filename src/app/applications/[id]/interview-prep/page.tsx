@@ -16,15 +16,19 @@ export default function InterviewPrepPage() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [generating, setGenerating] = useState(false);
+  const [aiGenerating, setAiGenerating] = useState(false);
+  const [aiAvailable, setAiAvailable] = useState(false);
 
   useEffect(() => {
     Promise.all([
       fetch(`/api/interview-prep/${id}`).then((r) => r.json()),
       fetch(`/api/applications/${id}`).then((r) => r.json()),
+      fetch("/api/ai/status").then((r) => r.json()).catch(() => ({ gemini: false })),
     ])
-      .then(([prepData, appData]) => {
+      .then(([prepData, appData, aiStatus]) => {
         setPrep(prepData);
         setApp(appData);
+        setAiAvailable(aiStatus.gemini);
       })
       .catch(console.error)
       .finally(() => setLoading(false));
@@ -59,6 +63,25 @@ export default function InterviewPrepPage() {
       console.error(err);
     } finally {
       setGenerating(false);
+    }
+  };
+
+  const handleAIGenerate = async () => {
+    setAiGenerating(true);
+    try {
+      const res = await fetch("/api/ai/interview-prep", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ applicationId: id }),
+      });
+      const questions = await res.json();
+      if (Array.isArray(questions)) {
+        setPrep((p: any) => ({ ...p, questions: JSON.stringify(questions) }));
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setAiGenerating(false);
     }
   };
 
@@ -103,10 +126,17 @@ export default function InterviewPrepPage() {
           <button
             onClick={handleGenerate}
             disabled={generating}
-            className="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-indigo-700 disabled:opacity-50 shadow-sm shadow-indigo-600/20 transition-all active:scale-[0.98]"
+            className="inline-flex items-center gap-2 border border-gray-200 text-gray-700 px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-gray-50 disabled:opacity-50 shadow-xs transition-all active:scale-[0.98]"
+          >
+            {generating ? "Generating..." : "Quick Generate"}
+          </button>
+          <button
+            onClick={handleAIGenerate}
+            disabled={!aiAvailable || aiGenerating}
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-violet-600 text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:from-indigo-700 hover:to-violet-700 disabled:opacity-50 shadow-sm transition-all active:scale-[0.98]"
           >
             <Sparkles className="w-4 h-4" />
-            {generating ? "Generating..." : "Generate Questions"}
+            {aiGenerating ? "AI Generating..." : "Generate with AI"}
           </button>
         </div>
       </div>

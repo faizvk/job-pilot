@@ -6,7 +6,7 @@ import { StatusBadge } from "@/components/applications/status-badge";
 import { formatDate, formatSalary, timeAgo } from "@/lib/utils";
 import {
   Building2, MapPin, DollarSign, Globe, Calendar, User, Mail,
-  FileText, PenLine, MessageSquare, ClipboardList, Trash2, ExternalLink
+  FileText, PenLine, MessageSquare, ClipboardList, Trash2, ExternalLink, Sparkles, Loader2
 } from "lucide-react";
 import Link from "next/link";
 
@@ -15,6 +15,8 @@ export default function ApplicationDetailPage() {
   const router = useRouter();
   const [app, setApp] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [aiAnalysis, setAiAnalysis] = useState<any>(null);
+  const [analyzing, setAnalyzing] = useState(false);
 
   useEffect(() => {
     fetch(`/api/applications/${id}`)
@@ -38,6 +40,23 @@ export default function ApplicationDetailPage() {
     });
     const res = await fetch(`/api/applications/${id}`);
     setApp(await res.json());
+  };
+
+  const handleAIAnalyze = async () => {
+    if (!app?.jobDescription) return;
+    setAnalyzing(true);
+    try {
+      const res = await fetch("/api/ai/analyze-jd", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ jobDescription: app.jobDescription, jobTitle: app.jobTitle, companyName: app.companyName }),
+      });
+      if (res.ok) setAiAnalysis(await res.json());
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setAnalyzing(false);
+    }
   };
 
   if (loading) return <div className="animate-pulse h-96 bg-gray-100 rounded-lg" />;
@@ -196,9 +215,89 @@ export default function ApplicationDetailPage() {
         </div>
       )}
 
+      {/* AI Analysis */}
+      {app.jobDescription && (
+        <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-xs">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-semibold text-lg flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-amber-500" /> AI Analysis
+            </h2>
+            {!aiAnalysis && (
+              <button
+                onClick={handleAIAnalyze}
+                disabled={analyzing}
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-violet-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:from-indigo-700 hover:to-violet-700 disabled:opacity-50 shadow-sm transition-all active:scale-[0.98]"
+              >
+                {analyzing ? <><Loader2 className="w-4 h-4 animate-spin" /> Analyzing...</> : <><Sparkles className="w-4 h-4" /> Analyze with AI</>}
+              </button>
+            )}
+          </div>
+          {aiAnalysis ? (
+            <div className="space-y-4">
+              <div className="flex flex-wrap gap-2">
+                <span className="text-xs font-medium px-2.5 py-1 rounded-md bg-indigo-50 text-indigo-700 ring-1 ring-inset ring-indigo-600/10">
+                  {aiAnalysis.seniorityLevel} level
+                </span>
+                <span className="text-xs font-medium px-2.5 py-1 rounded-md bg-violet-50 text-violet-700 ring-1 ring-inset ring-violet-600/10">
+                  {aiAnalysis.roleType}
+                </span>
+                <span className="text-xs font-medium px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/10">
+                  {aiAnalysis.remotePolicy}
+                </span>
+                {aiAnalysis.salaryEstimate && (
+                  <span className="text-xs font-medium px-2.5 py-1 rounded-md bg-amber-50 text-amber-700 ring-1 ring-inset ring-amber-600/10">
+                    ${(aiAnalysis.salaryEstimate.min / 1000).toFixed(0)}k — ${(aiAnalysis.salaryEstimate.max / 1000).toFixed(0)}k {aiAnalysis.salaryEstimate.currency}
+                  </span>
+                )}
+              </div>
+              <p className="text-sm text-gray-600 leading-relaxed">{aiAnalysis.summary}</p>
+              {aiAnalysis.techStack?.length > 0 && (
+                <div>
+                  <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Tech Stack</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {aiAnalysis.techStack.map((t: string) => (
+                      <span key={t} className="text-[11px] px-2 py-0.5 rounded-md bg-gray-100 text-gray-700">{t}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {aiAnalysis.responsibilities?.length > 0 && (
+                <div>
+                  <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Key Responsibilities</p>
+                  <ul className="text-sm text-gray-600 space-y-1">
+                    {aiAnalysis.responsibilities.map((r: string, i: number) => (
+                      <li key={i} className="flex items-start gap-2"><span className="text-indigo-400 mt-1">•</span> {r}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {aiAnalysis.redFlags?.length > 0 && (
+                <div>
+                  <p className="text-[11px] font-semibold text-red-500 uppercase tracking-wider mb-1.5">Red Flags</p>
+                  <ul className="text-sm text-red-600 space-y-1">
+                    {aiAnalysis.redFlags.map((f: string, i: number) => (
+                      <li key={i} className="flex items-start gap-2"><span className="mt-1">⚠</span> {f}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {aiAnalysis.companyCulture?.length > 0 && (
+                <div className="flex flex-wrap gap-1.5">
+                  {aiAnalysis.companyCulture.map((c: string) => (
+                    <span key={c} className="text-[11px] px-2 py-0.5 rounded-md bg-violet-50 text-violet-600">{c}</span>
+                  ))}
+                </div>
+              )}
+            </div>
+          ) : !analyzing ? (
+            <p className="text-sm text-gray-400">Click &ldquo;Analyze with AI&rdquo; to get insights about this role.</p>
+          ) : null}
+        </div>
+      )}
+
       {/* Job Description */}
       {app.jobDescription && (
-        <div className="bg-white rounded-lg border p-6">
+        <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-xs">
           <h2 className="font-semibold text-lg mb-3">Job Description</h2>
           <p className="text-sm text-gray-600 whitespace-pre-wrap">{app.jobDescription}</p>
         </div>

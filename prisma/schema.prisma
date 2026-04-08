@@ -144,13 +144,13 @@ model CoverLetterTemplate {
 }
 
 model GeneratedCoverLetter {
-  id            String              @id @default(cuid())
-  templateId    String
-  applicationId String              @unique
+  id            String               @id @default(cuid())
+  templateId    String?
+  applicationId String               @unique
   content       String
-  createdAt     DateTime            @default(now())
-  template      CoverLetterTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
-  application   Application         @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  createdAt     DateTime             @default(now())
+  template      CoverLetterTemplate? @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  application   Application          @relation(fields: [applicationId], references: [id], onDelete: Cascade)
 }
 
 model InterviewPrep {
