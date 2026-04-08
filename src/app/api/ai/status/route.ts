@@ -1,10 +1,13 @@
 import { NextResponse } from "next/server";
-import { isGeminiConfigured } from "@/lib/services/ai/gemini";
+import { isGeminiConfigured, isAIConfigured } from "@/lib/services/ai/gemini";
+import { isGroqConfigured } from "@/lib/services/ai/groq";
 import { isResendConfigured } from "@/lib/services/email.service";
 
 export async function GET() {
   return NextResponse.json({
     gemini: isGeminiConfigured(),
+    groq: isGroqConfigured(),
+    ai: isAIConfigured(), // true if any AI provider is available
     resend: isResendConfigured(),
   });
 }

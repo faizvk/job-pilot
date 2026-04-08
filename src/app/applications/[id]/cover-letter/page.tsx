@@ -28,7 +28,7 @@ export default function ApplicationCoverLetterPage() {
       .then(([appData, templateData, aiStatus]) => {
         setApp(appData);
         setTemplates(templateData);
-        setAiAvailable(aiStatus.gemini);
+        setAiAvailable(aiStatus.ai);
         if (appData.coverLetter) {
           setGeneratedContent(appData.coverLetter.content);
           setSelectedTemplateId(appData.coverLetter.templateId || "");
@@ -145,7 +145,7 @@ export default function ApplicationCoverLetterPage() {
         <div className="border-t border-gray-100 pt-4">
           <h3 className="text-[13px] font-semibold text-gray-700 mb-2 flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-amber-500" /> AI-Powered
-            {!aiAvailable && <span className="text-[10px] text-gray-400 font-normal">(Set GEMINI_API_KEY in .env)</span>}
+            {!aiAvailable && <span className="text-[10px] text-gray-400 font-normal">(Set GEMINI_API_KEY or GROQ_API_KEY in .env)</span>}
           </h3>
           <div className="flex items-center gap-3">
             <select

@@ -28,7 +28,7 @@ export default function InterviewPrepPage() {
       .then(([prepData, appData, aiStatus]) => {
         setPrep(prepData);
         setApp(appData);
-        setAiAvailable(aiStatus.gemini);
+        setAiAvailable(aiStatus.ai);
       })
       .catch(console.error)
       .finally(() => setLoading(false));
