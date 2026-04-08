@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { formatDate } from "@/lib/utils";
-import { Check, Clock, Mail, Copy, ChevronDown, ChevronRight } from "lucide-react";
+import { Check, Clock, Mail, Copy, ChevronDown, ChevronRight, Send, Loader2 } from "lucide-react";
 
 const TYPE_CONFIG: Record<string, { label: string; color: string }> = {
   follow_up: { label: "Follow Up", color: "bg-indigo-50 text-indigo-700 ring-1 ring-inset ring-indigo-600/10" },
@@ -13,11 +13,45 @@ const TYPE_CONFIG: Record<string, { label: string; color: string }> = {
 export function FollowUpList({ followUps, onMarkSent }: { followUps: any[]; onMarkSent: (id: string) => void }) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [sendingId, setSendingId] = useState<string | null>(null);
+  const [sentEmailId, setSentEmailId] = useState<string | null>(null);
+  const [emailTo, setEmailTo] = useState<Record<string, string>>({});
+  const [emailEnabled, setEmailEnabled] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/ai/status")
+      .then((r) => r.json())
+      .then((s) => setEmailEnabled(s.resend))
+      .catch(() => {});
+  }, []);
 
   const handleCopy = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 1500);
+  };
+
+  const handleSendEmail = async (fu: any) => {
+    const to = emailTo[fu.id];
+    if (!to || !fu.emailDraft) return;
+
+    setSendingId(fu.id);
+    try {
+      const res = await fetch("/api/email/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ followUpId: fu.id, to, draft: fu.emailDraft }),
+      });
+      if (res.ok) {
+        setSentEmailId(fu.id);
+        setTimeout(() => setSentEmailId(null), 3000);
+        onMarkSent(fu.id);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setSendingId(null);
+    }
   };
 
   return (
@@ -93,6 +127,35 @@ export function FollowUpList({ followUps, onMarkSent }: { followUps: any[]; onMa
                 <pre className="text-sm text-gray-600 whitespace-pre-wrap bg-gray-50 rounded-lg p-3 border border-gray-200 leading-relaxed">
                   {fu.emailDraft}
                 </pre>
+
+                {/* Send Email section */}
+                {emailEnabled && fu.status === "pending" && (
+                  <div className="mt-3 flex items-center gap-2">
+                    <input
+                      type="email"
+                      placeholder="Recipient email (e.g. hr@company.com)"
+                      value={emailTo[fu.id] || ""}
+                      onChange={(e) => setEmailTo({ ...emailTo, [fu.id]: e.target.value })}
+                      className="flex-1 border border-gray-200 rounded-lg px-3 py-1.5 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all"
+                    />
+                    <button
+                      onClick={() => handleSendEmail(fu)}
+                      disabled={!emailTo[fu.id] || sendingId === fu.id}
+                      className="inline-flex items-center gap-1.5 bg-indigo-600 text-white px-4 py-1.5 rounded-lg text-sm font-medium hover:bg-indigo-700 disabled:opacity-50 shadow-sm shadow-indigo-600/20 transition-all active:scale-[0.98]"
+                    >
+                      {sentEmailId === fu.id ? (
+                        <><Check className="w-3.5 h-3.5" /> Sent!</>
+                      ) : sendingId === fu.id ? (
+                        <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Sending...</>
+                      ) : (
+                        <><Send className="w-3.5 h-3.5" /> Send Email</>
+                      )}
+                    </button>
+                  </div>
+                )}
+                {!emailEnabled && fu.status === "pending" && (
+                  <p className="mt-2 text-[10px] text-gray-400">Set RESEND_API_KEY in .env to send emails directly</p>
+                )}
               </div>
             )}
           </div>

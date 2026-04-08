@@ -5,12 +5,12 @@ Track progress of all service integrations. Each item gets its own commit+push.
 ## Free / No-Cost Integrations
 
 ### AI / LLM
-- [ ] **1. Google Gemini API** — AI-powered cover letters, resume tailoring, interview prep, JD analysis
+- [x] **1. Google Gemini API** — AI-powered cover letters, resume tailoring, interview prep, JD analysis
 
 ### Job Data & Search
-- [ ] **2. JSearch API (RapidAPI)** — Real job listings from Indeed, LinkedIn, Glassdoor
-- [ ] **3. Remotive API** — Remote job listings feed
-- [ ] **4. Adzuna API** — Job search with salary estimates
+- [x] **2. JSearch API (RapidAPI)** — Real job listings from Indeed, LinkedIn, Glassdoor (already integrated)
+- [x] **3. Remotive API** — Remote job listings feed (already integrated)
+- [x] **4. Adzuna API** — Job search with salary estimates (already integrated)
 
 ### Email & Communication
 - [ ] **5. Resend** — Send follow-up emails directly from the app
@@ -36,10 +36,10 @@ Track progress of all service integrations. Each item gets its own commit+push.
 
 | # | Integration | Status | Commit | Date |
 |---|------------|--------|--------|------|
-| 1 | Gemini API | pending | — | — |
-| 2 | JSearch API | pending | — | — |
-| 3 | Remotive API | pending | — | — |
-| 4 | Adzuna API | pending | — | — |
+| 1 | Gemini API | done | af56168 | 2026-04-08 |
+| 2 | JSearch API | done | pre-existing | — |
+| 3 | Remotive API | done | pre-existing | — |
+| 4 | Adzuna API | done | pre-existing | — |
 | 5 | Resend | pending | — | — |
 | 6 | Clearbit Logo | pending | — | — |
 | 7 | Wikipedia API | pending | — | — |
