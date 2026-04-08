@@ -9,6 +9,7 @@ import {
   FileText, PenLine, MessageSquare, ClipboardList, Trash2, ExternalLink, Sparkles, Loader2
 } from "lucide-react";
 import Link from "next/link";
+import { CompanyLogo } from "@/components/ui/company-logo";
 
 export default function ApplicationDetailPage() {
   const { id } = useParams();
@@ -67,12 +68,15 @@ export default function ApplicationDetailPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">{app.jobTitle}</h1>
-          <p className="text-lg text-gray-600 flex items-center gap-2 mt-1">
-            <Building2 className="w-4 h-4" />
-            {app.companyName}
-          </p>
+        <div className="flex items-start gap-4">
+          <CompanyLogo companyName={app.companyName} size={48} className="flex-shrink-0 shadow-xs" />
+          <div>
+            <h1 className="text-2xl font-bold">{app.jobTitle}</h1>
+            <p className="text-lg text-gray-600 flex items-center gap-2 mt-1">
+              <Building2 className="w-4 h-4" />
+              {app.companyName}
+            </p>
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <Link
