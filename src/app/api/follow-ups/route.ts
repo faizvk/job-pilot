@@ -18,8 +18,13 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const data = followUpSchema.parse(body);
-    const followUp = await followUpService.create(DEFAULT_USER_ID, data);
+    const { autoDraft, ...rest } = body;
+    const data = followUpSchema.parse(rest);
+
+    const followUp = autoDraft
+      ? await followUpService.createWithDraft(DEFAULT_USER_ID, data)
+      : await followUpService.create(DEFAULT_USER_ID, data);
+
     return NextResponse.json(followUp, { status: 201 });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 400 });

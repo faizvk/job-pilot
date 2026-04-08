@@ -5,6 +5,8 @@ import { useParams } from "next/navigation";
 import { PrepNotesEditor } from "@/components/interview-prep/prep-notes-editor";
 import { QuestionList } from "@/components/interview-prep/question-list";
 import { ResearchLinks } from "@/components/interview-prep/research-links";
+import { Sparkles, ArrowLeft, Check } from "lucide-react";
+import Link from "next/link";
 
 export default function InterviewPrepPage() {
   const { id } = useParams();
@@ -12,6 +14,8 @@ export default function InterviewPrepPage() {
   const [app, setApp] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [generating, setGenerating] = useState(false);
 
   useEffect(() => {
     Promise.all([
@@ -36,6 +40,8 @@ export default function InterviewPrepPage() {
       });
       const data = await res.json();
       setPrep(data);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 1500);
     } catch (err) {
       console.error(err);
     } finally {
@@ -43,19 +49,73 @@ export default function InterviewPrepPage() {
     }
   };
 
-  if (loading) return <div className="animate-pulse h-96 bg-gray-100 rounded-lg" />;
+  const handleGenerate = async () => {
+    setGenerating(true);
+    try {
+      const res = await fetch(`/api/interview-prep/${id}/generate`, { method: "POST" });
+      const questions = await res.json();
+      setPrep((p: any) => ({ ...p, questions: JSON.stringify(questions) }));
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setGenerating(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="space-y-6 animate-fade-in">
+        <div className="h-8 w-64 bg-gray-100 rounded-lg animate-shimmer" />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="space-y-6">
+            <div className="h-64 bg-gray-100 rounded-xl animate-shimmer" />
+            <div className="h-32 bg-gray-100 rounded-xl animate-shimmer" />
+          </div>
+          <div className="h-96 bg-gray-100 rounded-xl animate-shimmer" />
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">Interview Prep</h1>
-          <p className="text-gray-500">
-            {app?.jobTitle} at {app?.companyName}
-          </p>
+        <div className="flex items-center gap-3">
+          <Link
+            href={`/applications/${id}`}
+            className="text-gray-400 hover:text-gray-600 transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </Link>
+          <div>
+            <h1 className="text-xl font-bold text-gray-900">Interview Prep</h1>
+            <p className="text-sm text-gray-500">
+              {app?.jobTitle} at {app?.companyName}
+            </p>
+          </div>
         </div>
-        {saving && <span className="text-sm text-gray-400">Saving...</span>}
+        <div className="flex items-center gap-2">
+          {(saving || saved) && (
+            <span className="inline-flex items-center gap-1 text-xs text-gray-400">
+              {saved ? <><Check className="w-3 h-3 text-emerald-500" /> Saved</> : "Saving..."}
+            </span>
+          )}
+          <button
+            onClick={handleGenerate}
+            disabled={generating}
+            className="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-indigo-700 disabled:opacity-50 shadow-sm shadow-indigo-600/20 transition-all active:scale-[0.98]"
+          >
+            <Sparkles className="w-4 h-4" />
+            {generating ? "Generating..." : "Generate Questions"}
+          </button>
+        </div>
       </div>
+
+      {!app?.jobDescription && (
+        <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-sm text-amber-700">
+          This application has no job description. Add one to get better auto-generated questions.
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="space-y-6">
