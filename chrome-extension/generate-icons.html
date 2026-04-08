@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head><title>Generate Icons</title></head>
+<body>
+<p>Open this file in a browser, right-click each canvas, and save as PNG to the icons/ folder.</p>
+<canvas id="c16" width="16" height="16"></canvas>
+<canvas id="c48" width="48" height="48"></canvas>
+<canvas id="c128" width="128" height="128"></canvas>
+<script>
+function drawIcon(canvas) {
+  const ctx = canvas.getContext("2d");
+  const s = canvas.width;
+  const r = s * 0.2;
+
+  // Background
+  const grad = ctx.createLinearGradient(0, 0, s, s);
+  grad.addColorStop(0, "#4f46e5");
+  grad.addColorStop(1, "#7c3aed");
+  ctx.beginPath();
+  ctx.roundRect(0, 0, s, s, r);
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // Text
+  ctx.fillStyle = "white";
+  ctx.font = `${s * 0.42}px -apple-system, sans-serif`;
+  ctx.fontWeight = "800";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("JP", s / 2, s / 2 + s * 0.02);
+}
+drawIcon(document.getElementById("c16"));
+drawIcon(document.getElementById("c48"));
+drawIcon(document.getElementById("c128"));
+</script>
+</body>
+</html>
