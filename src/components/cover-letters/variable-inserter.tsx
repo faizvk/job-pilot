@@ -1,24 +1,44 @@
 "use client";
 
 const VARIABLES = [
-  "companyName", "jobTitle", "userName", "topSkills",
-  "recentRole", "recentCompany", "location", "date",
+  { key: "companyName", label: "Company" },
+  { key: "jobTitle", label: "Job Title" },
+  { key: "userName", label: "Your Name" },
+  { key: "topSkills", label: "Top Skills" },
+  { key: "allSkills", label: "All Skills" },
+  { key: "matchedSkills", label: "Matched Skills" },
+  { key: "recentRole", label: "Recent Role" },
+  { key: "recentCompany", label: "Recent Company" },
+  { key: "summary", label: "Summary" },
+  { key: "experienceYears", label: "Experience" },
+  { key: "education", label: "Education" },
+  { key: "location", label: "Location" },
+  { key: "date", label: "Date" },
 ];
 
 export function VariableInserter({ onInsert }: { onInsert: (variable: string) => void }) {
   return (
-    <div className="flex flex-wrap gap-2 bg-gray-50 border rounded-lg p-3">
-      <span className="text-xs text-gray-500 self-center mr-1">Insert:</span>
-      {VARIABLES.map((v) => (
-        <button
-          key={v}
-          type="button"
-          onClick={() => onInsert(v)}
-          className="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors font-mono"
-        >
-          {`{{${v}}}`}
-        </button>
-      ))}
+    <div className="bg-gray-50 border border-gray-200 rounded-xl p-3">
+      <div className="flex items-center gap-2 mb-2">
+        <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Variables</span>
+        <span className="text-[10px] text-gray-400">Click to insert</span>
+      </div>
+      <div className="flex flex-wrap gap-1.5">
+        {VARIABLES.map((v) => (
+          <button
+            key={v.key}
+            type="button"
+            onClick={() => onInsert(v.key)}
+            className="px-2 py-1 text-[11px] bg-indigo-50 text-indigo-700 rounded-md hover:bg-indigo-100 transition-colors font-mono ring-1 ring-inset ring-indigo-600/10"
+            title={`Insert {{${v.key}}}`}
+          >
+            {v.label}
+          </button>
+        ))}
+      </div>
+      <p className="text-[10px] text-gray-400 mt-2">
+        Use <code className="font-mono text-indigo-600">{`{{#var}}...{{/var}}`}</code> for conditional sections (shown only when variable has a value)
+      </p>
     </div>
   );
 }

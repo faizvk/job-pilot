@@ -5,7 +5,8 @@ import { useParams, useRouter } from "next/navigation";
 import { TemplateEditor } from "@/components/cover-letters/template-editor";
 import { TemplatePreview } from "@/components/cover-letters/template-preview";
 import { VariableInserter } from "@/components/cover-letters/variable-inserter";
-import { Trash2 } from "lucide-react";
+import { Trash2, ArrowLeft, Check } from "lucide-react";
+import Link from "next/link";
 
 export default function CoverLetterDetailPage() {
   const { id } = useParams();
@@ -14,6 +15,7 @@ export default function CoverLetterDetailPage() {
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
 
   useEffect(() => {
     fetch(`/api/cover-letters/templates/${id}`)
@@ -34,6 +36,8 @@ export default function CoverLetterDetailPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, content }),
       });
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
     } finally {
       setSaving(false);
     }
@@ -49,25 +53,41 @@ export default function CoverLetterDetailPage() {
     setContent((prev) => prev + `{{${variable}}}`);
   };
 
-  if (loading) return <div className="animate-pulse h-96 bg-gray-100 rounded-lg" />;
+  if (loading) {
+    return (
+      <div className="space-y-6 animate-fade-in">
+        <div className="h-8 w-48 bg-gray-100 rounded-lg animate-shimmer" />
+        <div className="h-10 bg-gray-100 rounded-xl animate-shimmer" />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="h-[400px] bg-gray-100 rounded-xl animate-shimmer" />
+          <div className="h-[400px] bg-gray-100 rounded-xl animate-shimmer" />
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Edit Template</h1>
+        <div className="flex items-center gap-3">
+          <Link href="/cover-letters" className="text-gray-400 hover:text-gray-600 transition-colors">
+            <ArrowLeft className="w-5 h-5" />
+          </Link>
+          <h1 className="text-xl font-bold text-gray-900">Edit Template</h1>
+        </div>
         <div className="flex items-center gap-2">
           <button
             onClick={handleDelete}
-            className="inline-flex items-center gap-1 px-3 py-2 text-sm border border-red-200 text-red-600 rounded-lg hover:bg-red-50"
+            className="inline-flex items-center gap-1.5 px-3 py-2.5 text-sm border border-gray-200 text-gray-500 rounded-lg hover:text-red-600 hover:border-red-200 hover:bg-red-50 shadow-xs transition-all"
           >
             <Trash2 className="w-4 h-4" /> Delete
           </button>
           <button
             onClick={handleSave}
             disabled={saving}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 bg-indigo-600 text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-indigo-700 disabled:opacity-50 shadow-sm shadow-indigo-600/20 transition-all active:scale-[0.98]"
           >
-            {saving ? "Saving..." : "Save"}
+            {saved ? <><Check className="w-4 h-4" /> Saved</> : saving ? "Saving..." : "Save"}
           </button>
         </div>
       </div>
@@ -76,18 +96,18 @@ export default function CoverLetterDetailPage() {
         type="text"
         value={name}
         onChange={(e) => setName(e.target.value)}
-        className="w-full border rounded-lg px-3 py-2 text-sm"
+        className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all"
       />
 
       <VariableInserter onInsert={handleInsertVariable} />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div>
-          <h3 className="font-medium mb-2">Edit</h3>
+          <h3 className="text-[13px] font-semibold text-gray-700 mb-2">Edit</h3>
           <TemplateEditor content={content} onChange={setContent} />
         </div>
         <div>
-          <h3 className="font-medium mb-2">Preview</h3>
+          <h3 className="text-[13px] font-semibold text-gray-700 mb-2">Preview</h3>
           <TemplatePreview content={content} />
         </div>
       </div>
