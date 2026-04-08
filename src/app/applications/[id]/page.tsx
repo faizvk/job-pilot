@@ -18,11 +18,21 @@ export default function ApplicationDetailPage() {
   const [loading, setLoading] = useState(true);
   const [aiAnalysis, setAiAnalysis] = useState<any>(null);
   const [analyzing, setAnalyzing] = useState(false);
+  const [companyInfo, setCompanyInfo] = useState<any>(null);
 
   useEffect(() => {
     fetch(`/api/applications/${id}`)
       .then((res) => res.json())
-      .then(setApp)
+      .then((data) => {
+        setApp(data);
+        // Fetch company info in background
+        if (data?.companyName) {
+          fetch(`/api/company-info?company=${encodeURIComponent(data.companyName)}`)
+            .then((r) => r.ok ? r.json() : null)
+            .then(setCompanyInfo)
+            .catch(() => {});
+        }
+      })
       .catch(console.error)
       .finally(() => setLoading(false));
   }, [id]);
@@ -210,6 +220,24 @@ export default function ApplicationDetailPage() {
           </Link>
         </div>
       </div>
+
+      {/* Company Info from Wikipedia */}
+      {companyInfo && (
+        <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-xs">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="font-semibold text-lg">About {app.companyName}</h2>
+            <a
+              href={companyInfo.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-indigo-600 hover:text-indigo-700"
+            >
+              Wikipedia →
+            </a>
+          </div>
+          <p className="text-sm text-gray-600 leading-relaxed">{companyInfo.extract}</p>
+        </div>
+      )}
 
       {/* Notes */}
       {app.notes && (
