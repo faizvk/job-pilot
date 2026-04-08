@@ -3,8 +3,10 @@
 import { useState, useEffect } from "react";
 import {
   Search, RefreshCw, Filter, ExternalLink, ChevronDown, ChevronUp,
-  Send, EyeOff, Loader2, MapPin, Building2, Clock, Briefcase, Star, Settings2, X
+  Send, EyeOff, Loader2, MapPin, Building2, Clock, Briefcase, Star, Settings2, X,
+  Copy, Rocket
 } from "lucide-react";
+import { QuickCopyPanel } from "@/components/profile/quick-copy-panel";
 
 interface JobListing {
   id: string;
@@ -89,10 +91,14 @@ export default function JobFeedPage() {
   const [filterMinScore, setFilterMinScore] = useState(0);
   const [sources, setSources] = useState<string[]>([]);
   const [lastFetched, setLastFetched] = useState<string | null>(null);
+  const [showCopyPanel, setShowCopyPanel] = useState(false);
+  const [profile, setProfile] = useState<any>(null);
+  const [applyingAll, setApplyingAll] = useState(false);
 
   useEffect(() => {
     loadPreferences();
     loadListings();
+    fetch("/api/profile").then((r) => r.json()).then(setProfile).catch(() => {});
   }, []);
 
   const loadPreferences = async () => {
@@ -226,6 +232,59 @@ export default function JobFeedPage() {
     await loadListings();
   };
 
+  // Open selected job URLs and track them as applied
+  const openAndApply = async () => {
+    const selected = listings.filter((j) => selectedJobs.has(j.id));
+    if (selected.length === 0) return;
+    setApplyingAll(true);
+
+    // Open all URLs
+    for (const job of selected) {
+      if (job.url) window.open(job.url, "_blank");
+    }
+
+    // Import and mark as applied
+    const res = await fetch("/api/batch/import", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        jobs: selected.map((j) => ({
+          companyName: j.company,
+          jobTitle: j.title,
+          jobUrl: j.url,
+          jobDescription: j.description || "",
+          location: j.location || "",
+          workType: j.workType || "",
+          platform: j.platform,
+        })),
+        autoAnalyze: true,
+        autoTailor: false,
+      }),
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      // Mark as applied
+      const appIds = (data.applications || []).map((a: any) => a.id);
+      if (appIds.length > 0) {
+        await fetch("/api/batch/status", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ applicationIds: appIds, status: "applied" }),
+        });
+      }
+      // Mark as imported in job listings
+      await fetch("/api/job-search/listings", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids: selected.map((j) => j.id), action: "import" }),
+      });
+      setSelectedJobs(new Set());
+      await loadListings();
+    }
+    setApplyingAll(false);
+  };
+
   const formatPostedDate = (dateStr: string | null) => {
     if (!dateStr) return "";
     try {
@@ -268,6 +327,16 @@ export default function JobFeedPage() {
         </div>
         <div className="flex items-center gap-2">
           <button
+            onClick={() => setShowCopyPanel(!showCopyPanel)}
+            className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm transition-all ${
+              showCopyPanel
+                ? "bg-indigo-600 text-white shadow-sm shadow-indigo-600/20"
+                : "border border-gray-200 text-gray-600 hover:bg-gray-50 shadow-xs"
+            }`}
+          >
+            <Copy className="w-4 h-4" /> Quick Fill
+          </button>
+          <button
             onClick={() => setShowPrefs(!showPrefs)}
             className="inline-flex items-center gap-1.5 border border-gray-200 px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-all shadow-xs"
           >
@@ -286,6 +355,11 @@ export default function JobFeedPage() {
           </button>
         </div>
       </div>
+
+      {/* Quick Copy Panel - for filling out application forms */}
+      {showCopyPanel && profile && (
+        <QuickCopyPanel profile={profile} />
+      )}
 
       {/* Search Preferences Panel */}
       {showPrefs && (
@@ -440,10 +514,21 @@ export default function JobFeedPage() {
             {selectedJobs.size > 0 && (
               <div className="flex items-center gap-1.5 ml-2 pl-3 border-l border-gray-200">
                 <button
-                  onClick={sendToBatchApply}
-                  className="inline-flex items-center gap-1 bg-indigo-600 text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-indigo-700 transition-all shadow-sm active:scale-[0.97]"
+                  onClick={openAndApply}
+                  disabled={applyingAll}
+                  className="inline-flex items-center gap-1 bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-emerald-700 transition-all shadow-sm active:scale-[0.97] disabled:opacity-50"
                 >
-                  <Send className="w-3 h-3" /> Batch Apply ({selectedJobs.size})
+                  {applyingAll ? (
+                    <><Loader2 className="w-3 h-3 animate-spin" /> Opening...</>
+                  ) : (
+                    <><Rocket className="w-3 h-3" /> Open All & Apply ({selectedJobs.size})</>
+                  )}
+                </button>
+                <button
+                  onClick={sendToBatchApply}
+                  className="inline-flex items-center gap-1 text-indigo-600 px-2.5 py-1.5 rounded-lg text-xs hover:bg-indigo-50 border border-indigo-200 transition-all"
+                >
+                  <Send className="w-3 h-3" /> Batch Apply
                 </button>
                 <button
                   onClick={hideSelected}
