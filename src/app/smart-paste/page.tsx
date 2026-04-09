@@ -48,6 +48,8 @@ export default function SmartPastePage() {
   const [generatingResume, setGeneratingResume] = useState(false);
   const [generatedResume, setGeneratedResume] = useState<string | null>(null);
   const [showResumePreview, setShowResumePreview] = useState(false);
+  const [savedResumeId, setSavedResumeId] = useState<string | null>(null);
+  const [hasOriginalFile, setHasOriginalFile] = useState(false);
   const resumePreviewRef = useRef<HTMLDivElement>(null);
 
   const handleAnalyze = async () => {
@@ -61,6 +63,8 @@ export default function SmartPastePage() {
     setSelectedSuggestions(new Set());
     setGeneratedResume(null);
     setShowResumePreview(false);
+    setSavedResumeId(null);
+    setHasOriginalFile(false);
 
     try {
       const res = await fetch("/api/smart-paste", {
@@ -204,6 +208,8 @@ export default function SmartPastePage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
       setGeneratedResume(data.resume);
+      setSavedResumeId(data.savedId || null);
+      setHasOriginalFile(!!data.originalFilePath);
       setShowResumePreview(true);
     } catch (err: any) {
       setError(err.message || "Resume generation failed");
@@ -570,10 +576,18 @@ export default function SmartPastePage() {
           {generatedResume && (
             <div className="bg-white border border-gray-200/80 rounded-xl shadow-card p-5 space-y-4">
               <div className="flex items-center justify-between">
-                <h2 className="text-base font-semibold text-gray-900 flex items-center gap-2">
-                  <FileText className="w-4 h-4 text-emerald-500" />
-                  Tailored Resume
-                </h2>
+                <div>
+                  <h2 className="text-base font-semibold text-gray-900 flex items-center gap-2">
+                    <FileText className="w-4 h-4 text-emerald-500" />
+                    Tailored Resume
+                  </h2>
+                  {savedResumeId && (
+                    <p className="text-xs text-emerald-600 mt-0.5 flex items-center gap-1">
+                      <CheckCircle className="w-3 h-3" />
+                      Saved to Resumes
+                    </p>
+                  )}
+                </div>
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => setShowResumePreview(!showResumePreview)}
@@ -596,6 +610,14 @@ export default function SmartPastePage() {
                     <Download className="w-3.5 h-3.5" />
                     Download PDF
                   </button>
+                  {savedResumeId && (
+                    <a
+                      href={`/resumes/${savedResumeId}`}
+                      className="inline-flex items-center gap-1.5 bg-indigo-600 text-white px-4 py-1.5 rounded-lg text-xs font-medium hover:bg-indigo-700 transition-all active:scale-[0.98]"
+                    >
+                      Edit in Resumes
+                    </a>
+                  )}
                 </div>
               </div>
 

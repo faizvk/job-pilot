@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { ResumeEditor } from "@/components/resumes/resume-editor";
 import { ResumePreview } from "@/components/resumes/resume-preview";
-import { Trash2 } from "lucide-react";
+import { Trash2, Download } from "lucide-react";
 
 export default function ResumeDetailPage() {
   const { id } = useParams();
@@ -56,6 +56,14 @@ export default function ResumeDetailPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Edit Resume</h1>
         <div className="flex items-center gap-2">
+          {resume.filePath && (
+            <a
+              href={`/api/resumes/${id}/download`}
+              className="inline-flex items-center gap-1 px-3 py-2 text-sm border border-gray-200 text-gray-600 rounded-lg hover:bg-gray-50"
+            >
+              <Download className="w-4 h-4" /> Original PDF
+            </a>
+          )}
           <button
             onClick={handleDelete}
             className="inline-flex items-center gap-1 px-3 py-2 text-sm border border-red-200 text-red-600 rounded-lg hover:bg-red-50"

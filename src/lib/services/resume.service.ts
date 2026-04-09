@@ -16,7 +16,7 @@ export const resumeService = {
     });
   },
 
-  async create(userId: string, data: { name: string; content: string; isBase: boolean }) {
+  async create(userId: string, data: { name: string; content: string; isBase: boolean; filePath?: string }) {
     return prisma.resume.create({ data: { userId, ...data } });
   },
 

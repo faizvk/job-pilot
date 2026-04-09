@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateText, isAIConfigured } from "@/lib/services/ai/gemini";
+import { resumeService } from "@/lib/services/resume.service";
 import prisma from "@/lib/db";
 import { DEFAULT_USER_ID } from "@/lib/constants";
 
 /**
  * POST /api/smart-paste/generate-resume
  * Takes the base resume + selected suggestions + job context,
- * generates an improved resume tailored for the job.
+ * generates an improved resume, saves it to the Resumes section.
  */
 export async function POST(req: NextRequest) {
   try {
@@ -66,7 +67,19 @@ INSTRUCTIONS:
       "You are an expert resume writer. Output only the improved resume in clean markdown format."
     );
 
-    return NextResponse.json({ resume: updatedResume });
+    // Save as a new resume in the Resumes section
+    const savedResume = await resumeService.create(DEFAULT_USER_ID, {
+      name: `${baseResume.name} — ${companyName || jobTitle || "Tailored"}`,
+      content: updatedResume,
+      isBase: false,
+      filePath: baseResume.filePath || undefined,
+    });
+
+    return NextResponse.json({
+      resume: updatedResume,
+      savedId: savedResume.id,
+      originalFilePath: !!baseResume.filePath,
+    });
   } catch (error: any) {
     console.error("Generate resume error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });

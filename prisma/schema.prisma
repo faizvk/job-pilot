@@ -114,6 +114,7 @@ model Resume {
   userId         String
   name           String
   content        String
+  filePath       String?
   isBase         Boolean          @default(false)
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt

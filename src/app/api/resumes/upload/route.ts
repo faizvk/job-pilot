@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { resumeService } from "@/lib/services/resume.service";
 import { DEFAULT_USER_ID } from "@/lib/constants";
+import { writeFile, mkdir } from "fs/promises";
+import path from "path";
 
 export async function POST(req: NextRequest) {
   try {
@@ -58,10 +60,21 @@ export async function POST(req: NextRequest) {
       .replace(/[-_]/g, " ")
       .replace(/\b\w/g, (c) => c.toUpperCase());
 
+    // Save the original file to disk
+    let filePath: string | undefined;
+    if (ext === "pdf" || ext === "docx" || ext === "doc") {
+      const uploadsDir = path.join(process.cwd(), "uploads", "resumes");
+      await mkdir(uploadsDir, { recursive: true });
+      const savedFileName = `${Date.now()}-${fileName.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
+      filePath = path.join(uploadsDir, savedFileName);
+      await writeFile(filePath, buffer);
+    }
+
     const resume = await resumeService.create(DEFAULT_USER_ID, {
       name: resumeName,
       content: markdownContent,
       isBase,
+      filePath,
     });
 
     return NextResponse.json(resume, { status: 201 });
