@@ -153,6 +153,11 @@ export async function searchApplicationEmails(companyName?: string, limit = 20) 
  * Check if Gmail tokens are stored (user has connected)
  */
 export async function isGmailConnected(): Promise<boolean> {
-  const user = await prisma.user.findUnique({ where: { id: DEFAULT_USER_ID } });
-  return !!user?.gmailTokens;
+  try {
+    if (!isGmailConfigured()) return false;
+    const user = await prisma.user.findUnique({ where: { id: DEFAULT_USER_ID } });
+    return !!user?.gmailTokens;
+  } catch {
+    return false;
+  }
 }
