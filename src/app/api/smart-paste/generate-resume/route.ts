@@ -66,9 +66,12 @@ INSTRUCTIONS:
 - Keep the EXACT same LaTeX structure, packages, formatting commands, and style
 - Do NOT change the document class, margins, fonts, section formatting, or custom commands
 - Do NOT invent experience, projects, or skills that aren't in the original
-- DO reword bullet points, reorder sections, add relevant keywords from the original content, and bold important terms with \\textbf{}
+- PRESERVE the original \\textbf{} pattern exactly: only bold category labels (e.g. \\textbf{Languages:}), key project technologies, and action verbs — do NOT over-bold by wrapping every single skill or word in \\textbf{}
+- In the Technical Skills section, keep skills as plain text after the bolded category label, exactly like the original format
+- DO reword bullet points, reorder sections, and add relevant keywords from the original content as the suggestions say
+- Make MINIMAL changes — only what the suggestions explicitly ask for. Do not rewrite sections that aren't mentioned in the suggestions.
 - Keep it concise — no longer than the original
-- Output ONLY the complete LaTeX document from \\documentclass to \\end{document}, nothing else
+- Output the COMPLETE LaTeX document from \\documentclass to \\end{document} — do not truncate or cut off any section
 - Do NOT wrap it in markdown code blocks or add any explanation`;
 
       systemPrompt = "You are an expert resume writer and LaTeX typesetter. Output only the complete modified LaTeX document, no explanations or markdown.";
