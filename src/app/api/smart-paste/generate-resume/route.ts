@@ -72,6 +72,8 @@ INSTRUCTIONS:
 - Make MINIMAL changes — only what the suggestions explicitly ask for. Do not rewrite sections that aren't mentioned in the suggestions.
 - Keep it concise — no longer than the original
 - Output the COMPLETE LaTeX document from \\documentclass to \\end{document} — do not truncate or cut off any section
+- CRITICAL: Use correct LaTeX syntax — \\begin{itemize} must close with \\end{itemize} (curly braces, NOT parentheses or brackets)
+- CRITICAL: Include ALL sections from the original, even if unchanged. The output MUST end with \\end{document}
 - Do NOT wrap it in markdown code blocks or add any explanation`;
 
       systemPrompt = "You are an expert resume writer and LaTeX typesetter. Output only the complete modified LaTeX document, no explanations or markdown.";
@@ -101,13 +103,16 @@ INSTRUCTIONS:
 
     const updatedResume = await generateText(prompt, systemPrompt);
 
-    // Clean up: strip markdown code fences if AI wrapped the output
+    // Clean up AI output
     let cleanedResume = updatedResume;
     if (hasLatex) {
       cleanedResume = cleanedResume
         .replace(/^```(?:latex|tex)?\s*\n?/i, "")
         .replace(/\n?```\s*$/i, "")
         .trim();
+
+      // Fix common AI LaTeX mistakes
+      cleanedResume = sanitizeLatex(cleanedResume, baseResume.latexContent!);
     }
 
     // Save as a new resume in the Resumes section
@@ -136,4 +141,101 @@ INSTRUCTIONS:
     console.error("Generate resume error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
+}
+
+/**
+ * Fix common AI-introduced LaTeX errors:
+ * - Brace/paren mixups: \end{itemize), \begin{itemize], etc.
+ * - Missing \end{document}
+ * - Unbalanced \begin/\end pairs
+ * - Truncated output: restore missing tail from original
+ */
+function sanitizeLatex(generated: string, original: string): string {
+  let fixed = generated;
+
+  // Fix brace mixups in \begin{...} and \end{...}
+  fixed = fixed.replace(/\\(begin|end)\{([^}]*?)[)\]]/g, "\\$1{$2}");
+  // Also fix opening brace issues: \begin(itemize} or \begin[itemize}
+  fixed = fixed.replace(/\\(begin|end)[(\[][^}]*?\}/g, (match) => {
+    const envMatch = match.match(/\\(begin|end)[(\[]([a-zA-Z*]+)\}/);
+    if (envMatch) return `\\${envMatch[1]}{${envMatch[2]}}`;
+    return match;
+  });
+
+  // Ensure \end{document} exists
+  if (!fixed.includes("\\end{document}")) {
+    // Try to recover the tail from the original
+    const lastSection = findLastCompleteSection(fixed);
+    const originalTail = getOriginalTail(original, lastSection);
+    if (originalTail) {
+      fixed = fixed.trimEnd() + "\n\n" + originalTail;
+    } else {
+      fixed = fixed.trimEnd() + "\n\n\\end{document}\n";
+    }
+  }
+
+  // Verify all \begin{env} have matching \end{env}
+  const beginMatches: string[] = [];
+  const beginRegex = /\\begin\{([^}]+)\}/g;
+  let m;
+  while ((m = beginRegex.exec(fixed)) !== null) {
+    beginMatches.push(m[1]);
+  }
+  const endMatches: string[] = [];
+  const endRegex = /\\end\{([^}]+)\}/g;
+  while ((m = endRegex.exec(fixed)) !== null) {
+    endMatches.push(m[1]);
+  }
+
+  // Count each environment
+  const beginCounts: Record<string, number> = {};
+  const endCounts: Record<string, number> = {};
+  for (const env of beginMatches) {
+    beginCounts[env] = (beginCounts[env] || 0) + 1;
+  }
+  for (const env of endMatches) {
+    endCounts[env] = (endCounts[env] || 0) + 1;
+  }
+
+  // Insert missing \end{} before \end{document}
+  for (const env of Object.keys(beginCounts)) {
+    if (env === "document") continue;
+    const missing = (beginCounts[env] || 0) - (endCounts[env] || 0);
+    if (missing > 0) {
+      const endDoc = fixed.lastIndexOf("\\end{document}");
+      if (endDoc !== -1) {
+        const insert = ("\\end{" + env + "}\n").repeat(missing);
+        fixed = fixed.slice(0, endDoc) + insert + fixed.slice(endDoc);
+      }
+    }
+  }
+
+  return fixed;
+}
+
+function findLastCompleteSection(latex: string): string | null {
+  // Find the last \section{...} that appears in the generated output
+  const sectionRegex = /\\section\{([^}]+)\}/g;
+  let last = null;
+  let m;
+  while ((m = sectionRegex.exec(latex)) !== null) {
+    last = m[1];
+  }
+  return last;
+}
+
+function getOriginalTail(original: string, afterSection: string | null): string | null {
+  if (!afterSection) return null;
+
+  // Find this section in the original and return everything after it
+  const sectionIdx = original.indexOf(`\\section{${afterSection}}`);
+  if (sectionIdx === -1) return null;
+
+  // Find the next \section or \end{document} after this one
+  const afterIdx = sectionIdx + afterSection.length;
+  const nextSectionIdx = original.indexOf("\\section{", afterIdx);
+  if (nextSectionIdx === -1) return null;
+
+  // Return from that next section to end of document
+  return original.slice(nextSectionIdx).trim();
 }
