@@ -51,6 +51,9 @@ export function IntegrationsPanel() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <StatusBadge label="Gemini AI" active={status?.gemini} />
         <StatusBadge label="Groq AI" active={status?.groq} />
+        <StatusBadge label="OpenAI" active={status?.openai} />
+        <StatusBadge label="Claude AI" active={status?.anthropic} />
+        <StatusBadge label="Mistral AI" active={status?.mistral} />
         <StatusBadge label="Resend Email" active={status?.resend} />
         <StatusBadge label="Gmail" active={gmailConnected} />
       </div>
