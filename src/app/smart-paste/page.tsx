@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import {
   ClipboardPaste, Sparkles, Loader2, Briefcase, MapPin, Monitor,
   Code2, CheckCircle, XCircle, FileText, ChevronDown, ChevronUp,
-  Copy, Check, AlertTriangle, Plus,
+  Copy, Check, AlertTriangle, Plus, Download, Eye,
 } from "lucide-react";
+import { useRef } from "react";
 
 interface ExtractedJob {
   jobTitle: string;
@@ -43,6 +44,11 @@ export default function SmartPastePage() {
   const [selectedSkills, setSelectedSkills] = useState<Set<string>>(new Set());
   const [addingSkills, setAddingSkills] = useState(false);
   const [addedSkills, setAddedSkills] = useState<Set<string>>(new Set());
+  const [selectedSuggestions, setSelectedSuggestions] = useState<Set<number>>(new Set());
+  const [generatingResume, setGeneratingResume] = useState(false);
+  const [generatedResume, setGeneratedResume] = useState<string | null>(null);
+  const [showResumePreview, setShowResumePreview] = useState(false);
+  const resumePreviewRef = useRef<HTMLDivElement>(null);
 
   const handleAnalyze = async () => {
     if (!rawText.trim()) return;
@@ -52,6 +58,9 @@ export default function SmartPastePage() {
     setCoverLetter(null);
     setSelectedSkills(new Set());
     setAddedSkills(new Set());
+    setSelectedSuggestions(new Set());
+    setGeneratedResume(null);
+    setShowResumePreview(false);
 
     try {
       const res = await fetch("/api/smart-paste", {
@@ -150,6 +159,90 @@ export default function SmartPastePage() {
     setAddedSkills(newlyAdded);
     setSelectedSkills(new Set());
     setAddingSkills(false);
+  };
+
+  const toggleSuggestion = (index: number) => {
+    setSelectedSuggestions((prev) => {
+      const next = new Set(prev);
+      if (next.has(index)) next.delete(index);
+      else next.add(index);
+      return next;
+    });
+  };
+
+  const parsedSuggestions = result?.resumeSuggestions
+    ? result.resumeSuggestions.split(/\d+\.\s+/).filter(Boolean).map((s) => {
+        const match = s.match(/^\[(.+?)\]\s*[-–]\s*([\s\S]*)/);
+        return {
+          category: match?.[1] || "Suggestion",
+          text: (match?.[2] || s).trim(),
+          raw: s.trim(),
+        };
+      })
+    : [];
+
+  const handleGenerateResume = async () => {
+    if (selectedSuggestions.size === 0 || !result) return;
+    setGeneratingResume(true);
+    setGeneratedResume(null);
+
+    const suggestionsToApply = Array.from(selectedSuggestions).map(
+      (i) => parsedSuggestions[i]?.raw || ""
+    );
+
+    try {
+      const res = await fetch("/api/smart-paste/generate-resume", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          suggestions: suggestionsToApply,
+          jobTitle: result.extracted.jobTitle,
+          companyName: result.extracted.companyName,
+          techStack: result.extracted.techStack,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setGeneratedResume(data.resume);
+      setShowResumePreview(true);
+    } catch (err: any) {
+      setError(err.message || "Resume generation failed");
+    } finally {
+      setGeneratingResume(false);
+    }
+  };
+
+  const handleDownloadPdf = () => {
+    if (!generatedResume) return;
+
+    // Convert markdown to styled HTML and open print dialog
+    const html = markdownToHtml(generatedResume);
+    const printWindow = window.open("", "_blank");
+    if (!printWindow) return;
+
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Resume - ${result?.extracted.companyName || "Tailored"}</title>
+        <style>
+          @page { margin: 0.6in 0.7in; size: letter; }
+          body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #1a1a1a; line-height: 1.5; font-size: 11pt; }
+          h1 { font-size: 20pt; margin: 0 0 4px; color: #111; }
+          h2 { font-size: 12pt; color: #4f46e5; border-bottom: 1.5px solid #e5e7eb; padding-bottom: 3px; margin: 14px 0 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+          h3 { font-size: 11pt; margin: 8px 0 2px; color: #333; }
+          p { margin: 2px 0; }
+          ul { margin: 2px 0; padding-left: 18px; }
+          li { margin: 1px 0; font-size: 10.5pt; }
+          .contact { color: #555; font-size: 10pt; margin-bottom: 8px; }
+          @media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+        </style>
+      </head>
+      <body>${html}</body>
+      </html>
+    `);
+    printWindow.document.close();
+    setTimeout(() => printWindow.print(), 300);
   };
 
   const scoreColor =
@@ -378,36 +471,89 @@ export default function SmartPastePage() {
           {/* Resume Suggestions */}
           {result.resumeSuggestions ? (
             <div className="bg-white border border-gray-200/80 rounded-xl shadow-card p-5 space-y-3">
-              <button
-                onClick={() => setShowSuggestions(!showSuggestions)}
-                className="flex items-center justify-between w-full"
-              >
-                <h2 className="text-base font-semibold text-gray-900 flex items-center gap-2">
-                  <FileText className="w-4 h-4 text-indigo-500" />
-                  Resume Suggestions
-                </h2>
-                {showSuggestions ? (
-                  <ChevronUp className="w-4 h-4 text-gray-400" />
-                ) : (
-                  <ChevronDown className="w-4 h-4 text-gray-400" />
+              <div className="flex items-center justify-between">
+                <button
+                  onClick={() => setShowSuggestions(!showSuggestions)}
+                  className="flex items-center gap-2"
+                >
+                  <h2 className="text-base font-semibold text-gray-900 flex items-center gap-2">
+                    <FileText className="w-4 h-4 text-indigo-500" />
+                    Resume Suggestions
+                  </h2>
+                  {showSuggestions ? (
+                    <ChevronUp className="w-4 h-4 text-gray-400" />
+                  ) : (
+                    <ChevronDown className="w-4 h-4 text-gray-400" />
+                  )}
+                </button>
+                {parsedSuggestions.length > 0 && (
+                  <button
+                    onClick={() => {
+                      const allSelected = parsedSuggestions.every((_, i) => selectedSuggestions.has(i));
+                      if (allSelected) {
+                        setSelectedSuggestions(new Set());
+                      } else {
+                        setSelectedSuggestions(new Set(parsedSuggestions.map((_, i) => i)));
+                      }
+                    }}
+                    className="text-xs text-indigo-600 hover:text-indigo-700 font-medium"
+                  >
+                    {parsedSuggestions.every((_, i) => selectedSuggestions.has(i))
+                      ? "Deselect All"
+                      : "Select All"}
+                  </button>
                 )}
-              </button>
+              </div>
 
               {showSuggestions && (
                 <div className="space-y-2.5 pt-1">
-                  {result.resumeSuggestions.split(/\d+\.\s+/).filter(Boolean).map((suggestion, i) => {
-                    const match = suggestion.match(/^\[(.+?)\]\s*[-–]\s*([\s\S]*)/);
-                    const category = match?.[1] || "Suggestion";
-                    const text = match?.[2] || suggestion;
+                  {parsedSuggestions.map((suggestion, i) => {
+                    const isSelected = selectedSuggestions.has(i);
                     return (
-                      <div key={i} className="flex items-start gap-3 bg-gray-50 rounded-lg p-3">
-                        <span className="text-xs font-semibold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded shrink-0 mt-0.5">
-                          {category}
-                        </span>
-                        <p className="text-sm text-gray-700 leading-relaxed">{text.trim()}</p>
-                      </div>
+                      <button
+                        key={i}
+                        onClick={() => toggleSuggestion(i)}
+                        className={`w-full text-left flex items-start gap-3 rounded-lg p-3 transition-all ${
+                          isSelected
+                            ? "bg-indigo-50 ring-2 ring-indigo-400/50"
+                            : "bg-gray-50 hover:bg-gray-100"
+                        }`}
+                      >
+                        <div className={`w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 mt-0.5 transition-all ${
+                          isSelected
+                            ? "bg-indigo-600 border-indigo-600"
+                            : "border-gray-300 bg-white"
+                        }`}>
+                          {isSelected && <Check className="w-3 h-3 text-white" />}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <span className="text-xs font-semibold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded">
+                            {suggestion.category}
+                          </span>
+                          <p className="text-sm text-gray-700 leading-relaxed mt-1">{suggestion.text}</p>
+                        </div>
+                      </button>
                     );
                   })}
+                </div>
+              )}
+
+              {selectedSuggestions.size > 0 && (
+                <div className="flex items-center gap-3 pt-2 border-t border-gray-100">
+                  <button
+                    onClick={handleGenerateResume}
+                    disabled={generatingResume}
+                    className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:from-indigo-700 hover:to-indigo-800 disabled:opacity-50 shadow-sm shadow-indigo-600/20 transition-all active:scale-[0.98]"
+                  >
+                    {generatingResume ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Sparkles className="w-4 h-4" />
+                    )}
+                    {generatingResume
+                      ? "Generating..."
+                      : `Generate Resume with ${selectedSuggestions.size} suggestion${selectedSuggestions.size > 1 ? "s" : ""}`}
+                  </button>
                 </div>
               )}
             </div>
@@ -419,6 +565,50 @@ export default function SmartPastePage() {
               </p>
             </div>
           ) : null}
+
+          {/* Generated Resume Preview */}
+          {generatedResume && (
+            <div className="bg-white border border-gray-200/80 rounded-xl shadow-card p-5 space-y-4">
+              <div className="flex items-center justify-between">
+                <h2 className="text-base font-semibold text-gray-900 flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-emerald-500" />
+                  Tailored Resume
+                </h2>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setShowResumePreview(!showResumePreview)}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-gray-200 text-gray-600 hover:bg-gray-50 transition-all"
+                  >
+                    <Eye className="w-3.5 h-3.5" />
+                    {showResumePreview ? "Hide" : "Preview"}
+                  </button>
+                  <button
+                    onClick={() => handleCopy(generatedResume)}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-gray-200 text-gray-600 hover:bg-gray-50 transition-all"
+                  >
+                    {copied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
+                    Copy
+                  </button>
+                  <button
+                    onClick={handleDownloadPdf}
+                    className="inline-flex items-center gap-1.5 bg-gray-900 text-white px-4 py-1.5 rounded-lg text-xs font-medium hover:bg-gray-800 transition-all active:scale-[0.98]"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                    Download PDF
+                  </button>
+                </div>
+              </div>
+
+              {showResumePreview && (
+                <div
+                  ref={resumePreviewRef}
+                  className="border border-gray-200 rounded-lg p-6 max-h-[600px] overflow-y-auto bg-white"
+                >
+                  <ResumeMarkdownPreview content={generatedResume} />
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Cover Letter Generator */}
           <div className="bg-white border border-gray-200/80 rounded-xl shadow-card p-5 space-y-4">
@@ -478,4 +668,61 @@ export default function SmartPastePage() {
       )}
     </div>
   );
+}
+
+function ResumeMarkdownPreview({ content }: { content: string }) {
+  return (
+    <div className="resume-preview">
+      {content.split("\n").map((line, i) => {
+        if (line.startsWith("# "))
+          return <h1 key={i} className="text-xl font-bold mb-1 text-gray-900">{line.slice(2)}</h1>;
+        if (line.startsWith("## "))
+          return <h2 key={i} className="text-sm font-semibold mt-4 mb-1.5 text-indigo-700 border-b border-gray-200 pb-1 uppercase tracking-wide">{line.slice(3)}</h2>;
+        if (line.startsWith("### "))
+          return <h3 key={i} className="text-sm font-semibold mt-2 text-gray-800">{line.slice(4)}</h3>;
+        if (line.startsWith("- "))
+          return <li key={i} className="text-sm ml-4 text-gray-700 leading-relaxed">{line.slice(2)}</li>;
+        if (line.trim() === "") return <div key={i} className="h-1.5" />;
+        return <p key={i} className="text-sm text-gray-700 leading-relaxed">{line}</p>;
+      })}
+    </div>
+  );
+}
+
+function markdownToHtml(md: string): string {
+  const lines = md.split("\n");
+  let html = "";
+  let inList = false;
+
+  for (const line of lines) {
+    if (line.startsWith("- ")) {
+      if (!inList) { html += "<ul>"; inList = true; }
+      html += `<li>${escapeHtml(line.slice(2))}</li>`;
+      continue;
+    }
+    if (inList) { html += "</ul>"; inList = false; }
+
+    if (line.startsWith("# ")) {
+      html += `<h1>${escapeHtml(line.slice(2))}</h1>`;
+    } else if (line.startsWith("## ")) {
+      html += `<h2>${escapeHtml(line.slice(3))}</h2>`;
+    } else if (line.startsWith("### ")) {
+      html += `<h3>${escapeHtml(line.slice(4))}</h3>`;
+    } else if (line.trim() === "") {
+      html += "<br/>";
+    } else {
+      html += `<p>${escapeHtml(line)}</p>`;
+    }
+  }
+  if (inList) html += "</ul>";
+  return html;
+}
+
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
 }
