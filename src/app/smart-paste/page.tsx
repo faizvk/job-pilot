@@ -50,6 +50,8 @@ export default function SmartPastePage() {
   const [showResumePreview, setShowResumePreview] = useState(false);
   const [savedResumeId, setSavedResumeId] = useState<string | null>(null);
   const [hasOriginalFile, setHasOriginalFile] = useState(false);
+  const [isLatex, setIsLatex] = useState(false);
+  const [copiedLatex, setCopiedLatex] = useState(false);
   const resumePreviewRef = useRef<HTMLDivElement>(null);
 
   const handleAnalyze = async () => {
@@ -65,6 +67,7 @@ export default function SmartPastePage() {
     setShowResumePreview(false);
     setSavedResumeId(null);
     setHasOriginalFile(false);
+    setIsLatex(false);
 
     try {
       const res = await fetch("/api/smart-paste", {
@@ -210,6 +213,7 @@ export default function SmartPastePage() {
       setGeneratedResume(data.resume);
       setSavedResumeId(data.savedId || null);
       setHasOriginalFile(!!data.originalFilePath);
+      setIsLatex(!!data.isLatex);
       setShowResumePreview(true);
     } catch (err: any) {
       setError(err.message || "Resume generation failed");
@@ -579,12 +583,17 @@ export default function SmartPastePage() {
                 <div>
                   <h2 className="text-base font-semibold text-gray-900 flex items-center gap-2">
                     <FileText className="w-4 h-4 text-emerald-500" />
-                    Tailored Resume
+                    {isLatex ? "Tailored Resume (LaTeX)" : "Tailored Resume"}
                   </h2>
                   {savedResumeId && (
                     <p className="text-xs text-emerald-600 mt-0.5 flex items-center gap-1">
                       <CheckCircle className="w-3 h-3" />
                       Saved to Resumes
+                    </p>
+                  )}
+                  {isLatex && (
+                    <p className="text-xs text-gray-500 mt-0.5">
+                      Copy and paste into Overleaf to generate your PDF
                     </p>
                   )}
                 </div>
@@ -597,19 +606,37 @@ export default function SmartPastePage() {
                     {showResumePreview ? "Hide" : "Preview"}
                   </button>
                   <button
-                    onClick={() => handleCopy(generatedResume)}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-gray-200 text-gray-600 hover:bg-gray-50 transition-all"
+                    onClick={() => {
+                      handleCopy(generatedResume);
+                      if (isLatex) {
+                        setCopiedLatex(true);
+                        setTimeout(() => setCopiedLatex(false), 3000);
+                      }
+                    }}
+                    className={`inline-flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-medium transition-all active:scale-[0.98] ${
+                      isLatex
+                        ? "bg-gradient-to-r from-emerald-600 to-emerald-700 text-white hover:from-emerald-700 hover:to-emerald-800 shadow-sm shadow-emerald-600/20"
+                        : "border border-gray-200 text-gray-600 hover:bg-gray-50"
+                    }`}
                   >
-                    {copied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
-                    Copy
+                    {(isLatex ? copiedLatex : copied) ? (
+                      <Check className="w-3.5 h-3.5" />
+                    ) : (
+                      <Copy className="w-3.5 h-3.5" />
+                    )}
+                    {isLatex
+                      ? copiedLatex ? "Copied! Paste in Overleaf" : "Copy LaTeX"
+                      : "Copy"}
                   </button>
-                  <button
-                    onClick={handleDownloadPdf}
-                    className="inline-flex items-center gap-1.5 bg-gray-900 text-white px-4 py-1.5 rounded-lg text-xs font-medium hover:bg-gray-800 transition-all active:scale-[0.98]"
-                  >
-                    <Download className="w-3.5 h-3.5" />
-                    Download PDF
-                  </button>
+                  {!isLatex && (
+                    <button
+                      onClick={handleDownloadPdf}
+                      className="inline-flex items-center gap-1.5 bg-gray-900 text-white px-4 py-1.5 rounded-lg text-xs font-medium hover:bg-gray-800 transition-all active:scale-[0.98]"
+                    >
+                      <Download className="w-3.5 h-3.5" />
+                      Download PDF
+                    </button>
+                  )}
                   {savedResumeId && (
                     <a
                       href={`/resumes/${savedResumeId}`}
@@ -624,9 +651,17 @@ export default function SmartPastePage() {
               {showResumePreview && (
                 <div
                   ref={resumePreviewRef}
-                  className="border border-gray-200 rounded-lg p-6 max-h-[600px] overflow-y-auto bg-white"
+                  className={`border border-gray-200 rounded-lg max-h-[600px] overflow-y-auto ${
+                    isLatex ? "bg-gray-900" : "bg-white p-6"
+                  }`}
                 >
-                  <ResumeMarkdownPreview content={generatedResume} />
+                  {isLatex ? (
+                    <pre className="p-4 text-sm text-gray-100 font-mono whitespace-pre-wrap break-words leading-relaxed">
+                      <code>{generatedResume}</code>
+                    </pre>
+                  ) : (
+                    <ResumeMarkdownPreview content={generatedResume} />
+                  )}
                 </div>
               )}
             </div>
