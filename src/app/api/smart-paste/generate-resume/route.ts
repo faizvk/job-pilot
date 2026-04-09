@@ -47,10 +47,14 @@ export async function POST(req: NextRequest) {
 
     let prompt: string;
     let systemPrompt: string;
+    let latexSections: { name: string; content: string; startIdx: number; endIdx: number }[] = [];
 
     if (hasLatex) {
-      // Generate modified LaTeX
-      prompt = `You are a professional resume writer who works with LaTeX. Take this existing LaTeX resume and apply ONLY the selected improvements listed below. Do not add fake experience or skills the person doesn't have.
+      // Parse original LaTeX into sections, have AI modify only relevant ones,
+      // then reassemble — avoids truncation and syntax corruption.
+      latexSections = parseLatexSections(baseResume.latexContent!);
+
+      prompt = `You are a professional resume writer. I will give you specific SECTIONS of a LaTeX resume. Apply ONLY the improvements listed below to the relevant sections. Do not add fake experience or skills the person doesn't have.
 
 TARGET JOB: ${jobTitle || "Software Engineer"} at ${companyName || "a company"}
 RELEVANT TECH: ${(techStack || []).join(", ")}
@@ -58,25 +62,21 @@ RELEVANT TECH: ${(techStack || []).join(", ")}
 IMPROVEMENTS TO APPLY:
 ${suggestionsText}
 
-CURRENT RESUME (LaTeX source):
-${baseResume.latexContent}
+HERE ARE THE RESUME SECTIONS:
+${latexSections.map((s) => `=== SECTION: ${s.name} ===\n${s.content}`).join("\n\n")}
 
 INSTRUCTIONS:
-- Apply each improvement listed above to the LaTeX resume
-- Keep the EXACT same LaTeX structure, packages, formatting commands, and style
-- Do NOT change the document class, margins, fonts, section formatting, or custom commands
+- Output ONLY the sections you modified, in this exact format for each:
+  === SECTION: <section name> ===
+  <modified LaTeX content>
+- Do NOT output sections that are unchanged
+- Keep the EXACT same LaTeX commands, \\textbf{} patterns, \\href{}{} links, \\begin{itemize}/\\end{itemize} structure
+- PRESERVE the original \\textbf{} pattern: only bold category labels and key technologies, NOT every single skill
 - Do NOT invent experience, projects, or skills that aren't in the original
-- PRESERVE the original \\textbf{} pattern exactly: only bold category labels (e.g. \\textbf{Languages:}), key project technologies, and action verbs — do NOT over-bold by wrapping every single skill or word in \\textbf{}
-- In the Technical Skills section, keep skills as plain text after the bolded category label, exactly like the original format
-- DO reword bullet points, reorder sections, and add relevant keywords from the original content as the suggestions say
-- Make MINIMAL changes — only what the suggestions explicitly ask for. Do not rewrite sections that aren't mentioned in the suggestions.
-- Keep it concise — no longer than the original
-- Output the COMPLETE LaTeX document from \\documentclass to \\end{document} — do not truncate or cut off any section
-- CRITICAL: Use correct LaTeX syntax — \\begin{itemize} must close with \\end{itemize} (curly braces, NOT parentheses or brackets)
-- CRITICAL: Include ALL sections from the original, even if unchanged. The output MUST end with \\end{document}
-- Do NOT wrap it in markdown code blocks or add any explanation`;
+- Make MINIMAL changes — only what the suggestions explicitly ask for
+- Do NOT wrap output in markdown code blocks`;
 
-      systemPrompt = "You are an expert resume writer and LaTeX typesetter. Output only the complete modified LaTeX document, no explanations or markdown.";
+      systemPrompt = "You are an expert resume writer. Output only the modified LaTeX sections in the specified format. Do not output unchanged sections.";
     } else {
       // Fallback to markdown
       prompt = `You are a professional resume writer. Take this existing resume and apply ONLY the selected improvements listed below. Do not add fake experience or skills the person doesn't have.
@@ -111,8 +111,12 @@ INSTRUCTIONS:
         .replace(/\n?```\s*$/i, "")
         .trim();
 
-      // Fix common AI LaTeX mistakes
-      cleanedResume = sanitizeLatex(cleanedResume, baseResume.latexContent!);
+      // Reassemble: merge AI's modified sections back into the original LaTeX
+      cleanedResume = reassembleLatex(
+        baseResume.latexContent!,
+        latexSections,
+        cleanedResume
+      );
     }
 
     // Save as a new resume in the Resumes section
@@ -143,98 +147,106 @@ INSTRUCTIONS:
   }
 }
 
+interface LatexSection {
+  name: string;
+  content: string;
+  startIdx: number;
+  endIdx: number;
+}
+
 /**
- * Fix common AI-introduced LaTeX errors by comparing against the original.
- * Main strategy: detect where AI output diverges/truncates and splice in original's tail.
+ * Parse a LaTeX resume into named sections.
+ * Splits on \section{...} boundaries, with a "preamble" for everything before the first section.
  */
-function sanitizeLatex(generated: string, original: string): string {
-  let fixed = generated;
+function parseLatexSections(latex: string): LatexSection[] {
+  const sections: LatexSection[] = [];
+  const sectionRegex = /\\section\{([^}]+)\}/g;
+  const matches: { name: string; idx: number }[] = [];
 
-  // 1. Fix brace mixups: \end{itemize) → \end{itemize}
-  fixed = fixed.replace(/\\(begin|end)\{([^}]*?)[)\]]/g, "\\$1{$2}");
-
-  // 2. Fix truncated \href — find any \href{url that's missing }{text}
-  //    Pattern: \href{...  at end of line without closing }{...}
-  const hrefRegex = /\\href\{([^}]*)$/m;
-  const truncatedHref = hrefRegex.exec(fixed);
-  if (truncatedHref) {
-    // Find this partial URL in the original and get the complete \href{url}{text}
-    const partialUrl = truncatedHref[1];
-    const originalIdx = original.indexOf(partialUrl);
-    if (originalIdx !== -1) {
-      // Find the complete \href from the original starting before this URL
-      const hrefStart = original.lastIndexOf("\\href{", originalIdx);
-      if (hrefStart !== -1) {
-        // Extract everything from this \href to the end of the line/entry
-        const afterHref = original.slice(hrefStart);
-        // Match the complete \href{url}{text} possibly followed by more text on the line
-        const completeMatch = afterHref.match(/\\href\{[^}]+\}\{[^}]+\}[^\n]*/);
-        if (completeMatch) {
-          // Replace the truncated \href line with the complete one
-          const truncStart = fixed.lastIndexOf("\\href{" + partialUrl.slice(0, 20));
-          if (truncStart !== -1) {
-            fixed = fixed.slice(0, truncStart) + completeMatch[0];
-          }
-        }
-      }
-    }
-  }
-
-  // 3. If \end{document} is missing, recover the tail from the original.
-  //    Find the last line in generated that also exists in original,
-  //    then append everything from original after that point.
-  if (!fixed.includes("\\end{document}")) {
-    const genLines = fixed.split("\n");
-    const origLines = original.split("\n");
-
-    // Walk backwards through generated lines to find last matching line in original
-    let spliceFromOrigLine = -1;
-    for (let i = genLines.length - 1; i >= 0; i--) {
-      const line = genLines[i].trim();
-      if (!line || line.startsWith("%")) continue;
-
-      // Find this line in the original
-      for (let j = 0; j < origLines.length; j++) {
-        if (origLines[j].trim() === line) {
-          spliceFromOrigLine = j;
-          break;
-        }
-      }
-      if (spliceFromOrigLine !== -1) break;
-    }
-
-    if (spliceFromOrigLine !== -1 && spliceFromOrigLine < origLines.length - 1) {
-      // Append everything after the matched line from original
-      const tail = origLines.slice(spliceFromOrigLine + 1).join("\n");
-      fixed = fixed.trimEnd() + "\n" + tail;
-    } else {
-      // Fallback: just close the document
-      fixed = fixed.trimEnd() + "\n\n\\end{itemize}\n\n\\end{document}\n";
-    }
-  }
-
-  // 4. Fix unbalanced \begin/\end pairs
-  const envCounts: Record<string, number> = {};
-  const beginRe = /\\begin\{([^}]+)\}/g;
-  const endRe = /\\end\{([^}]+)\}/g;
   let m;
-  while ((m = beginRe.exec(fixed)) !== null) {
-    envCounts[m[1]] = (envCounts[m[1]] || 0) + 1;
+  while ((m = sectionRegex.exec(latex)) !== null) {
+    matches.push({ name: m[1], idx: m.index });
   }
-  while ((m = endRe.exec(fixed)) !== null) {
-    envCounts[m[1]] = (envCounts[m[1]] || 0) - 1;
+
+  // Add preamble (everything before first \section)
+  if (matches.length > 0) {
+    sections.push({
+      name: "preamble",
+      content: latex.slice(0, matches[0].idx).trim(),
+      startIdx: 0,
+      endIdx: matches[0].idx,
+    });
   }
-  for (const env of Object.keys(envCounts)) {
-    if (env === "document") continue;
-    const missing = envCounts[env] || 0;
-    if (missing > 0) {
-      const endDoc = fixed.lastIndexOf("\\end{document}");
-      if (endDoc !== -1) {
-        const insert = ("\\end{" + env + "}\n").repeat(missing);
-        fixed = fixed.slice(0, endDoc) + insert + fixed.slice(endDoc);
-      }
+
+  // Add each section
+  for (let i = 0; i < matches.length; i++) {
+    const start = matches[i].idx;
+    const end = i + 1 < matches.length ? matches[i + 1].idx : latex.indexOf("\\end{document}");
+    const endIdx = end !== -1 ? end : latex.length;
+    sections.push({
+      name: matches[i].name,
+      content: latex.slice(start, endIdx).trim(),
+      startIdx: start,
+      endIdx,
+    });
+  }
+
+  return sections;
+}
+
+/**
+ * Merge AI-modified sections back into the original LaTeX document.
+ * AI outputs only changed sections in format:
+ *   === SECTION: Name ===
+ *   <content>
+ * Unchanged sections are kept verbatim from original.
+ */
+function reassembleLatex(
+  originalLatex: string,
+  originalSections: LatexSection[],
+  aiOutput: string
+): string {
+  // Parse AI output into modified sections
+  const modifiedSections = new Map<string, string>();
+  const sectionSplitRegex = /===\s*SECTION:\s*(.+?)\s*===/g;
+  const aiMatches: { name: string; idx: number }[] = [];
+
+  let m;
+  while ((m = sectionSplitRegex.exec(aiOutput)) !== null) {
+    aiMatches.push({ name: m[1].trim(), idx: m.index + m[0].length });
+  }
+
+  for (let i = 0; i < aiMatches.length; i++) {
+    const start = aiMatches[i].idx;
+    const end = i + 1 < aiMatches.length
+      ? aiOutput.lastIndexOf("===", aiMatches[i + 1].idx - 1)
+      : aiOutput.length;
+    const content = aiOutput.slice(start, end).trim();
+    modifiedSections.set(aiMatches[i].name, content);
+  }
+
+  // If AI didn't use the section format, it probably output the full doc — return original
+  if (modifiedSections.size === 0) {
+    console.warn("AI didn't use section format, returning original LaTeX");
+    return originalLatex;
+  }
+
+  // Reassemble: use modified sections where available, original sections elsewhere
+  const parts: string[] = [];
+  for (const section of originalSections) {
+    const modified = modifiedSections.get(section.name);
+    if (modified) {
+      parts.push(modified);
+    } else {
+      parts.push(section.content);
     }
   }
 
-  return fixed;
+  // Add \end{document}
+  let result = parts.join("\n\n") + "\n\n\\end{document}\n";
+
+  // Ensure no duplicate \end{document}
+  result = result.replace(/(\\end\{document\}\s*){2,}/g, "\\end{document}\n");
+
+  return result;
 }
