@@ -26,8 +26,9 @@ export async function POST(req: NextRequest) {
     let content = "";
 
     if (ext === "pdf") {
+      // Use internal lib to avoid pdf-parse's index.js which tries to load a test file
       // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const pdfParse = require("pdf-parse");
+      const pdfParse = require("pdf-parse/lib/pdf-parse.js");
       const data = await pdfParse(buffer);
       content = data.text;
     } else if (ext === "docx" || ext === "doc") {
