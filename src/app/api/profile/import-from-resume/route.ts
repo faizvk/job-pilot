@@ -107,21 +107,36 @@ ${resume.content.slice(0, 5000)}`,
       await profileService.updateProfile(DEFAULT_USER_ID, profileUpdate);
     }
 
-    // Add skills (skip duplicates)
-    const existingSkillNames = new Set(
-      profile.skills.map((s: { name: string }) => s.name.toLowerCase())
-    );
+    // Add skills (skip duplicates — fuzzy match to avoid "JavaScript" + "JavaScript (ES6+)")
+    const existingSkillNames = profile.skills.map((s: { name: string }) => s.name.toLowerCase());
     let skillsAdded = 0;
 
+    const normalize = (s: string) =>
+      s.toLowerCase()
+        .replace(/\.js$/i, "")
+        .replace(/\s*\(.*?\)\s*/g, "")  // remove parenthetical like (ES6+)
+        .replace(/[.\-\/\s]+/g, "")      // remove dots, dashes, slashes, spaces
+        .trim();
+
+    const isDuplicate = (name: string): boolean => {
+      const norm = normalize(name);
+      return existingSkillNames.some((existing: string) => {
+        const normExisting = normalize(existing);
+        return normExisting === norm ||
+          normExisting.includes(norm) ||
+          norm.includes(normExisting);
+      });
+    };
+
     for (const skill of extracted.skills) {
-      if (!skill.name || existingSkillNames.has(skill.name.toLowerCase())) continue;
+      if (!skill.name || isDuplicate(skill.name)) continue;
       try {
         await profileService.addSkill(DEFAULT_USER_ID, {
           name: skill.name,
           category: skill.category,
           level: skill.level,
         });
-        existingSkillNames.add(skill.name.toLowerCase());
+        existingSkillNames.push(skill.name.toLowerCase());
         skillsAdded++;
       } catch {
         // Skip duplicates (unique constraint)
