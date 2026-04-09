@@ -4,7 +4,7 @@ import { useState } from "react";
 import {
   ClipboardPaste, Sparkles, Loader2, Briefcase, MapPin, Monitor,
   Code2, CheckCircle, XCircle, FileText, ChevronDown, ChevronUp,
-  Copy, Check, AlertTriangle,
+  Copy, Check, AlertTriangle, Plus,
 } from "lucide-react";
 
 interface ExtractedJob {
@@ -40,6 +40,9 @@ export default function SmartPastePage() {
   const [showSuggestions, setShowSuggestions] = useState(true);
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState("");
+  const [selectedSkills, setSelectedSkills] = useState<Set<string>>(new Set());
+  const [addingSkills, setAddingSkills] = useState(false);
+  const [addedSkills, setAddedSkills] = useState<Set<string>>(new Set());
 
   const handleAnalyze = async () => {
     if (!rawText.trim()) return;
@@ -47,6 +50,8 @@ export default function SmartPastePage() {
     setError("");
     setResult(null);
     setCoverLetter(null);
+    setSelectedSkills(new Set());
+    setAddedSkills(new Set());
 
     try {
       const res = await fetch("/api/smart-paste", {
@@ -96,6 +101,55 @@ export default function SmartPastePage() {
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const toggleSkillSelection = (skill: string) => {
+    setSelectedSkills((prev) => {
+      const next = new Set(prev);
+      if (next.has(skill)) next.delete(skill);
+      else next.add(skill);
+      return next;
+    });
+  };
+
+  const selectAllMissing = () => {
+    if (!result) return;
+    const allMissing = result.skillMatch.missing;
+    const allSelected = allMissing.every((s) => selectedSkills.has(s));
+    if (allSelected) {
+      setSelectedSkills(new Set());
+    } else {
+      setSelectedSkills(new Set(allMissing));
+    }
+  };
+
+  const handleAddSkillsToProfile = async () => {
+    if (selectedSkills.size === 0) return;
+    setAddingSkills(true);
+    const newlyAdded = new Set(addedSkills);
+
+    const skillsToAdd = Array.from(selectedSkills);
+    for (const skillName of skillsToAdd) {
+      if (addedSkills.has(skillName)) continue;
+      try {
+        const res = await fetch("/api/profile/skills", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: skillName.charAt(0).toUpperCase() + skillName.slice(1),
+            category: "technical",
+            level: "beginner",
+          }),
+        });
+        if (res.ok) newlyAdded.add(skillName);
+      } catch {
+        // skip failures
+      }
+    }
+
+    setAddedSkills(newlyAdded);
+    setSelectedSkills(new Set());
+    setAddingSkills(false);
   };
 
   const scoreColor =
@@ -261,17 +315,62 @@ export default function SmartPastePage() {
             )}
 
             {result.skillMatch.missing.length > 0 && (
-              <div>
-                <p className="text-xs text-gray-500 mb-1.5 flex items-center gap-1">
-                  <XCircle className="w-3.5 h-3.5 text-red-400" /> Skills to Highlight or Learn
-                </p>
-                <div className="flex flex-wrap gap-1.5">
-                  {result.skillMatch.missing.map((s) => (
-                    <span key={s} className="px-2.5 py-1 bg-red-50 text-red-600 rounded-md text-xs font-medium">
-                      {s}
-                    </span>
-                  ))}
+              <div className="space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <p className="text-xs text-gray-500 flex items-center gap-1">
+                    <XCircle className="w-3.5 h-3.5 text-red-400" /> Skills to Highlight or Learn
+                  </p>
+                  <button
+                    onClick={selectAllMissing}
+                    className="text-xs text-indigo-600 hover:text-indigo-700 font-medium"
+                  >
+                    {result.skillMatch.missing.every((s) => selectedSkills.has(s))
+                      ? "Deselect All"
+                      : "Select All"}
+                  </button>
                 </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {result.skillMatch.missing.map((s) => {
+                    const isAdded = addedSkills.has(s);
+                    const isSelected = selectedSkills.has(s);
+                    return (
+                      <button
+                        key={s}
+                        onClick={() => !isAdded && toggleSkillSelection(s)}
+                        disabled={isAdded}
+                        className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
+                          isAdded
+                            ? "bg-emerald-50 text-emerald-600 cursor-default"
+                            : isSelected
+                              ? "bg-indigo-100 text-indigo-700 ring-2 ring-indigo-400/50"
+                              : "bg-red-50 text-red-600 hover:bg-red-100 cursor-pointer"
+                        }`}
+                      >
+                        {isAdded ? (
+                          <span className="flex items-center gap-1">
+                            <Check className="w-3 h-3" /> {s}
+                          </span>
+                        ) : (
+                          s
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+                {selectedSkills.size > 0 && (
+                  <button
+                    onClick={handleAddSkillsToProfile}
+                    disabled={addingSkills}
+                    className="inline-flex items-center gap-1.5 bg-indigo-600 text-white px-4 py-2 rounded-lg text-xs font-medium hover:bg-indigo-700 disabled:opacity-50 shadow-sm shadow-indigo-600/20 transition-all active:scale-[0.98]"
+                  >
+                    {addingSkills ? (
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    ) : (
+                      <Plus className="w-3.5 h-3.5" />
+                    )}
+                    Add {selectedSkills.size} skill{selectedSkills.size > 1 ? "s" : ""} to profile
+                  </button>
+                )}
               </div>
             )}
           </div>
