@@ -65,14 +65,14 @@ Return JSON with these fields:
 - github: GitHub URL or username (string, or "" if not found)
 - portfolio: portfolio/website URL (string, or "" if not found)
 - summary: the professional summary/objective section verbatim (string, or "" if not found)
-- skills: array of skills, each with:
-  - name: skill name (e.g., "React", "Node.js", "Python")
+- skills: array of EVERY SINGLE skill, technology, framework, library, tool, API, and platform mentioned in the resume. Extract them individually — do NOT group them. For example, "ReactJS, HTML5, CSS3, Redux Toolkit" should become 4 separate skill entries. Include skills from the Technical Skills section AND from project descriptions. Each with:
+  - name: skill name exactly as commonly known (e.g., "React", "Node.js", "Express.js", "Redux Toolkit", "Tailwind CSS", "Socket.IO", "JWT Authentication", "Razorpay", "Hardhat")
   - category: one of "technical", "soft", "language", "tool"
-    - "technical" = programming languages, frameworks, libraries, databases
-    - "tool" = Git, Docker, Postman, CI/CD, cloud platforms
-    - "soft" = communication, leadership, teamwork
-    - "language" = spoken languages like English, Hindi
-  - level: estimate based on context — if it's a primary/featured skill use "advanced", if mentioned in passing use "intermediate", if listed as "basic" or "learning" use "beginner"
+    - "technical" = programming languages, frameworks, libraries, databases, protocols (JavaScript, React, MongoDB, REST APIs, Socket.IO, Solidity, Zod, etc.)
+    - "tool" = dev tools, platforms, APIs, services, CI/CD (Git, GitHub, Docker, Postman, Cloudinary, Google Gemini API, Razorpay, Hardhat, IPFS, etc.)
+    - "soft" = interpersonal skills (communication, leadership, teamwork, problem-solving)
+    - "language" = spoken/written languages (English, Hindi, etc.)
+  - level: "advanced" if it's a primary/featured skill or used in multiple projects, "intermediate" if used in one project or listed as secondary, "beginner" if mentioned as learning or basic
 - education: array of entries, each with:
   - institution: school/university name
   - degree: degree type (e.g., "B.Tech", "M.S.", "Bachelor's")
