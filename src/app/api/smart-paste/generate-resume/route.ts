@@ -144,63 +144,89 @@ INSTRUCTIONS:
 }
 
 /**
- * Fix common AI-introduced LaTeX errors:
- * - Brace/paren mixups: \end{itemize), \begin{itemize], etc.
- * - Missing \end{document}
- * - Unbalanced \begin/\end pairs
- * - Truncated output: restore missing tail from original
+ * Fix common AI-introduced LaTeX errors by comparing against the original.
+ * Main strategy: detect where AI output diverges/truncates and splice in original's tail.
  */
 function sanitizeLatex(generated: string, original: string): string {
   let fixed = generated;
 
-  // Fix brace mixups in \begin{...} and \end{...}
+  // 1. Fix brace mixups: \end{itemize) → \end{itemize}
   fixed = fixed.replace(/\\(begin|end)\{([^}]*?)[)\]]/g, "\\$1{$2}");
-  // Also fix opening brace issues: \begin(itemize} or \begin[itemize}
-  fixed = fixed.replace(/\\(begin|end)[(\[][^}]*?\}/g, (match) => {
-    const envMatch = match.match(/\\(begin|end)[(\[]([a-zA-Z*]+)\}/);
-    if (envMatch) return `\\${envMatch[1]}{${envMatch[2]}}`;
-    return match;
-  });
 
-  // Ensure \end{document} exists
-  if (!fixed.includes("\\end{document}")) {
-    // Try to recover the tail from the original
-    const lastSection = findLastCompleteSection(fixed);
-    const originalTail = getOriginalTail(original, lastSection);
-    if (originalTail) {
-      fixed = fixed.trimEnd() + "\n\n" + originalTail;
-    } else {
-      fixed = fixed.trimEnd() + "\n\n\\end{document}\n";
+  // 2. Fix truncated \href — find any \href{url that's missing }{text}
+  //    Pattern: \href{...  at end of line without closing }{...}
+  const hrefRegex = /\\href\{([^}]*)$/m;
+  const truncatedHref = hrefRegex.exec(fixed);
+  if (truncatedHref) {
+    // Find this partial URL in the original and get the complete \href{url}{text}
+    const partialUrl = truncatedHref[1];
+    const originalIdx = original.indexOf(partialUrl);
+    if (originalIdx !== -1) {
+      // Find the complete \href from the original starting before this URL
+      const hrefStart = original.lastIndexOf("\\href{", originalIdx);
+      if (hrefStart !== -1) {
+        // Extract everything from this \href to the end of the line/entry
+        const afterHref = original.slice(hrefStart);
+        // Match the complete \href{url}{text} possibly followed by more text on the line
+        const completeMatch = afterHref.match(/\\href\{[^}]+\}\{[^}]+\}[^\n]*/);
+        if (completeMatch) {
+          // Replace the truncated \href line with the complete one
+          const truncStart = fixed.lastIndexOf("\\href{" + partialUrl.slice(0, 20));
+          if (truncStart !== -1) {
+            fixed = fixed.slice(0, truncStart) + completeMatch[0];
+          }
+        }
+      }
     }
   }
 
-  // Verify all \begin{env} have matching \end{env}
-  const beginMatches: string[] = [];
-  const beginRegex = /\\begin\{([^}]+)\}/g;
+  // 3. If \end{document} is missing, recover the tail from the original.
+  //    Find the last line in generated that also exists in original,
+  //    then append everything from original after that point.
+  if (!fixed.includes("\\end{document}")) {
+    const genLines = fixed.split("\n");
+    const origLines = original.split("\n");
+
+    // Walk backwards through generated lines to find last matching line in original
+    let spliceFromOrigLine = -1;
+    for (let i = genLines.length - 1; i >= 0; i--) {
+      const line = genLines[i].trim();
+      if (!line || line.startsWith("%")) continue;
+
+      // Find this line in the original
+      for (let j = 0; j < origLines.length; j++) {
+        if (origLines[j].trim() === line) {
+          spliceFromOrigLine = j;
+          break;
+        }
+      }
+      if (spliceFromOrigLine !== -1) break;
+    }
+
+    if (spliceFromOrigLine !== -1 && spliceFromOrigLine < origLines.length - 1) {
+      // Append everything after the matched line from original
+      const tail = origLines.slice(spliceFromOrigLine + 1).join("\n");
+      fixed = fixed.trimEnd() + "\n" + tail;
+    } else {
+      // Fallback: just close the document
+      fixed = fixed.trimEnd() + "\n\n\\end{itemize}\n\n\\end{document}\n";
+    }
+  }
+
+  // 4. Fix unbalanced \begin/\end pairs
+  const envCounts: Record<string, number> = {};
+  const beginRe = /\\begin\{([^}]+)\}/g;
+  const endRe = /\\end\{([^}]+)\}/g;
   let m;
-  while ((m = beginRegex.exec(fixed)) !== null) {
-    beginMatches.push(m[1]);
+  while ((m = beginRe.exec(fixed)) !== null) {
+    envCounts[m[1]] = (envCounts[m[1]] || 0) + 1;
   }
-  const endMatches: string[] = [];
-  const endRegex = /\\end\{([^}]+)\}/g;
-  while ((m = endRegex.exec(fixed)) !== null) {
-    endMatches.push(m[1]);
+  while ((m = endRe.exec(fixed)) !== null) {
+    envCounts[m[1]] = (envCounts[m[1]] || 0) - 1;
   }
-
-  // Count each environment
-  const beginCounts: Record<string, number> = {};
-  const endCounts: Record<string, number> = {};
-  for (const env of beginMatches) {
-    beginCounts[env] = (beginCounts[env] || 0) + 1;
-  }
-  for (const env of endMatches) {
-    endCounts[env] = (endCounts[env] || 0) + 1;
-  }
-
-  // Insert missing \end{} before \end{document}
-  for (const env of Object.keys(beginCounts)) {
+  for (const env of Object.keys(envCounts)) {
     if (env === "document") continue;
-    const missing = (beginCounts[env] || 0) - (endCounts[env] || 0);
+    const missing = envCounts[env] || 0;
     if (missing > 0) {
       const endDoc = fixed.lastIndexOf("\\end{document}");
       if (endDoc !== -1) {
@@ -211,31 +237,4 @@ function sanitizeLatex(generated: string, original: string): string {
   }
 
   return fixed;
-}
-
-function findLastCompleteSection(latex: string): string | null {
-  // Find the last \section{...} that appears in the generated output
-  const sectionRegex = /\\section\{([^}]+)\}/g;
-  let last = null;
-  let m;
-  while ((m = sectionRegex.exec(latex)) !== null) {
-    last = m[1];
-  }
-  return last;
-}
-
-function getOriginalTail(original: string, afterSection: string | null): string | null {
-  if (!afterSection) return null;
-
-  // Find this section in the original and return everything after it
-  const sectionIdx = original.indexOf(`\\section{${afterSection}}`);
-  if (sectionIdx === -1) return null;
-
-  // Find the next \section or \end{document} after this one
-  const afterIdx = sectionIdx + afterSection.length;
-  const nextSectionIdx = original.indexOf("\\section{", afterIdx);
-  if (nextSectionIdx === -1) return null;
-
-  // Return from that next section to end of document
-  return original.slice(nextSectionIdx).trim();
 }
