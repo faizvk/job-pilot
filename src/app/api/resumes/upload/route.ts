@@ -39,6 +39,9 @@ export async function POST(req: NextRequest) {
       content = buffer.toString("utf-8");
     }
 
+    // Clean up PDF extraction artifacts
+    content = cleanPdfText(content);
+
     if (!content.trim()) {
       return NextResponse.json(
         { error: "Could not extract text from the file. The file may be empty or image-based." },
@@ -71,6 +74,32 @@ export async function POST(req: NextRequest) {
   }
 }
 
+/**
+ * Clean up common PDF extraction artifacts:
+ * - Icon/symbol characters (R, Ó, ̄, ®, etc.)
+ * - Broken hyphenation at line ends
+ * - Extra whitespace
+ */
+function cleanPdfText(text: string): string {
+  return text
+    // Remove common PDF icon/symbol artifacts that appear before contact info
+    .replace(/[R]\s+(?=\S+@)/g, "") // "R" before email
+    .replace(/[Ó]\s+(?=\+?\d)/g, "") // "Ó" before phone
+    .replace(/[̄¯]\s+(?=\S)/g, "") // combining macron before links
+    .replace(/[®]\s+(?=\S)/g, "") // "®" before portfolio
+    .replace(/[]\s+(?=\S)/g, "") // box character before links
+    // Remove isolated single special characters on lines or between items
+    .replace(/·\s*([RÓ¯®])\s*·/g, "·")
+    .replace(/\s+[RÓ¯®]\s+/g, " ")
+    // Fix broken hyphenation (word- \n continuation)
+    .replace(/(\w)-\s*\n\s*(\w)/g, "$1$2")
+    // Normalize multiple spaces
+    .replace(/[ \t]{2,}/g, " ")
+    // Normalize separator dots/middots
+    .replace(/\s*·\s*/g, " · ")
+    .trim();
+}
+
 function textToMarkdown(raw: string): string {
   const lines = raw.split("\n").map((l) => l.trimEnd());
 
@@ -82,16 +111,22 @@ function textToMarkdown(raw: string): string {
     /^(skills|technical\s*skills|core\s*competencies|technologies)$/i,
     /^(projects|personal\s*projects|key\s*projects)$/i,
     /^(certifications?|licenses?|courses?)$/i,
-    /^(awards?|achievements?|honors?)$/i,
+    /^(awards?|achievements?\s*(?:&|and)?\s*certifications?|honors?)$/i,
     /^(languages?|additional\s*info|interests|hobbies|references?)$/i,
     /^(publications?|volunteer|community)$/i,
+  ];
+
+  // Patterns for project/job titles (e.g., "MyStore — Full-Stack E-Commerce Platform")
+  const subheadingPatterns = [
+    /^.+\s*[—–-]\s*.+(?:GitHub|Live|Link|Demo)/i,
+    /^.+\s*\(.+\)\s*(?:GitHub|Live)/i,
   ];
 
   const result: string[] = [];
   let isFirstLine = true;
 
-  for (const line of lines) {
-    const trimmed = line.trim();
+  for (let i = 0; i < lines.length; i++) {
+    const trimmed = lines[i].trim();
 
     // Skip empty lines but preserve spacing
     if (!trimmed) {
@@ -103,7 +138,9 @@ function textToMarkdown(raw: string): string {
 
     // First non-empty line is likely the name
     if (isFirstLine) {
-      result.push(`# ${trimmed}`);
+      // Clean name: remove any remaining symbol artifacts
+      const cleanName = trimmed.replace(/[^a-zA-Z\s.'-]/g, "").trim();
+      result.push(`# ${cleanName || trimmed}`);
       isFirstLine = false;
       continue;
     }
@@ -116,13 +153,27 @@ function textToMarkdown(raw: string): string {
       continue;
     }
 
+    // Check if it's a project/job subheading
+    const isSubheading = subheadingPatterns.some((p) => p.test(trimmed));
+    if (isSubheading) {
+      result.push("");
+      result.push(`### ${trimmed}`);
+      continue;
+    }
+
+    // Lines starting with "Languages:", "Web Development:", etc. — keep as list items
+    if (/^(Languages?|Web Development|Databases?|Tools?\s*(?:&|and)?\s*APIs?|Frameworks?):\s/i.test(trimmed)) {
+      result.push(`- ${trimmed}`);
+      continue;
+    }
+
     // Lines that look like bullet points
     if (/^[•\-\*\u2022\u2023\u25E6\u2043\u2219]\s/.test(trimmed)) {
       result.push(`- ${trimmed.replace(/^[•\-\*\u2022\u2023\u25E6\u2043\u2219]\s*/, "")}`);
       continue;
     }
 
-    // Lines that look like "Company | Role | Date" or "Company - Role - Date"
+    // Lines that look like "Company | Role | Date"
     if (/\|/.test(trimmed) && trimmed.split("|").length >= 2) {
       result.push(`### ${trimmed}`);
       continue;
