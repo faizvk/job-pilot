@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { ResumeEditor } from "@/components/resumes/resume-editor";
 import { ResumePreview } from "@/components/resumes/resume-preview";
-import { Upload, Loader2, FileUp } from "lucide-react";
+import { Upload, Loader2, FileUp, UserCheck } from "lucide-react";
 
 export default function NewResumePage() {
   const router = useRouter();
@@ -55,6 +55,17 @@ export default function NewResumePage() {
       if (!res.ok) {
         setUploadError(data.error || "Upload failed");
         return;
+      }
+
+      // Auto-import resume data into profile
+      try {
+        await fetch("/api/profile/import-from-resume", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ resumeId: data.id }),
+        });
+      } catch {
+        // Non-blocking — profile import is best-effort
       }
 
       // Redirect to edit the uploaded resume
