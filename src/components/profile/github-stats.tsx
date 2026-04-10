@@ -25,17 +25,25 @@ const LANG_COLORS: Record<string, string> = {
   Solidity: "bg-gray-600", Dart: "bg-blue-400",
 };
 
+function extractUsername(input: string): string {
+  // Handle full URLs like "https://github.com/faizvk"
+  const match = input.match(/github\.com\/([a-zA-Z0-9_-]+)/);
+  return match ? match[1] : input.replace(/^@/, "").trim();
+}
+
 export function GitHubStats({ username }: { username: string | null }) {
   const [data, setData] = useState<GitHubData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const parsed = username ? extractUsername(username) : null;
+
   const fetchStats = async () => {
-    if (!username) return;
+    if (!parsed) return;
     setLoading(true);
     setError("");
     try {
-      const res = await fetch(`/api/github/stats?username=${username}`);
+      const res = await fetch(`/api/github/stats?username=${parsed}`);
       const json = await res.json();
       if (json.error) throw new Error(json.error);
       setData(json);
@@ -45,7 +53,7 @@ export function GitHubStats({ username }: { username: string | null }) {
     setLoading(false);
   };
 
-  if (!username) {
+  if (!parsed) {
     return (
       <div className="border border-gray-200 rounded-xl p-5 text-center">
         <GithubIcon className="w-8 h-8 text-gray-300 mx-auto mb-2" />
@@ -60,7 +68,7 @@ export function GitHubStats({ username }: { username: string | null }) {
         <div className="flex items-center gap-2">
           <GithubIcon className="w-5 h-5 text-gray-900" />
           <h3 className="text-sm font-semibold text-gray-900">GitHub Stats</h3>
-          <span className="text-xs text-gray-400">@{username}</span>
+          <span className="text-xs text-gray-400">@{parsed}</span>
         </div>
         <button
           onClick={fetchStats}
