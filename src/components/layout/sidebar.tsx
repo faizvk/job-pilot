@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import {
   LayoutDashboard, Briefcase, Zap, Layers, Search, FileText,
-  Mail, Bell, BarChart3, User, Rocket, ClipboardPaste
+  Mail, Bell, BarChart3, User, Rocket, ClipboardPaste, BellRing, Github
 } from "lucide-react";
 
 const navGroups = [
@@ -14,6 +14,7 @@ const navGroups = [
     items: [
       { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
       { href: "/job-feed", label: "Job Feed", icon: Search },
+      { href: "/job-alerts", label: "Job Alerts", icon: BellRing },
     ],
   },
   {

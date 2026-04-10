@@ -7,6 +7,7 @@ import { EducationForm } from "@/components/profile/education-form";
 import { SkillsManager } from "@/components/profile/skills-manager";
 import { QuickCopyPanel } from "@/components/profile/quick-copy-panel";
 import { IntegrationsPanel } from "@/components/profile/integrations-panel";
+import { GitHubStats } from "@/components/profile/github-stats";
 import { Copy, FileText, Loader2, CheckCircle } from "lucide-react";
 
 export default function ProfilePage() {
@@ -172,7 +173,10 @@ export default function ProfilePage() {
           />
         )}
         {activeTab === "integrations" && (
-          <IntegrationsPanel />
+          <div className="space-y-6">
+            <IntegrationsPanel />
+            <GitHubStats username={profile?.github || null} />
+          </div>
         )}
       </div>
     </div>

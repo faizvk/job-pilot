@@ -27,8 +27,10 @@ model User {
   applications Application[]
   resumes      Resume[]
   coverLetters CoverLetterTemplate[]
-  followUps    FollowUp[]
-  weeklyGoals  WeeklyGoal[]
+  followUps      FollowUp[]
+  weeklyGoals    WeeklyGoal[]
+  jobAlerts      JobAlert[]
+  telegramChatId String?
 }
 
 model WorkHistory {
@@ -227,4 +229,20 @@ model JobListing {
   imported        Boolean  @default(false)
   hidden          Boolean  @default(false)
   fetchedAt       DateTime @default(now())
+  alertId         String?
+}
+
+model JobAlert {
+  id          String    @id @default(cuid())
+  userId      String
+  name        String
+  keywords    String
+  location    String?
+  frequency   String    @default("daily")
+  isActive    Boolean   @default(true)
+  lastRunAt   DateTime?
+  newJobCount Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
