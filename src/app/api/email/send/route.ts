@@ -1,38 +1,57 @@
 import { NextRequest, NextResponse } from "next/server";
-import { sendEmail, parseEmailDraft, isResendConfigured } from "@/lib/services/email.service";
 import { sendGmail, isGmailConnected } from "@/lib/services/gmail.service";
 import prisma from "@/lib/db";
 
+/**
+ * Parse an email draft string into subject and body.
+ * Expected format:
+ * Subject: <subject line>
+ *
+ * <body>
+ */
+function parseEmailDraft(draft: string): { subject: string; body: string } {
+  const lines = draft.split("\n");
+  let subject = "";
+  let bodyStart = 0;
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (line.toLowerCase().startsWith("subject:")) {
+      subject = line.replace(/^subject:\s*/i, "").trim();
+      bodyStart = lines[i + 1]?.trim() === "" ? i + 2 : i + 1;
+      break;
+    }
+  }
+
+  if (!subject) {
+    subject = lines[0]?.trim() || "Follow-up";
+    bodyStart = 1;
+  }
+
+  const body = lines.slice(bodyStart).join("\n").trim();
+  return { subject, body };
+}
+
 export async function POST(req: NextRequest) {
   try {
-    const hasResend = isResendConfigured();
     const hasGmail = await isGmailConnected();
 
-    if (!hasResend && !hasGmail) {
+    if (!hasGmail) {
       return NextResponse.json(
-        { error: "No email provider configured. Set up Resend or connect Gmail." },
+        { error: "No email provider configured. Connect Gmail in Profile → Integrations." },
         { status: 503 }
       );
     }
 
-    const { followUpId, to, draft, via } = await req.json();
+    const { followUpId, to, draft } = await req.json();
 
     if (!to || !draft) {
       return NextResponse.json({ error: "to and draft required" }, { status: 400 });
     }
 
     const { subject, body } = parseEmailDraft(draft);
-
-    let emailId: string | undefined;
-
-    // Use Gmail if explicitly requested or if Resend is not available
-    if ((via === "gmail" || !hasResend) && hasGmail) {
-      const result = await sendGmail(to, subject, body);
-      emailId = result.id ?? undefined;
-    } else {
-      const result = await sendEmail({ to, subject, body });
-      emailId = result?.id;
-    }
+    const result = await sendGmail(to, subject, body);
+    const emailId = result.id ?? undefined;
 
     // Mark follow-up as sent if followUpId provided
     if (followUpId) {

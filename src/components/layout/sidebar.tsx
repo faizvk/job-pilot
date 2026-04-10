@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { useSidebar } from "./sidebar-context";
 import {
   LayoutDashboard, Briefcase, Zap, Layers, Search, FileText,
-  Mail, Bell, BarChart3, User, Rocket, BellRing,
+  BarChart3, User, Rocket, BellRing,
   Sparkles, ChevronsLeft, ChevronsRight, Bot
 } from "lucide-react";
 
@@ -31,8 +31,6 @@ const navGroups = [
     label: "Tools",
     items: [
       { href: "/resumes", label: "Resumes", icon: FileText },
-      { href: "/cover-letters", label: "Cover Letters", icon: Mail },
-      { href: "/follow-ups", label: "Follow-ups", icon: Bell },
     ],
   },
   {

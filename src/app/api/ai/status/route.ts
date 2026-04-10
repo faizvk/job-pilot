@@ -7,7 +7,6 @@ import { isMistralConfigured } from "@/lib/services/ai/mistral";
 import { isDeepSeekConfigured } from "@/lib/services/ai/deepseek";
 import { isCohereConfigured } from "@/lib/services/ai/cohere";
 import { isTogetherConfigured } from "@/lib/services/ai/together";
-import { isResendConfigured } from "@/lib/services/email.service";
 import { isGmailConfigured, isGmailConnected } from "@/lib/services/gmail.service";
 
 export async function GET() {
@@ -25,7 +24,6 @@ export async function GET() {
     together: isTogetherConfigured(),
     ai: isAIConfigured(),
     providers: getConfiguredProviders(),
-    resend: isResendConfigured(),
     gmail: { configured: gmailConfigured, connected: gmailConnected },
   });
 }

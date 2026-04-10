@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Menu, Rocket, ChevronRight, Search, Briefcase, Zap, Layers,
-  FileText, Mail, Bell, BarChart3, User, LayoutDashboard, X, Sparkles, BellRing, Bot } from "lucide-react";
+  FileText, BarChart3, User, LayoutDashboard, X, Sparkles, BellRing, Bot } from "lucide-react";
 import { useState } from "react";
 
 const links = [
@@ -14,8 +14,6 @@ const links = [
   { href: "/quick-apply", label: "Quick Apply", icon: Zap },
   { href: "/batch-apply", label: "Batch Apply", icon: Layers },
   { href: "/resumes", label: "Resumes", icon: FileText },
-  { href: "/cover-letters", label: "Cover Letters", icon: Mail },
-  { href: "/follow-ups", label: "Follow-ups", icon: Bell },
   { href: "/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/automations", label: "Automations", icon: Bot },
   { href: "/profile", label: "Profile", icon: User },
@@ -29,8 +27,6 @@ const PAGE_TITLES: Record<string, string> = {
   "quick-apply": "Quick Apply",
   "batch-apply": "Batch Apply",
   resumes: "Resumes",
-  "cover-letters": "Cover Letters",
-  "follow-ups": "Follow-ups",
   analytics: "Analytics",
   automations: "Automations",
   profile: "Profile",

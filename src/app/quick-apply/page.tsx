@@ -76,7 +76,7 @@ export default function QuickApplyPage() {
     setSavedApp(null);
 
     try {
-      const res = await fetch("/api/smart-paste", {
+      const res = await fetch("/api/quick-apply", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ rawText, action: "analyze" }),
@@ -97,7 +97,7 @@ export default function QuickApplyPage() {
     setCoverLetter(null);
 
     try {
-      const res = await fetch("/api/smart-paste", {
+      const res = await fetch("/api/quick-apply", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -204,7 +204,7 @@ export default function QuickApplyPage() {
     );
 
     try {
-      const res = await fetch("/api/smart-paste/generate-resume", {
+      const res = await fetch("/api/quick-apply/generate-resume", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
