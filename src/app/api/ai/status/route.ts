@@ -4,6 +4,9 @@ import { isGroqConfigured } from "@/lib/services/ai/groq";
 import { isOpenAIConfigured } from "@/lib/services/ai/openai";
 import { isAnthropicConfigured } from "@/lib/services/ai/anthropic";
 import { isMistralConfigured } from "@/lib/services/ai/mistral";
+import { isDeepSeekConfigured } from "@/lib/services/ai/deepseek";
+import { isCohereConfigured } from "@/lib/services/ai/cohere";
+import { isTogetherConfigured } from "@/lib/services/ai/together";
 import { isResendConfigured } from "@/lib/services/email.service";
 import { isGmailConfigured, isGmailConnected } from "@/lib/services/gmail.service";
 
@@ -16,7 +19,10 @@ export async function GET() {
     groq: isGroqConfigured(),
     openai: isOpenAIConfigured(),
     anthropic: isAnthropicConfigured(),
+    deepseek: isDeepSeekConfigured(),
     mistral: isMistralConfigured(),
+    cohere: isCohereConfigured(),
+    together: isTogetherConfigured(),
     ai: isAIConfigured(),
     providers: getConfiguredProviders(),
     resend: isResendConfigured(),

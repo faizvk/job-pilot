@@ -3,6 +3,9 @@ import { isGroqConfigured, groqGenerateText, groqGenerateJSON } from "./groq";
 import { isOpenAIConfigured, openaiGenerateText, openaiGenerateJSON } from "./openai";
 import { isAnthropicConfigured, anthropicGenerateText, anthropicGenerateJSON } from "./anthropic";
 import { isMistralConfigured, mistralGenerateText, mistralGenerateJSON } from "./mistral";
+import { isDeepSeekConfigured, deepseekGenerateText, deepseekGenerateJSON } from "./deepseek";
+import { isCohereConfigured, cohereGenerateText, cohereGenerateJSON } from "./cohere";
+import { isTogetherConfigured, togetherGenerateText, togetherGenerateJSON } from "./together";
 
 let genAI: GoogleGenerativeAI | null = null;
 
@@ -21,7 +24,7 @@ export function isGeminiConfigured(): boolean {
 
 /**
  * Provider chain — each entry has a check, text generator, and JSON generator.
- * Order: Gemini → Groq → OpenAI → Claude → Mistral
+ * Order: Gemini → Groq → OpenAI → Claude → DeepSeek → Mistral → Cohere → Together
  */
 interface AIProvider {
   name: string;
@@ -74,10 +77,28 @@ function getProviders(): AIProvider[] {
       generateJSON: anthropicGenerateJSON,
     },
     {
+      name: "DeepSeek",
+      isConfigured: isDeepSeekConfigured,
+      generateText: deepseekGenerateText,
+      generateJSON: deepseekGenerateJSON,
+    },
+    {
       name: "Mistral",
       isConfigured: isMistralConfigured,
       generateText: mistralGenerateText,
       generateJSON: mistralGenerateJSON,
+    },
+    {
+      name: "Cohere",
+      isConfigured: isCohereConfigured,
+      generateText: cohereGenerateText,
+      generateJSON: cohereGenerateJSON,
+    },
+    {
+      name: "Together",
+      isConfigured: isTogetherConfigured,
+      generateText: togetherGenerateText,
+      generateJSON: togetherGenerateJSON,
     },
   ];
 }

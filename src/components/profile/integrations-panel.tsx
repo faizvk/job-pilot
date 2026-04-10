@@ -49,12 +49,15 @@ export function IntegrationsPanel() {
 
       {/* Service Status Overview */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <StatusBadge label="Gemini AI" active={status?.gemini} />
-        <StatusBadge label="Groq AI" active={status?.groq} />
+        <StatusBadge label="Gemini" active={status?.gemini} />
+        <StatusBadge label="Groq" active={status?.groq} />
         <StatusBadge label="OpenAI" active={status?.openai} />
-        <StatusBadge label="Claude AI" active={status?.anthropic} />
-        <StatusBadge label="Mistral AI" active={status?.mistral} />
-        <StatusBadge label="Resend Email" active={status?.resend} />
+        <StatusBadge label="Claude" active={status?.anthropic} />
+        <StatusBadge label="DeepSeek" active={status?.deepseek} />
+        <StatusBadge label="Mistral" active={status?.mistral} />
+        <StatusBadge label="Cohere" active={status?.cohere} />
+        <StatusBadge label="Together" active={status?.together} />
+        <StatusBadge label="Resend" active={status?.resend} />
         <StatusBadge label="Gmail" active={gmailConnected} />
       </div>
 
