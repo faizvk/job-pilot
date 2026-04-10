@@ -45,27 +45,27 @@ export default function ApplicationsPage() {
     <div className="space-y-5 animate-fade-in">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-[22px] font-bold text-gray-900">Applications</h1>
-          <p className="text-sm text-gray-500 mt-0.5">Track and manage your job applications</p>
+          <h1 className="text-2xl font-bold text-slate-900">Applications</h1>
+          <p className="text-sm text-slate-500 mt-0.5">Track and manage your job applications</p>
         </div>
         <div className="flex items-center gap-3">
-          <div className="flex bg-gray-100 rounded-lg p-0.5">
+          <div className="flex bg-slate-100 rounded-lg p-0.5">
             <button
               onClick={() => setViewMode("kanban")}
-              className={`p-2 rounded-md transition-all ${viewMode === "kanban" ? "bg-white shadow-xs text-gray-900" : "text-gray-500 hover:text-gray-700"}`}
+              className={`p-2 rounded-md transition-all ${viewMode === "kanban" ? "bg-white shadow-xs text-slate-900" : "text-slate-500 hover:text-slate-700"}`}
             >
               <LayoutGrid className="w-4 h-4" />
             </button>
             <button
               onClick={() => setViewMode("table")}
-              className={`p-2 rounded-md transition-all ${viewMode === "table" ? "bg-white shadow-xs text-gray-900" : "text-gray-500 hover:text-gray-700"}`}
+              className={`p-2 rounded-md transition-all ${viewMode === "table" ? "bg-white shadow-xs text-slate-900" : "text-slate-500 hover:text-slate-700"}`}
             >
               <List className="w-4 h-4" />
             </button>
           </div>
           <Link
             href="/applications/new"
-            className="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2.5 rounded-lg text-sm font-medium shadow-sm shadow-indigo-600/20 hover:bg-indigo-700 hover:shadow-md transition-all active:scale-[0.98]"
+            className="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2.5 rounded-xl text-sm font-medium shadow-sm shadow-indigo-600/20 hover:bg-indigo-700 hover:shadow-md transition-all active:scale-[0.98]"
           >
             <Plus className="w-4 h-4" />
             Add Application

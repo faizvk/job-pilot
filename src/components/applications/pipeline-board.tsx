@@ -47,7 +47,7 @@ export function PipelineBoard({ applications, onStatusChange }: PipelineBoardPro
         return (
           <div
             key={status}
-            className={`flex-shrink-0 w-72 rounded-lg ${isDragOver ? "bg-blue-50 border-blue-300" : "bg-gray-50"} border p-3`}
+            className={`flex-shrink-0 w-72 rounded-lg ${isDragOver ? "bg-blue-50 border-blue-300" : "bg-slate-50"} border p-3`}
             onDragOver={handleDragOver(status)}
             onDrop={handleDrop(status)}
             onDragLeave={() => setDragOverStatus(null)}
@@ -57,7 +57,7 @@ export function PipelineBoard({ applications, onStatusChange }: PipelineBoardPro
                 <span className={`w-2 h-2 rounded-full ${config.bgColor}`} />
                 {config.label}
               </h3>
-              <span className="text-xs text-gray-400 bg-white px-2 py-0.5 rounded-full">
+              <span className="text-xs text-slate-400 bg-white px-2 py-0.5 rounded-full">
                 {statusApps.length}
               </span>
             </div>
@@ -72,7 +72,7 @@ export function PipelineBoard({ applications, onStatusChange }: PipelineBoardPro
                 </div>
               ))}
               {statusApps.length === 0 && (
-                <p className="text-xs text-gray-400 text-center py-4">Drop here</p>
+                <p className="text-xs text-slate-400 text-center py-4">Drop here</p>
               )}
             </div>
           </div>

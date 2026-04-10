@@ -24,7 +24,7 @@ export function UpcomingDeadlines({ followUps }: { followUps: FollowUp[] }) {
       ) : (
         <div className="space-y-3">
           {followUps.map((fu) => (
-            <div key={fu.id} className="flex items-start gap-3 p-2.5 -mx-1 rounded-xl hover:bg-slate-50 transition-colors">
+            <div key={fu.id} className="flex items-start gap-3 p-2.5 -mx-1 rounded-xl hover:bg-slate-50 transition-all">
               <div className="p-1.5 rounded-lg bg-gradient-to-br from-amber-50 to-orange-50 flex-shrink-0 mt-0.5">
                 <Clock className="w-3.5 h-3.5 text-amber-500" />
               </div>

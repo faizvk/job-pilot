@@ -67,7 +67,7 @@ export function IntegrationsPanel() {
     setTestingTelegram(false);
   };
 
-  if (loading) return <div className="h-32 bg-gray-50 rounded-lg animate-shimmer" />;
+  if (loading) return <div className="h-32 bg-slate-50 rounded-lg animate-shimmer" />;
 
   const gmailConfigured = status?.gmail?.configured;
   const gmailConnected = status?.gmail?.connected;
@@ -75,8 +75,8 @@ export function IntegrationsPanel() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-base font-semibold text-gray-900 mb-1">Integrations</h2>
-        <p className="text-sm text-gray-500">Connect external services to enhance your job search</p>
+        <h2 className="text-base font-semibold text-slate-900 mb-1">Integrations</h2>
+        <p className="text-sm text-slate-500">Connect external services to enhance your job search</p>
       </div>
 
       {/* Service Status Overview */}
@@ -96,15 +96,15 @@ export function IntegrationsPanel() {
       </div>
 
       {/* Gmail Integration */}
-      <div className="border border-gray-200 rounded-xl p-5 space-y-4">
+      <div className="border border-slate-200 rounded-xl p-5 space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-red-50 rounded-lg flex items-center justify-center">
               <Mail className="w-5 h-5 text-red-500" />
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-gray-900">Gmail & Calendar</h3>
-              <p className="text-xs text-gray-500">Send emails, detect confirmations & schedule interviews</p>
+              <h3 className="text-sm font-semibold text-slate-900">Gmail & Calendar</h3>
+              <p className="text-xs text-slate-500">Send emails, detect confirmations & schedule interviews</p>
             </div>
           </div>
           {gmailConnected ? (
@@ -125,20 +125,20 @@ export function IntegrationsPanel() {
               </button>
             </div>
           ) : gmailConfigured ? (
-            <a href="/api/gmail/auth" className="inline-flex items-center gap-1.5 bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 shadow-sm shadow-indigo-600/20 transition-all active:scale-[0.98]">
+            <a href="/api/gmail/auth" className="inline-flex items-center gap-1.5 bg-indigo-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-indigo-700 shadow-sm shadow-indigo-600/20 transition-all active:scale-[0.98]">
               <ExternalLink className="w-4 h-4" /> Connect Google
             </a>
           ) : (
-            <span className="text-xs text-gray-400">Set GMAIL_CLIENT_ID & GMAIL_CLIENT_SECRET in .env</span>
+            <span className="text-xs text-slate-400">Set GMAIL_CLIENT_ID & GMAIL_CLIENT_SECRET in .env</span>
           )}
         </div>
 
         {gmailConnected && (
-          <div className="border-t border-gray-100 pt-4 space-y-3">
-            <h4 className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Search Application Emails</h4>
+          <div className="border-t border-slate-100 pt-4 space-y-3">
+            <h4 className="text-xs font-semibold text-slate-600 uppercase tracking-wide">Search Application Emails</h4>
             <div className="flex items-center gap-2">
-              <input type="text" value={searchCompany} onChange={(e) => setSearchCompany(e.target.value)} placeholder="Company name (optional)" className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400" />
-              <button onClick={handleSearchEmails} disabled={searching} className="inline-flex items-center gap-1.5 bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 disabled:opacity-50 transition-all active:scale-[0.98]">
+              <input type="text" value={searchCompany} onChange={(e) => setSearchCompany(e.target.value)} placeholder="Company name (optional)" className="flex-1 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400" />
+              <button onClick={handleSearchEmails} disabled={searching} className="inline-flex items-center gap-1.5 bg-slate-900 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-slate-800 disabled:opacity-50 transition-all active:scale-[0.98]">
                 {searching ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
                 Search
               </button>
@@ -146,10 +146,10 @@ export function IntegrationsPanel() {
             {emails.length > 0 && (
               <div className="space-y-2 max-h-64 overflow-y-auto">
                 {emails.map((email: any) => (
-                  <div key={email.id} className="border border-gray-100 rounded-lg p-3 text-sm">
-                    <div className="font-medium text-gray-900 truncate">{email.subject}</div>
-                    <div className="text-xs text-gray-500 mt-0.5">{email.from} &middot; {email.date}</div>
-                    <div className="text-xs text-gray-400 mt-1 line-clamp-2">{email.snippet}</div>
+                  <div key={email.id} className="border border-slate-100 rounded-lg p-3 text-sm">
+                    <div className="font-medium text-slate-900 truncate">{email.subject}</div>
+                    <div className="text-xs text-slate-500 mt-0.5">{email.from} &middot; {email.date}</div>
+                    <div className="text-xs text-slate-400 mt-1 line-clamp-2">{email.snippet}</div>
                   </div>
                 ))}
               </div>
@@ -159,15 +159,15 @@ export function IntegrationsPanel() {
       </div>
 
       {/* Telegram Integration */}
-      <div className="border border-gray-200 rounded-xl p-5 space-y-4">
+      <div className="border border-slate-200 rounded-xl p-5 space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
               <MessageCircle className="w-5 h-5 text-blue-500" />
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-gray-900">Telegram Notifications</h3>
-              <p className="text-xs text-gray-500">Get alerts for new jobs, interviews & deadlines on your phone</p>
+              <h3 className="text-sm font-semibold text-slate-900">Telegram Notifications</h3>
+              <p className="text-xs text-slate-500">Get alerts for new jobs, interviews & deadlines on your phone</p>
             </div>
           </div>
           {telegramStatus?.connected ? (
@@ -184,7 +184,7 @@ export function IntegrationsPanel() {
         </div>
 
         {!telegramStatus?.connected && (
-          <div className="border-t border-gray-100 pt-4 space-y-3">
+          <div className="border-t border-slate-100 pt-4 space-y-3">
             <div className="bg-blue-50 rounded-lg p-3 text-xs text-blue-800 space-y-1">
               <p className="font-medium">Setup Instructions:</p>
               <ol className="list-decimal ml-4 space-y-0.5">
@@ -196,8 +196,8 @@ export function IntegrationsPanel() {
               </ol>
             </div>
             <div className="flex items-center gap-2">
-              <input type="text" value={chatIdInput} onChange={(e) => setChatIdInput(e.target.value)} placeholder="Your Telegram Chat ID" className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400" />
-              <button onClick={handleConnectTelegram} disabled={connectingTelegram || !chatIdInput.trim()} className="inline-flex items-center gap-1.5 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-50 transition-all active:scale-[0.98]">
+              <input type="text" value={chatIdInput} onChange={(e) => setChatIdInput(e.target.value)} placeholder="Your Telegram Chat ID" className="flex-1 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400" />
+              <button onClick={handleConnectTelegram} disabled={connectingTelegram || !chatIdInput.trim()} className="inline-flex items-center gap-1.5 bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-blue-700 disabled:opacity-50 transition-all active:scale-[0.98]">
                 {connectingTelegram ? <Loader2 className="w-4 h-4 animate-spin" /> : <MessageCircle className="w-4 h-4" />}
                 Connect
               </button>
@@ -211,9 +211,9 @@ export function IntegrationsPanel() {
 
 function StatusBadge({ label, active }: { label: string; active: boolean }) {
   return (
-    <div className="flex items-center gap-2 border border-gray-100 rounded-lg px-3 py-2.5">
-      {active ? <CheckCircle className="w-4 h-4 text-emerald-500 shrink-0" /> : <XCircle className="w-4 h-4 text-gray-300 shrink-0" />}
-      <span className={`text-xs font-medium ${active ? "text-gray-900" : "text-gray-400"}`}>{label}</span>
+    <div className="flex items-center gap-2 border border-slate-100 rounded-lg px-3 py-2.5">
+      {active ? <CheckCircle className="w-4 h-4 text-emerald-500 shrink-0" /> : <XCircle className="w-4 h-4 text-slate-300 shrink-0" />}
+      <span className={`text-xs font-medium ${active ? "text-slate-900" : "text-slate-400"}`}>{label}</span>
     </div>
   );
 }

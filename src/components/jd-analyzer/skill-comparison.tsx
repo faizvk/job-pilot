@@ -13,7 +13,7 @@ export function SkillComparison({ matched, missing }: { matched: string[]; missi
               <Check className="w-3.5 h-3.5 text-green-600" /> {s}
             </div>
           ))}
-          {matched.length === 0 && <p className="text-sm text-gray-400">None matched</p>}
+          {matched.length === 0 && <p className="text-sm text-slate-400">None matched</p>}
         </div>
       </div>
       <div className="bg-red-50 rounded-lg p-4">
@@ -24,7 +24,7 @@ export function SkillComparison({ matched, missing }: { matched: string[]; missi
               <X className="w-3.5 h-3.5 text-red-500" /> {s}
             </div>
           ))}
-          {missing.length === 0 && <p className="text-sm text-gray-400">All matched!</p>}
+          {missing.length === 0 && <p className="text-sm text-slate-400">All matched!</p>}
         </div>
       </div>
     </div>

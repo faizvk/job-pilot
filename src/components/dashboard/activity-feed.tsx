@@ -30,7 +30,7 @@ export function ActivityFeed({ activities }: { activities: ActivityItem[] }) {
           <Link
             key={item.id}
             href={`/applications/${item.applicationId}`}
-            className="flex items-center gap-3 p-2.5 -mx-1 rounded-xl hover:bg-slate-50 transition-colors group"
+            className="flex items-center gap-3 p-2.5 -mx-1 rounded-xl hover:bg-slate-50 transition-all group"
           >
             <div className="w-2 h-2 rounded-full bg-gradient-to-br from-indigo-400 to-purple-400 flex-shrink-0" />
             <div className="flex-1 min-w-0">

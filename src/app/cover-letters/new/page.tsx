@@ -112,15 +112,15 @@ export default function NewCoverLetterPage() {
     <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Link href="/cover-letters" className="text-gray-400 hover:text-gray-600 transition-colors">
+          <Link href="/cover-letters" className="text-slate-400 hover:text-slate-600 transition-colors">
             <ArrowLeft className="w-5 h-5" />
           </Link>
-          <h1 className="text-xl font-bold text-gray-900">Create Template</h1>
+          <h1 className="text-xl font-bold text-slate-900">Create Template</h1>
         </div>
         <button
           onClick={handleSave}
           disabled={!name || !content || saving}
-          className="bg-indigo-600 text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-indigo-700 disabled:opacity-50 shadow-sm shadow-indigo-600/20 transition-all active:scale-[0.98]"
+          className="bg-indigo-600 text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-indigo-700 disabled:opacity-50 shadow-sm shadow-indigo-600/20 transition-all active:scale-[0.98]"
         >
           {saving ? "Saving..." : "Save Template"}
         </button>
@@ -128,12 +128,12 @@ export default function NewCoverLetterPage() {
 
       {/* Preset selector */}
       <div className="flex items-center gap-2">
-        <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Start from:</span>
+        <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Start from:</span>
         {PRESETS.map((p) => (
           <button
             key={p.label}
             onClick={() => applyPreset(p)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-gray-200 text-gray-600 hover:bg-indigo-50 hover:text-indigo-700 hover:border-indigo-200 shadow-xs transition-all"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-200 text-slate-600 hover:bg-indigo-50 hover:text-indigo-700 hover:border-indigo-200 shadow-xs transition-all"
           >
             <FileText className="w-3 h-3" /> {p.label}
           </button>
@@ -145,18 +145,18 @@ export default function NewCoverLetterPage() {
         placeholder="Template name (e.g., 'General Application')"
         value={name}
         onChange={(e) => setName(e.target.value)}
-        className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all"
+        className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all"
       />
 
       <VariableInserter onInsert={handleInsertVariable} />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div>
-          <h3 className="text-[13px] font-semibold text-gray-700 mb-2">Edit</h3>
+          <h3 className="text-[13px] font-semibold text-slate-700 mb-2">Edit</h3>
           <TemplateEditor content={content} onChange={setContent} />
         </div>
         <div>
-          <h3 className="text-[13px] font-semibold text-gray-700 mb-2">Preview</h3>
+          <h3 className="text-[13px] font-semibold text-slate-700 mb-2">Preview</h3>
           <TemplatePreview content={content} />
         </div>
       </div>

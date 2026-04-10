@@ -3,7 +3,7 @@
 export function EmailDraftEditor({ content, onChange }: { content: string; onChange: (v: string) => void }) {
   return (
     <div className="space-y-2">
-      <label className="block text-sm font-medium text-gray-700">Email Draft</label>
+      <label className="block text-sm font-medium text-slate-700">Email Draft</label>
       <textarea
         value={content}
         onChange={(e) => onChange(e.target.value)}

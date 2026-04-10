@@ -14,13 +14,13 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         ref={ref}
         className={cn(
-          "inline-flex items-center justify-center rounded-lg font-medium transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98]",
+          "inline-flex items-center justify-center rounded-xl font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.97]",
           {
-            "bg-indigo-600 text-white shadow-sm shadow-indigo-600/20 hover:bg-indigo-700 hover:shadow-md hover:shadow-indigo-600/25": variant === "default",
-            "bg-red-600 text-white shadow-sm hover:bg-red-700": variant === "destructive",
-            "border border-gray-200 bg-white text-gray-700 shadow-xs hover:bg-gray-50 hover:border-gray-300": variant === "outline",
-            "bg-gray-100 text-gray-700 hover:bg-gray-200/80": variant === "secondary",
-            "text-gray-600 hover:bg-gray-100 hover:text-gray-900": variant === "ghost",
+            "bg-gradient-to-r from-indigo-600 to-indigo-500 text-white shadow-sm shadow-indigo-600/20 hover:shadow-md hover:shadow-indigo-600/25 hover:from-indigo-500 hover:to-indigo-600": variant === "default",
+            "bg-gradient-to-r from-red-600 to-red-500 text-white shadow-sm hover:shadow-md": variant === "destructive",
+            "border border-slate-200 bg-white text-slate-700 shadow-xs hover:bg-slate-50 hover:border-slate-300": variant === "outline",
+            "bg-slate-100 text-slate-700 hover:bg-slate-200/80": variant === "secondary",
+            "text-slate-600 hover:bg-slate-100 hover:text-slate-900": variant === "ghost",
             "text-indigo-600 underline-offset-4 hover:underline": variant === "link",
           },
           {

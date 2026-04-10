@@ -72,7 +72,7 @@ export function SkillsManager({ skills, onRefresh }: { skills: any[]; onRefresh:
     <div className="space-y-6">
       {SKILL_CATEGORIES.map((cat) => (
         <div key={cat}>
-          <h3 className="text-[13px] font-semibold text-gray-700 mb-2 capitalize">{cat} Skills</h3>
+          <h3 className="text-[13px] font-semibold text-slate-700 mb-2 capitalize">{cat} Skills</h3>
           <div className="flex flex-wrap gap-1.5">
             {grouped[cat]?.map((skill) => (
               <span key={skill.id} className={`inline-flex items-center gap-1 text-[11px] font-medium px-2 py-1 rounded-md ${categoryColors[cat]}`}>
@@ -83,7 +83,7 @@ export function SkillsManager({ skills, onRefresh }: { skills: any[]; onRefresh:
               </span>
             ))}
             {(!grouped[cat] || grouped[cat].length === 0) && (
-              <span className="text-xs text-gray-400">No skills added</span>
+              <span className="text-xs text-slate-400">No skills added</span>
             )}
           </div>
         </div>
@@ -92,10 +92,10 @@ export function SkillsManager({ skills, onRefresh }: { skills: any[]; onRefresh:
       <div className="flex items-center gap-3 pt-2">
         {/* Bulk add */}
         {bulkMode ? (
-          <div className="flex-1 border border-gray-200 rounded-xl p-4 space-y-3 animate-scale-in">
+          <div className="flex-1 border border-slate-200 rounded-xl p-4 space-y-3 animate-scale-in">
             <div className="flex items-center justify-between">
-              <p className="text-[13px] font-semibold text-gray-800">Bulk Add Skills</p>
-              <button onClick={() => setBulkMode(false)} className="text-gray-400 hover:text-gray-600">
+              <p className="text-[13px] font-semibold text-slate-800">Bulk Add Skills</p>
+              <button onClick={() => setBulkMode(false)} className="text-slate-400 hover:text-slate-600">
                 <X className="w-4 h-4" />
               </button>
             </div>
@@ -104,15 +104,15 @@ export function SkillsManager({ skills, onRefresh }: { skills: any[]; onRefresh:
               onChange={(e) => setBulkText(e.target.value)}
               rows={3}
               placeholder="Paste skills separated by commas or new lines:&#10;JavaScript, React, Node.js, TypeScript, Python, Git, Docker..."
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 resize-none transition-all"
+              className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 resize-none transition-all"
             />
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
-                <label className="text-xs text-gray-500">Category:</label>
+                <label className="text-xs text-slate-500">Category:</label>
                 <select
                   value={bulkCategory}
                   onChange={(e) => setBulkCategory(e.target.value)}
-                  className="border border-gray-200 rounded-lg px-2 py-1 text-xs shadow-xs"
+                  className="border border-slate-200 rounded-lg px-2 py-1 text-xs shadow-xs"
                 >
                   {SKILL_CATEGORIES.map((c) => (
                     <option key={c} value={c}>{c}</option>
@@ -120,11 +120,11 @@ export function SkillsManager({ skills, onRefresh }: { skills: any[]; onRefresh:
                 </select>
               </div>
               <div className="flex items-center gap-2">
-                <label className="text-xs text-gray-500">Level:</label>
+                <label className="text-xs text-slate-500">Level:</label>
                 <select
                   value={bulkLevel}
                   onChange={(e) => setBulkLevel(e.target.value)}
-                  className="border border-gray-200 rounded-lg px-2 py-1 text-xs shadow-xs"
+                  className="border border-slate-200 rounded-lg px-2 py-1 text-xs shadow-xs"
                 >
                   {SKILL_LEVELS.map((l) => (
                     <option key={l} value={l}>{l}</option>
@@ -133,52 +133,52 @@ export function SkillsManager({ skills, onRefresh }: { skills: any[]; onRefresh:
               </div>
               <div className="flex-1" />
               {bulkText && (
-                <span className="text-xs text-gray-400">
+                <span className="text-xs text-slate-400">
                   {bulkText.split(/[,\n]/).filter((s) => s.trim()).length} skills
                 </span>
               )}
               <button
                 onClick={handleBulkAdd}
                 disabled={!bulkText.trim() || bulkLoading}
-                className="bg-indigo-600 text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-indigo-700 disabled:opacity-50 shadow-sm transition-all active:scale-[0.98]"
+                className="bg-indigo-600 text-white px-3 py-1.5 rounded-xl text-xs font-medium hover:bg-indigo-700 disabled:opacity-50 shadow-sm transition-all active:scale-[0.98]"
               >
                 {bulkLoading ? "Adding..." : "Add All"}
               </button>
             </div>
           </div>
         ) : adding ? (
-          <form onSubmit={handleAdd} className="flex items-end gap-2 border border-gray-200 rounded-xl p-3 animate-scale-in">
+          <form onSubmit={handleAdd} className="flex items-end gap-2 border border-slate-200 rounded-xl p-3 animate-scale-in">
             <div>
-              <label className="block text-[11px] text-gray-500 mb-1 font-medium">Skill</label>
+              <label className="block text-[11px] text-slate-500 mb-1 font-medium">Skill</label>
               <input
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
-                className="border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm w-40 shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
+                className="border border-slate-200 rounded-lg px-2.5 py-1.5 text-sm w-40 shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
                 required
               />
             </div>
             <div>
-              <label className="block text-[11px] text-gray-500 mb-1 font-medium">Category</label>
+              <label className="block text-[11px] text-slate-500 mb-1 font-medium">Category</label>
               <select
                 value={form.category}
                 onChange={(e) => setForm({ ...form, category: e.target.value })}
-                className="border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm shadow-xs"
+                className="border border-slate-200 rounded-lg px-2.5 py-1.5 text-sm shadow-xs"
               >
                 {SKILL_CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-[11px] text-gray-500 mb-1 font-medium">Level</label>
+              <label className="block text-[11px] text-slate-500 mb-1 font-medium">Level</label>
               <select
                 value={form.level}
                 onChange={(e) => setForm({ ...form, level: e.target.value })}
-                className="border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm shadow-xs"
+                className="border border-slate-200 rounded-lg px-2.5 py-1.5 text-sm shadow-xs"
               >
                 {SKILL_LEVELS.map((l) => <option key={l} value={l}>{l}</option>)}
               </select>
             </div>
-            <button type="submit" className="bg-indigo-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-indigo-700 shadow-sm transition-all">Add</button>
-            <button type="button" onClick={() => setAdding(false)} className="border border-gray-200 px-3 py-1.5 rounded-lg text-sm text-gray-600 hover:bg-gray-50 shadow-xs transition-all">Cancel</button>
+            <button type="submit" className="bg-indigo-600 text-white px-3 py-1.5 rounded-xl text-sm font-medium hover:bg-indigo-700 shadow-sm transition-all">Add</button>
+            <button type="button" onClick={() => setAdding(false)} className="border border-slate-200 px-3 py-1.5 rounded-lg text-sm text-slate-600 hover:bg-slate-50 shadow-xs transition-all">Cancel</button>
           </form>
         ) : (
           <div className="flex items-center gap-2">
@@ -188,10 +188,10 @@ export function SkillsManager({ skills, onRefresh }: { skills: any[]; onRefresh:
             >
               <Zap className="w-4 h-4" /> Bulk Add Skills
             </button>
-            <span className="text-gray-300">|</span>
+            <span className="text-slate-300">|</span>
             <button
               onClick={() => setAdding(true)}
-              className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700"
+              className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-700"
             >
               <Plus className="w-4 h-4" /> Add One
             </button>

@@ -4,6 +4,7 @@ import "./globals.css";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
 import { ToastProvider } from "@/components/ui/toast";
+import { SidebarProvider } from "@/components/layout/sidebar-context";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -29,17 +30,19 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <div className="flex h-screen overflow-hidden bg-[#fafbfc]">
-          <Sidebar />
-          <div className="flex-1 flex flex-col overflow-hidden">
-            <Header />
-            <main className="flex-1 overflow-y-auto">
-              <div className="max-w-[1400px] mx-auto px-6 py-6">
-                {children}
-              </div>
-            </main>
+        <SidebarProvider>
+          <div className="flex h-screen overflow-hidden bg-[#fafbfc]">
+            <Sidebar />
+            <div className="flex-1 flex flex-col overflow-hidden">
+              <Header />
+              <main className="flex-1 overflow-y-auto">
+                <div className="max-w-[1400px] mx-auto px-6 py-6">
+                  {children}
+                </div>
+              </main>
+            </div>
           </div>
-        </div>
+        </SidebarProvider>
         <ToastProvider />
       </body>
     </html>

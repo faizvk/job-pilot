@@ -73,14 +73,14 @@ export default function ProfilePage() {
     <div className="space-y-5 animate-fade-in">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-[22px] font-bold text-gray-900">Profile</h1>
-          <p className="text-sm text-gray-500 mt-0.5">Your info is used for job matching, resume tailoring, and quick-fill</p>
+          <h1 className="text-2xl font-bold text-slate-900">Profile</h1>
+          <p className="text-sm text-slate-500 mt-0.5">Your info is used for job matching, resume tailoring, and quick-fill</p>
         </div>
         <div className="flex items-center gap-2">
           <button
             onClick={handleImportFromResume}
             disabled={importing}
-            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 text-gray-600 hover:bg-gray-50 shadow-xs transition-all disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium border border-slate-200 text-slate-600 hover:bg-slate-50 shadow-xs transition-all disabled:opacity-50"
           >
             {importing ? (
               <Loader2 className="w-4 h-4 animate-spin" />
@@ -91,10 +91,10 @@ export default function ProfilePage() {
           </button>
           <button
             onClick={() => setShowCopyPanel(!showCopyPanel)}
-            className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+            className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium transition-all ${
               showCopyPanel
                 ? "bg-indigo-600 text-white shadow-sm shadow-indigo-600/20"
-                : "border border-gray-200 text-gray-600 hover:bg-gray-50 shadow-xs"
+                : "border border-slate-200 text-slate-600 hover:bg-slate-50 shadow-xs"
             }`}
           >
             <Copy className="w-4 h-4" /> Quick Copy
@@ -134,15 +134,15 @@ export default function ProfilePage() {
         <QuickCopyPanel profile={profile} />
       )}
 
-      <div className="flex gap-1 bg-gray-100 p-1 rounded-lg w-fit">
+      <div className="flex gap-1 bg-slate-100 p-1 rounded-xl w-fit">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`px-4 py-2 text-sm rounded-md transition-all ${
+            className={`px-4 py-2 text-sm rounded-lg transition-all ${
               activeTab === tab.id
-                ? "bg-white shadow-xs font-medium text-gray-900"
-                : "text-gray-500 hover:text-gray-700"
+                ? "bg-white shadow-sm font-medium text-slate-900"
+                : "text-slate-500 hover:text-slate-700"
             }`}
           >
             {tab.label}
@@ -150,7 +150,7 @@ export default function ProfilePage() {
         ))}
       </div>
 
-      <div className="bg-white border border-gray-200/80 rounded-xl shadow-card p-6">
+      <div className="bg-white border border-slate-200/60 rounded-2xl shadow-card p-6">
         {activeTab === "personal" && (
           <PersonalInfoForm profile={profile} onSave={handleUpdateProfile} />
         )}

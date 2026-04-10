@@ -32,7 +32,7 @@ export function StepTailorResume({ tailoredContent, onTailor, onNext, onBack }: 
     <div className="space-y-4">
       <div className="flex items-center gap-4 bg-white border rounded-lg p-4">
         <label className="text-sm font-medium">Base Resume:</label>
-        <select value={selectedId} onChange={(e) => setSelectedId(e.target.value)} className="flex-1 border rounded-lg px-3 py-2 text-sm">
+        <select value={selectedId} onChange={(e) => setSelectedId(e.target.value)} className="flex-1 border rounded-xl px-3 py-2 text-sm">
           {resumes.map((r) => (
             <option key={r.id} value={r.id}>{r.name} {r.isBase ? "(Base)" : ""}</option>
           ))}
@@ -50,13 +50,13 @@ export function StepTailorResume({ tailoredContent, onTailor, onNext, onBack }: 
       )}
 
       {resumes.length === 0 && !loading && (
-        <div className="text-center py-8 text-gray-500">
+        <div className="text-center py-8 text-slate-500">
           <p>No resumes found. <a href="/resumes/new" className="text-blue-600 hover:underline">Create one first</a>.</p>
         </div>
       )}
 
       <div className="flex justify-between">
-        <button onClick={onBack} className="border px-4 py-2 rounded-lg text-sm hover:bg-gray-50">Back</button>
+        <button onClick={onBack} className="border px-4 py-2 rounded-lg text-sm hover:bg-slate-50">Back</button>
         <button onClick={onNext} className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
           {tailoredContent ? "Continue to Cover Letter" : "Skip"}
         </button>

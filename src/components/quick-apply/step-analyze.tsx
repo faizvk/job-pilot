@@ -12,7 +12,7 @@ interface StepAnalyzeProps {
 }
 
 export function StepAnalyze({ analysis, onNext, onBack }: StepAnalyzeProps) {
-  if (!analysis) return <p className="text-gray-500">No analysis data.</p>;
+  if (!analysis) return <p className="text-slate-500">No analysis data.</p>;
 
   return (
     <div className="space-y-6">
@@ -31,14 +31,14 @@ export function StepAnalyze({ analysis, onNext, onBack }: StepAnalyzeProps) {
       {analysis.experienceRequirements.length > 0 && (
         <div className="bg-white border rounded-lg p-6">
           <h3 className="font-medium mb-2">Experience Requirements</h3>
-          <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
+          <ul className="list-disc list-inside text-sm text-slate-600 space-y-1">
             {analysis.experienceRequirements.map((req, i) => <li key={i}>{req}</li>)}
           </ul>
         </div>
       )}
 
       <div className="flex justify-between">
-        <button onClick={onBack} className="border px-4 py-2 rounded-lg text-sm hover:bg-gray-50">Back</button>
+        <button onClick={onBack} className="border px-4 py-2 rounded-lg text-sm hover:bg-slate-50">Back</button>
         <button onClick={onNext} className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">Continue to Resume</button>
       </div>
     </div>

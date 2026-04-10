@@ -84,9 +84,9 @@ export default function ApplicationCoverLetterPage() {
   if (loading) {
     return (
       <div className="space-y-6 animate-fade-in">
-        <div className="h-8 w-64 bg-gray-100 rounded-lg animate-shimmer" />
-        <div className="h-20 bg-gray-100 rounded-xl animate-shimmer" />
-        <div className="h-96 bg-gray-100 rounded-xl animate-shimmer" />
+        <div className="h-8 w-64 bg-slate-100 rounded-lg animate-shimmer" />
+        <div className="h-20 bg-slate-100 rounded-xl animate-shimmer" />
+        <div className="h-96 bg-slate-100 rounded-xl animate-shimmer" />
       </div>
     );
   }
@@ -95,12 +95,12 @@ export default function ApplicationCoverLetterPage() {
     <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Link href={`/applications/${id}`} className="text-gray-400 hover:text-gray-600 transition-colors">
+          <Link href={`/applications/${id}`} className="text-slate-400 hover:text-slate-600 transition-colors">
             <ArrowLeft className="w-5 h-5" />
           </Link>
           <div>
-            <h1 className="text-xl font-bold text-gray-900">Cover Letter</h1>
-            <p className="text-sm text-gray-500">{app?.jobTitle} at {app?.companyName}</p>
+            <h1 className="text-xl font-bold text-slate-900">Cover Letter</h1>
+            <p className="text-sm text-slate-500">{app?.jobTitle} at {app?.companyName}</p>
           </div>
         </div>
         {generatedContent && (
@@ -114,17 +114,17 @@ export default function ApplicationCoverLetterPage() {
       </div>
 
       {/* Generation Options */}
-      <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-xs space-y-4">
+      <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs space-y-4">
         {/* Template-based generation */}
         <div>
-          <h3 className="text-[13px] font-semibold text-gray-700 mb-2 flex items-center gap-2">
-            <FileText className="w-4 h-4 text-gray-400" /> Template-Based
+          <h3 className="text-[13px] font-semibold text-slate-700 mb-2 flex items-center gap-2">
+            <FileText className="w-4 h-4 text-slate-400" /> Template-Based
           </h3>
           <div className="flex items-center gap-3">
             <select
               value={selectedTemplateId}
               onChange={(e) => setSelectedTemplateId(e.target.value)}
-              className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
+              className="flex-1 border border-slate-200 rounded-xl px-3 py-2 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
             >
               <option value="">Select a template</option>
               {templates.map((t: any) => (
@@ -134,7 +134,7 @@ export default function ApplicationCoverLetterPage() {
             <button
               onClick={handleGenerate}
               disabled={!selectedTemplateId || generating}
-              className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 disabled:opacity-50 shadow-sm shadow-indigo-600/20 transition-all active:scale-[0.98]"
+              className="bg-indigo-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-indigo-700 disabled:opacity-50 shadow-sm shadow-indigo-600/20 transition-all active:scale-[0.98]"
             >
               {generating ? "Generating..." : "Generate"}
             </button>
@@ -142,16 +142,16 @@ export default function ApplicationCoverLetterPage() {
         </div>
 
         {/* AI generation */}
-        <div className="border-t border-gray-100 pt-4">
-          <h3 className="text-[13px] font-semibold text-gray-700 mb-2 flex items-center gap-2">
+        <div className="border-t border-slate-100 pt-4">
+          <h3 className="text-[13px] font-semibold text-slate-700 mb-2 flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-amber-500" /> AI-Powered
-            {!aiAvailable && <span className="text-[10px] text-gray-400 font-normal">(Set GEMINI_API_KEY or GROQ_API_KEY in .env)</span>}
+            {!aiAvailable && <span className="text-[10px] text-slate-400 font-normal">(Set GEMINI_API_KEY or GROQ_API_KEY in .env)</span>}
           </h3>
           <div className="flex items-center gap-3">
             <select
               value={aiTone}
               onChange={(e) => setAiTone(e.target.value as any)}
-              className="border border-gray-200 rounded-lg px-3 py-2 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
+              className="border border-slate-200 rounded-xl px-3 py-2 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
             >
               <option value="professional">Professional</option>
               <option value="technical">Technical</option>
@@ -160,7 +160,7 @@ export default function ApplicationCoverLetterPage() {
             <button
               onClick={handleAIGenerate}
               disabled={!aiAvailable || aiGenerating}
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-violet-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:from-indigo-700 hover:to-violet-700 disabled:opacity-50 shadow-sm transition-all active:scale-[0.98]"
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-violet-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:from-indigo-700 hover:to-violet-700 disabled:opacity-50 shadow-sm transition-all active:scale-[0.98]"
             >
               <Sparkles className="w-4 h-4" />
               {aiGenerating ? "Writing..." : "Generate with AI"}
@@ -172,25 +172,25 @@ export default function ApplicationCoverLetterPage() {
       {generatedContent ? (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div>
-            <h3 className="text-[13px] font-semibold text-gray-700 mb-2">Edit</h3>
+            <h3 className="text-[13px] font-semibold text-slate-700 mb-2">Edit</h3>
             <textarea
               value={generatedContent}
               onChange={(e) => setGeneratedContent(e.target.value)}
-              className="w-full h-[500px] border border-gray-200 rounded-xl p-4 text-sm font-mono resize-none shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all"
+              className="w-full h-[500px] border border-slate-200 rounded-xl p-4 text-sm font-mono resize-none shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all"
             />
           </div>
           <div>
-            <h3 className="text-[13px] font-semibold text-gray-700 mb-2">Preview</h3>
+            <h3 className="text-[13px] font-semibold text-slate-700 mb-2">Preview</h3>
             <TemplatePreview content={generatedContent} />
           </div>
         </div>
       ) : (
         <div className="text-center py-16">
-          <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center mx-auto mb-4">
-            <FileText className="w-6 h-6 text-gray-400" />
+          <div className="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+            <FileText className="w-6 h-6 text-slate-400" />
           </div>
-          <p className="text-gray-600 font-medium">No cover letter yet</p>
-          <p className="text-sm text-gray-400 mt-1">Choose a template or use AI to generate one</p>
+          <p className="text-slate-600 font-medium">No cover letter yet</p>
+          <p className="text-sm text-slate-400 mt-1">Choose a template or use AI to generate one</p>
         </div>
       )}
     </div>

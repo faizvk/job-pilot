@@ -100,7 +100,7 @@ export default function QuickApplyPage() {
     <div className="max-w-4xl mx-auto space-y-6">
       <div>
         <h1 className="text-2xl font-bold">Quick Apply</h1>
-        <p className="text-gray-500">Streamlined workflow to apply faster with quality</p>
+        <p className="text-slate-500">Streamlined workflow to apply faster with quality</p>
       </div>
 
       <StepIndicator steps={STEPS} currentStep={state.step} />

@@ -48,8 +48,8 @@ export default function ResumeDetailPage() {
     router.push("/resumes");
   };
 
-  if (loading) return <div className="animate-pulse h-96 bg-gray-100 rounded-lg" />;
-  if (!resume) return <p className="text-gray-500">Resume not found.</p>;
+  if (loading) return <div className="animate-pulse h-96 bg-slate-100 rounded-lg" />;
+  if (!resume) return <p className="text-slate-500">Resume not found.</p>;
 
   return (
     <div className="space-y-6">
@@ -59,7 +59,7 @@ export default function ResumeDetailPage() {
           {resume.filePath && (
             <a
               href={`/api/resumes/${id}/download`}
-              className="inline-flex items-center gap-1 px-3 py-2 text-sm border border-gray-200 text-gray-600 rounded-lg hover:bg-gray-50"
+              className="inline-flex items-center gap-1 px-3 py-2 text-sm border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50"
             >
               <Download className="w-4 h-4" /> Original PDF
             </a>
@@ -85,7 +85,7 @@ export default function ResumeDetailPage() {
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="flex-1 border rounded-lg px-3 py-2 text-sm"
+          className="flex-1 border rounded-xl px-3 py-2 text-sm"
         />
         <label className="flex items-center gap-2 text-sm">
           <input

@@ -73,7 +73,7 @@ const PLATFORM_COLORS: Record<string, string> = {
   Remotive: "bg-rose-50 text-rose-700 ring-1 ring-inset ring-rose-600/10",
   Jobicy: "bg-pink-50 text-pink-700 ring-1 ring-inset ring-pink-600/10",
   Adzuna: "bg-cyan-50 text-cyan-700 ring-1 ring-inset ring-cyan-600/10",
-  "Company Site": "bg-gray-50 text-gray-600 ring-1 ring-inset ring-gray-500/10",
+  "Company Site": "bg-slate-50 text-slate-600 ring-1 ring-inset ring-slate-500/10",
 };
 
 export default function JobFeedPage() {
@@ -301,14 +301,14 @@ export default function JobFeedPage() {
   };
 
   const getScoreColor = (score: number | null) => {
-    if (!score) return "text-gray-400";
+    if (!score) return "text-slate-400";
     if (score >= 70) return "text-emerald-600";
     if (score >= 40) return "text-amber-600";
     return "text-red-500";
   };
 
   const getScoreBg = (score: number | null) => {
-    if (!score) return "bg-gray-50";
+    if (!score) return "bg-slate-50";
     if (score >= 70) return "bg-emerald-50";
     if (score >= 40) return "bg-amber-50";
     return "bg-red-50";
@@ -319,8 +319,8 @@ export default function JobFeedPage() {
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-[22px] font-bold text-gray-900">Job Feed</h1>
-          <p className="text-sm text-gray-500 mt-0.5">
+          <h1 className="text-2xl font-bold text-slate-900">Job Feed</h1>
+          <p className="text-sm text-slate-500 mt-0.5">
             {total} jobs found{sources.length > 0 && ` from ${sources.join(", ")}`}
             {lastFetched && ` \u00b7 Last fetched: ${lastFetched}`}
           </p>
@@ -331,21 +331,21 @@ export default function JobFeedPage() {
             className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm transition-all ${
               showCopyPanel
                 ? "bg-indigo-600 text-white shadow-sm shadow-indigo-600/20"
-                : "border border-gray-200 text-gray-600 hover:bg-gray-50 shadow-xs"
+                : "border border-slate-200 text-slate-600 hover:bg-slate-50 shadow-xs"
             }`}
           >
             <Copy className="w-4 h-4" /> Quick Fill
           </button>
           <button
             onClick={() => setShowPrefs(!showPrefs)}
-            className="inline-flex items-center gap-1.5 border border-gray-200 px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-all shadow-xs"
+            className="inline-flex items-center gap-1.5 border border-slate-200 px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-slate-50 hover:border-slate-300 transition-all shadow-xs"
           >
             <Settings2 className="w-4 h-4" /> Preferences
           </button>
           <button
             onClick={fetchJobs}
             disabled={fetching}
-            className="inline-flex items-center gap-1.5 bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm shadow-indigo-600/20 hover:bg-indigo-700 hover:shadow-md disabled:opacity-50 transition-all active:scale-[0.98]"
+            className="inline-flex items-center gap-1.5 bg-indigo-600 text-white px-4 py-2 rounded-xl text-sm font-medium shadow-sm shadow-indigo-600/20 hover:bg-indigo-700 hover:shadow-md disabled:opacity-50 transition-all active:scale-[0.98]"
           >
             {fetching ? (
               <><Loader2 className="w-4 h-4 animate-spin" /> Fetching Jobs...</>
@@ -363,32 +363,32 @@ export default function JobFeedPage() {
 
       {/* Search Preferences Panel */}
       {showPrefs && (
-        <div className="bg-white border border-gray-200/80 rounded-xl shadow-card p-5 space-y-4 animate-scale-in">
+        <div className="bg-white border border-slate-200/80 rounded-xl shadow-card p-5 space-y-4 animate-scale-in">
           <div className="flex items-center justify-between">
-            <h2 className="text-[15px] font-semibold text-gray-900">Search Preferences</h2>
-            <button onClick={() => setShowPrefs(false)} className="p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all">
+            <h2 className="text-[15px] font-semibold text-slate-900">Search Preferences</h2>
+            <button onClick={() => setShowPrefs(false)} className="p-1 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-all">
               <X className="w-4 h-4" />
             </button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="text-[13px] font-medium text-gray-700">Job Titles (one per line)</label>
+              <label className="text-[13px] font-medium text-slate-700">Job Titles (one per line)</label>
               <textarea
                 value={prefs.jobTitles.join("\n")}
                 onChange={(e) => setPrefs({ ...prefs, jobTitles: e.target.value.split("\n").filter((t) => t.trim()) })}
                 rows={4}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm mt-1.5 shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all"
+                className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm mt-1.5 shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all"
                 placeholder="Junior Software Engineer&#10;Software Developer&#10;Frontend Developer"
               />
             </div>
             <div>
-              <label className="text-[13px] font-medium text-gray-700">Locations (one per line)</label>
+              <label className="text-[13px] font-medium text-slate-700">Locations (one per line)</label>
               <textarea
                 value={prefs.locations.join("\n")}
                 onChange={(e) => setPrefs({ ...prefs, locations: e.target.value.split("\n").filter((t) => t.trim()) })}
                 rows={4}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm mt-1.5 shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all"
+                className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm mt-1.5 shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all"
                 placeholder="Kerala, India&#10;Bangalore, India&#10;Remote"
               />
             </div>
@@ -396,7 +396,7 @@ export default function JobFeedPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="text-[13px] font-medium text-gray-700">Work Type</label>
+              <label className="text-[13px] font-medium text-slate-700">Work Type</label>
               <div className="flex flex-wrap gap-2 mt-1.5">
                 {["remote", "hybrid", "onsite"].map((type) => (
                   <label key={type} className="flex items-center gap-1.5 text-sm cursor-pointer">
@@ -409,7 +409,7 @@ export default function JobFeedPage() {
                           : prefs.workTypes.filter((t) => t !== type);
                         setPrefs({ ...prefs, workTypes: wt });
                       }}
-                      className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                      className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
                     />
                     {type.charAt(0).toUpperCase() + type.slice(1)}
                   </label>
@@ -417,7 +417,7 @@ export default function JobFeedPage() {
               </div>
             </div>
             <div>
-              <label className="text-[13px] font-medium text-gray-700">Experience Range (years)</label>
+              <label className="text-[13px] font-medium text-slate-700">Experience Range (years)</label>
               <div className="flex items-center gap-2 mt-1.5">
                 <input
                   type="number"
@@ -425,70 +425,70 @@ export default function JobFeedPage() {
                   max={20}
                   value={prefs.experienceMin}
                   onChange={(e) => setPrefs({ ...prefs, experienceMin: parseInt(e.target.value) || 0 })}
-                  className="w-16 border border-gray-200 rounded-lg px-2 py-1.5 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
+                  className="w-16 border border-slate-200 rounded-lg px-2 py-1.5 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
                 />
-                <span className="text-gray-400 text-sm">to</span>
+                <span className="text-slate-400 text-sm">to</span>
                 <input
                   type="number"
                   min={0}
                   max={20}
                   value={prefs.experienceMax}
                   onChange={(e) => setPrefs({ ...prefs, experienceMax: parseInt(e.target.value) || 0 })}
-                  className="w-16 border border-gray-200 rounded-lg px-2 py-1.5 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
+                  className="w-16 border border-slate-200 rounded-lg px-2 py-1.5 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
                 />
-                <span className="text-xs text-gray-400">years</span>
+                <span className="text-xs text-slate-400">years</span>
               </div>
             </div>
             <div>
-              <label className="text-[13px] font-medium text-gray-700">Min Salary (optional)</label>
+              <label className="text-[13px] font-medium text-slate-700">Min Salary (optional)</label>
               <input
                 type="number"
                 value={prefs.salaryMin || ""}
                 onChange={(e) => setPrefs({ ...prefs, salaryMin: e.target.value ? parseInt(e.target.value) : null })}
                 placeholder="e.g. 300000"
-                className="w-full border border-gray-200 rounded-lg px-3 py-1.5 text-sm mt-1.5 shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
+                className="w-full border border-slate-200 rounded-xl px-3 py-1.5 text-sm mt-1.5 shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="text-[13px] font-medium text-gray-700">Must-have Keywords (comma-separated)</label>
+              <label className="text-[13px] font-medium text-slate-700">Must-have Keywords (comma-separated)</label>
               <input
                 value={prefs.keywords}
                 onChange={(e) => setPrefs({ ...prefs, keywords: e.target.value })}
-                className="w-full border border-gray-200 rounded-lg px-3 py-1.5 text-sm mt-1.5 shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
+                className="w-full border border-slate-200 rounded-xl px-3 py-1.5 text-sm mt-1.5 shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
                 placeholder="javascript, react, node, python"
               />
             </div>
             <div>
-              <label className="text-[13px] font-medium text-gray-700">Exclude Keywords (comma-separated)</label>
+              <label className="text-[13px] font-medium text-slate-700">Exclude Keywords (comma-separated)</label>
               <input
                 value={prefs.excludeKeywords}
                 onChange={(e) => setPrefs({ ...prefs, excludeKeywords: e.target.value })}
-                className="w-full border border-gray-200 rounded-lg px-3 py-1.5 text-sm mt-1.5 shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
+                className="w-full border border-slate-200 rounded-xl px-3 py-1.5 text-sm mt-1.5 shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
                 placeholder="senior, staff, principal"
               />
             </div>
           </div>
 
           <div>
-            <label className="text-[13px] font-medium text-gray-700 mb-1.5 block">API Keys (optional, for more results)</label>
-            <div className="text-xs text-gray-600 bg-amber-50/60 border border-amber-200/60 rounded-lg p-3 space-y-1">
+            <label className="text-[13px] font-medium text-slate-700 mb-1.5 block">API Keys (optional, for more results)</label>
+            <div className="text-xs text-slate-600 bg-amber-50/60 border border-amber-200/60 rounded-lg p-3 space-y-1">
               <p>Set these in your <code className="bg-amber-100/70 px-1 py-0.5 rounded text-amber-800 font-mono">.env</code> file for more job sources:</p>
-              <p><code className="font-mono text-gray-800">RAPIDAPI_KEY=your_key</code> — Get free at rapidapi.com/letscrape-6bRBa3QguO5/api/jsearch (500 req/month free, pulls from LinkedIn + Indeed + Glassdoor)</p>
-              <p><code className="font-mono text-gray-800">ADZUNA_APP_ID=your_id</code> + <code className="font-mono text-gray-800">ADZUNA_API_KEY=your_key</code> — Get free at developer.adzuna.com (India jobs)</p>
+              <p><code className="font-mono text-slate-800">RAPIDAPI_KEY=your_key</code> — Get free at rapidapi.com/letscrape-6bRBa3QguO5/api/jsearch (500 req/month free, pulls from LinkedIn + Indeed + Glassdoor)</p>
+              <p><code className="font-mono text-slate-800">ADZUNA_APP_ID=your_id</code> + <code className="font-mono text-slate-800">ADZUNA_API_KEY=your_key</code> — Get free at developer.adzuna.com (India jobs)</p>
               <p>Without API keys, jobs are fetched from Remotive and Arbeitnow (free, no key needed).</p>
             </div>
           </div>
 
           <div className="flex justify-end gap-2 pt-1">
-            <button onClick={() => setShowPrefs(false)} className="border border-gray-200 px-4 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-50 transition-all shadow-xs">
+            <button onClick={() => setShowPrefs(false)} className="border border-slate-200 px-4 py-2 rounded-lg text-sm text-slate-600 hover:bg-slate-50 transition-all shadow-xs">
               Cancel
             </button>
             <button
               onClick={savePreferences}
-              className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 shadow-sm shadow-indigo-600/20 transition-all active:scale-[0.98]"
+              className="bg-indigo-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-indigo-700 shadow-sm shadow-indigo-600/20 transition-all active:scale-[0.98]"
             >
               Save Preferences
             </button>
@@ -498,25 +498,25 @@ export default function JobFeedPage() {
 
       {/* Action bar */}
       {listings.length > 0 && (
-        <div className="flex items-center justify-between bg-white border border-gray-200/80 rounded-xl shadow-card p-3">
+        <div className="flex items-center justify-between bg-white border border-slate-200/80 rounded-xl shadow-card p-3">
           <div className="flex items-center gap-3">
             <label className="flex items-center gap-2 text-sm cursor-pointer">
               <input
                 type="checkbox"
                 checked={selectedJobs.size === listings.length && listings.length > 0}
                 onChange={selectAll}
-                className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
               />
-              <span className="text-gray-600">Select All</span>
-              <span className="text-xs text-gray-400">({selectedJobs.size}/{listings.length})</span>
+              <span className="text-slate-600">Select All</span>
+              <span className="text-xs text-slate-400">({selectedJobs.size}/{listings.length})</span>
             </label>
 
             {selectedJobs.size > 0 && (
-              <div className="flex items-center gap-1.5 ml-2 pl-3 border-l border-gray-200">
+              <div className="flex items-center gap-1.5 ml-2 pl-3 border-l border-slate-200">
                 <button
                   onClick={openAndApply}
                   disabled={applyingAll}
-                  className="inline-flex items-center gap-1 bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-emerald-700 transition-all shadow-sm active:scale-[0.97] disabled:opacity-50"
+                  className="inline-flex items-center gap-1 bg-emerald-600 text-white px-3 py-1.5 rounded-xl text-xs font-medium hover:bg-emerald-700 transition-all shadow-sm active:scale-[0.97] disabled:opacity-50"
                 >
                   {applyingAll ? (
                     <><Loader2 className="w-3 h-3 animate-spin" /> Opening...</>
@@ -532,7 +532,7 @@ export default function JobFeedPage() {
                 </button>
                 <button
                   onClick={hideSelected}
-                  className="inline-flex items-center gap-1 text-gray-500 px-2.5 py-1.5 rounded-lg text-xs hover:bg-gray-100 transition-all"
+                  className="inline-flex items-center gap-1 text-slate-500 px-2.5 py-1.5 rounded-lg text-xs hover:bg-slate-100 transition-all"
                 >
                   <EyeOff className="w-3 h-3" /> Hide
                 </button>
@@ -542,7 +542,7 @@ export default function JobFeedPage() {
 
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className={`inline-flex items-center gap-1.5 text-sm px-2.5 py-1.5 rounded-lg transition-all ${showFilters ? "bg-indigo-50 text-indigo-600" : "text-gray-500 hover:bg-gray-100"}`}
+            className={`inline-flex items-center gap-1.5 text-sm px-2.5 py-1.5 rounded-lg transition-all ${showFilters ? "bg-indigo-50 text-indigo-600" : "text-slate-500 hover:bg-slate-100"}`}
           >
             <Filter className="w-3.5 h-3.5" /> Filters
           </button>
@@ -551,13 +551,13 @@ export default function JobFeedPage() {
 
       {/* Filters */}
       {showFilters && (
-        <div className="flex items-center gap-4 bg-white border border-gray-200/80 rounded-xl shadow-card p-3 animate-scale-in">
+        <div className="flex items-center gap-4 bg-white border border-slate-200/80 rounded-xl shadow-card p-3 animate-scale-in">
           <div className="flex items-center gap-2">
-            <label className="text-xs text-gray-500 font-medium">Platform:</label>
+            <label className="text-xs text-slate-500 font-medium">Platform:</label>
             <select
               value={filterPlatform}
               onChange={(e) => setFilterPlatform(e.target.value)}
-              className="border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
+              className="border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
             >
               <option value="">All Platforms</option>
               <option value="LinkedIn">LinkedIn</option>
@@ -570,11 +570,11 @@ export default function JobFeedPage() {
             </select>
           </div>
           <div className="flex items-center gap-2">
-            <label className="text-xs text-gray-500 font-medium">Work Type:</label>
+            <label className="text-xs text-slate-500 font-medium">Work Type:</label>
             <select
               value={filterWorkType}
               onChange={(e) => setFilterWorkType(e.target.value)}
-              className="border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
+              className="border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
             >
               <option value="">All</option>
               <option value="remote">Remote</option>
@@ -583,16 +583,16 @@ export default function JobFeedPage() {
             </select>
           </div>
           <div className="flex items-center gap-2">
-            <label className="text-xs text-gray-500 font-medium">Min Match:</label>
+            <label className="text-xs text-slate-500 font-medium">Min Match:</label>
             <input
               type="number"
               min={0}
               max={100}
               value={filterMinScore}
               onChange={(e) => setFilterMinScore(parseInt(e.target.value) || 0)}
-              className="w-16 border border-gray-200 rounded-lg px-2 py-1.5 text-xs shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
+              className="w-16 border border-slate-200 rounded-lg px-2 py-1.5 text-xs shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
             />
-            <span className="text-xs text-gray-400">%</span>
+            <span className="text-xs text-slate-400">%</span>
           </div>
         </div>
       )}
@@ -601,7 +601,7 @@ export default function JobFeedPage() {
       {loading ? (
         <div className="text-center py-16">
           <Loader2 className="w-7 h-7 animate-spin text-indigo-500 mx-auto" />
-          <p className="text-sm text-gray-500 mt-3">Loading jobs...</p>
+          <p className="text-sm text-slate-500 mt-3">Loading jobs...</p>
         </div>
       ) : listings.length > 0 ? (
         <div className="space-y-2">
@@ -609,7 +609,7 @@ export default function JobFeedPage() {
             <div
               key={job.id}
               className={`bg-white border rounded-xl overflow-hidden transition-all duration-150 shadow-card hover:shadow-card-hover ${
-                selectedJobs.has(job.id) ? "border-indigo-300 ring-1 ring-indigo-200/50" : "border-gray-200/80"
+                selectedJobs.has(job.id) ? "border-indigo-300 ring-1 ring-indigo-200/50" : "border-slate-200/80"
               }`}
               style={{ animationDelay: `${index * 30}ms` }}
             >
@@ -618,31 +618,31 @@ export default function JobFeedPage() {
                   type="checkbox"
                   checked={selectedJobs.has(job.id)}
                   onChange={() => toggleSelect(job.id)}
-                  className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 mt-1 flex-shrink-0"
+                  className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 mt-1 flex-shrink-0"
                 />
 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
-                      <h3 className="font-semibold text-[14px] text-gray-900 truncate">{job.title}</h3>
-                      <div className="flex items-center gap-3 mt-1.5 text-xs text-gray-500 flex-wrap">
+                      <h3 className="font-semibold text-[14px] text-slate-900 truncate">{job.title}</h3>
+                      <div className="flex items-center gap-3 mt-1.5 text-xs text-slate-500 flex-wrap">
                         <span className="inline-flex items-center gap-1">
-                          <Building2 className="w-3 h-3 text-gray-400" /> {job.company}
+                          <Building2 className="w-3 h-3 text-slate-400" /> {job.company}
                         </span>
                         {job.location && (
                           <span className="inline-flex items-center gap-1">
-                            <MapPin className="w-3 h-3 text-gray-400" /> {job.location}
+                            <MapPin className="w-3 h-3 text-slate-400" /> {job.location}
                           </span>
                         )}
                         {job.workType && (
                           <span className="inline-flex items-center gap-1">
-                            <Briefcase className="w-3 h-3 text-gray-400" />
+                            <Briefcase className="w-3 h-3 text-slate-400" />
                             {job.workType.charAt(0).toUpperCase() + job.workType.slice(1)}
                           </span>
                         )}
                         {job.postedAt && (
                           <span className="inline-flex items-center gap-1">
-                            <Clock className="w-3 h-3 text-gray-400" /> {formatPostedDate(job.postedAt)}
+                            <Clock className="w-3 h-3 text-slate-400" /> {formatPostedDate(job.postedAt)}
                           </span>
                         )}
                       </div>
@@ -655,7 +655,7 @@ export default function JobFeedPage() {
                           {job.matchScore}%
                         </div>
                       )}
-                      <span className={`text-[11px] px-2 py-0.5 rounded-md font-medium ${PLATFORM_COLORS[job.platform] || "bg-gray-50 text-gray-600 ring-1 ring-inset ring-gray-500/10"}`}>
+                      <span className={`text-[11px] px-2 py-0.5 rounded-md font-medium ${PLATFORM_COLORS[job.platform] || "bg-slate-50 text-slate-600 ring-1 ring-inset ring-slate-500/10"}`}>
                         {job.platform}
                       </span>
                     </div>
@@ -679,7 +679,7 @@ export default function JobFeedPage() {
 
                   {/* Description preview */}
                   {job.description && (
-                    <p className="text-xs text-gray-400 mt-2 line-clamp-2 leading-relaxed">
+                    <p className="text-xs text-slate-400 mt-2 line-clamp-2 leading-relaxed">
                       {job.description.split("\n").find((l) => l.trim().length > 20 && !l.startsWith("###"))?.trim().slice(0, 200)}...
                     </p>
                   )}
@@ -690,13 +690,13 @@ export default function JobFeedPage() {
                     href={job.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-emerald-700 shadow-sm shadow-emerald-600/20 transition-all active:scale-[0.97]"
+                    className="inline-flex items-center gap-1 bg-emerald-600 text-white px-3 py-1.5 rounded-xl text-xs font-medium hover:bg-emerald-700 shadow-sm shadow-emerald-600/20 transition-all active:scale-[0.97]"
                   >
                     <ExternalLink className="w-3 h-3" /> Apply
                   </a>
                   <button
                     onClick={() => setExpandedJob(expandedJob === job.id ? null : job.id)}
-                    className="text-gray-400 hover:text-gray-600 p-1 hover:bg-gray-100 rounded transition-all"
+                    className="text-slate-400 hover:text-slate-600 p-1 hover:bg-slate-100 rounded transition-all"
                   >
                     {expandedJob === job.id ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                   </button>
@@ -705,14 +705,14 @@ export default function JobFeedPage() {
 
               {/* Expanded description */}
               {expandedJob === job.id && job.description && (
-                <div className="border-t border-gray-100 px-5 py-4 bg-gray-50/50 max-h-96 overflow-y-auto">
-                  <div className="space-y-1 text-sm text-gray-600">
+                <div className="border-t border-slate-100 px-5 py-4 bg-slate-50/50 max-h-96 overflow-y-auto">
+                  <div className="space-y-1 text-sm text-slate-600">
                     {job.description.split("\n").map((line, i) => {
                       const trimmed = line.trim();
                       if (!trimmed) return <div key={i} className="h-2" />;
                       if (trimmed.startsWith("### ")) {
                         return (
-                          <h4 key={i} className="font-semibold text-gray-900 text-[13px] pt-3 pb-1 border-b border-gray-200/80 mb-1">
+                          <h4 key={i} className="font-semibold text-slate-900 text-[13px] pt-3 pb-1 border-b border-slate-200/80 mb-1">
                             {trimmed.replace("### ", "")}
                           </h4>
                         );
@@ -738,11 +738,11 @@ export default function JobFeedPage() {
           <div className="w-16 h-16 rounded-2xl bg-indigo-50 flex items-center justify-center mx-auto mb-4">
             <Search className="w-7 h-7 text-indigo-400" />
           </div>
-          <p className="text-lg font-semibold text-gray-900">No jobs yet</p>
-          <p className="text-sm text-gray-500 mt-1.5 max-w-sm mx-auto">Set your preferences and click &ldquo;Fetch 50+ Jobs&rdquo; to get started</p>
+          <p className="text-lg font-semibold text-slate-900">No jobs yet</p>
+          <p className="text-sm text-slate-500 mt-1.5 max-w-sm mx-auto">Set your preferences and click &ldquo;Fetch 50+ Jobs&rdquo; to get started</p>
           <button
             onClick={() => { setShowPrefs(true); }}
-            className="mt-5 bg-indigo-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-indigo-700 shadow-sm shadow-indigo-600/20 transition-all active:scale-[0.98]"
+            className="mt-5 bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-indigo-700 shadow-sm shadow-indigo-600/20 transition-all active:scale-[0.98]"
           >
             Set Up Preferences
           </button>

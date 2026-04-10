@@ -29,8 +29,8 @@ export default function EditApplicationPage() {
     }
   };
 
-  if (loading) return <div className="animate-pulse h-96 bg-gray-100 rounded-lg" />;
-  if (!app) return <p className="text-gray-500">Application not found.</p>;
+  if (loading) return <div className="animate-pulse h-96 bg-slate-100 rounded-lg" />;
+  if (!app) return <p className="text-slate-500">Application not found.</p>;
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">

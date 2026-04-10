@@ -13,41 +13,41 @@ export function StepPasteJd({ jobDescription, applicationData, onJobDescriptionC
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Company Name *</label>
+          <label className="block text-sm font-medium text-slate-700 mb-1">Company Name *</label>
           <input
             type="text" value={applicationData.companyName}
             onChange={(e) => onApplicationDataChange({ companyName: e.target.value })}
-            className="w-full border rounded-lg px-3 py-2 text-sm" required
+            className="w-full border rounded-xl px-3 py-2 text-sm" required
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Job Title *</label>
+          <label className="block text-sm font-medium text-slate-700 mb-1">Job Title *</label>
           <input
             type="text" value={applicationData.jobTitle}
             onChange={(e) => onApplicationDataChange({ jobTitle: e.target.value })}
-            className="w-full border rounded-lg px-3 py-2 text-sm" required
+            className="w-full border rounded-xl px-3 py-2 text-sm" required
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Job URL</label>
+          <label className="block text-sm font-medium text-slate-700 mb-1">Job URL</label>
           <input
             type="url" value={applicationData.jobUrl}
             onChange={(e) => onApplicationDataChange({ jobUrl: e.target.value })}
-            className="w-full border rounded-lg px-3 py-2 text-sm"
+            className="w-full border rounded-xl px-3 py-2 text-sm"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
+          <label className="block text-sm font-medium text-slate-700 mb-1">Location</label>
           <input
             type="text" value={applicationData.location}
             onChange={(e) => onApplicationDataChange({ location: e.target.value })}
-            className="w-full border rounded-lg px-3 py-2 text-sm"
+            className="w-full border rounded-xl px-3 py-2 text-sm"
           />
         </div>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Job Description *</label>
+        <label className="block text-sm font-medium text-slate-700 mb-1">Job Description *</label>
         <textarea
           value={jobDescription}
           onChange={(e) => onJobDescriptionChange(e.target.value)}

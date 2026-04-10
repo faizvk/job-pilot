@@ -8,7 +8,7 @@ interface ResumePerf {
 
 export function ResumePerformance({ data }: { data: ResumePerf[] }) {
   if (data.length === 0) {
-    return <p className="text-sm text-gray-500">No resume data yet. Start applying with tailored resumes!</p>;
+    return <p className="text-sm text-slate-500">No resume data yet. Start applying with tailored resumes!</p>;
   }
 
   return (
@@ -23,7 +23,7 @@ export function ResumePerformance({ data }: { data: ResumePerf[] }) {
             />
           </div>
           <span className="text-sm font-medium w-16 text-right">{r.responseRate}%</span>
-          <span className="text-xs text-gray-400 w-12 text-right">{r.totalApps} apps</span>
+          <span className="text-xs text-slate-400 w-12 text-right">{r.totalApps} apps</span>
         </div>
       ))}
     </div>

@@ -39,12 +39,12 @@ export function ResearchLinks({ links: linksJson, onChange }: { links: string; o
   const removeLink = (i: number) => save(links.filter((_, idx) => idx !== i));
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-xs">
+    <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs">
       <div className="flex items-center gap-2 mb-3">
         <div className="w-7 h-7 bg-violet-50 rounded-lg flex items-center justify-center">
           <Link2 className="w-3.5 h-3.5 text-violet-600" />
         </div>
-        <h3 className="font-semibold text-[14px] text-gray-900">Research Links</h3>
+        <h3 className="font-semibold text-[14px] text-slate-900">Research Links</h3>
       </div>
       <div className="space-y-2 mb-3">
         {links.map((link, i) => (
@@ -59,14 +59,14 @@ export function ResearchLinks({ links: linksJson, onChange }: { links: string; o
             </a>
             <button
               onClick={() => removeLink(i)}
-              className="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"
+              className="text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"
             >
               <Trash2 className="w-3.5 h-3.5" />
             </button>
           </div>
         ))}
         {links.length === 0 && (
-          <p className="text-xs text-gray-400">Add links to company pages, Glassdoor reviews, news articles...</p>
+          <p className="text-xs text-slate-400">Add links to company pages, Glassdoor reviews, news articles...</p>
         )}
       </div>
       <div className="flex gap-2">
@@ -75,14 +75,14 @@ export function ResearchLinks({ links: linksJson, onChange }: { links: string; o
           onChange={(e) => setNewTitle(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Title"
-          className="flex-1 border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all"
+          className="flex-1 border border-slate-200 rounded-lg px-2.5 py-1.5 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all"
         />
         <input
           value={newUrl}
           onChange={(e) => setNewUrl(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="URL"
-          className="flex-1 border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all"
+          className="flex-1 border border-slate-200 rounded-lg px-2.5 py-1.5 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all"
         />
         <button
           onClick={addLink}

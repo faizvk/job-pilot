@@ -49,14 +49,14 @@ export default function ApplicationFollowUpsPage() {
     fetchData();
   };
 
-  if (loading) return <div className="animate-pulse h-96 bg-gray-100 rounded-lg" />;
+  if (loading) return <div className="animate-pulse h-96 bg-slate-100 rounded-lg" />;
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">Follow-ups</h1>
-          <p className="text-gray-500">
+          <p className="text-slate-500">
             {app?.jobTitle} at {app?.companyName}
           </p>
         </div>

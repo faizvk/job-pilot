@@ -50,20 +50,20 @@ export function ToastProvider() {
             <div
               key={toast.id}
               className={cn(
-                "flex items-center gap-2.5 rounded-xl px-4 py-3 text-sm shadow-elevated animate-slide-in min-w-[280px]",
+                "flex items-center gap-2.5 rounded-2xl px-4 py-3.5 text-sm shadow-elevated animate-slide-in min-w-[300px] backdrop-blur-xl",
                 {
-                  "bg-white border border-emerald-200 text-emerald-800": toast.variant === "success",
-                  "bg-white border border-red-200 text-red-800": toast.variant === "error",
-                  "bg-white border border-gray-200 text-gray-800": toast.variant === "info",
+                  "bg-white/95 border border-emerald-200/80 text-emerald-800": toast.variant === "success",
+                  "bg-white/95 border border-red-200/80 text-red-800": toast.variant === "error",
+                  "bg-white/95 border border-slate-200/80 text-slate-800": toast.variant === "info",
                 }
               )}
             >
               <Icon className={cn("w-4 h-4 flex-shrink-0", {
                 "text-emerald-500": toast.variant === "success",
                 "text-red-500": toast.variant === "error",
-                "text-gray-400": toast.variant === "info",
+                "text-slate-400": toast.variant === "info",
               })} />
-              <span className="flex-1">{toast.message}</span>
+              <span className="flex-1 font-medium">{toast.message}</span>
               <button onClick={() => removeToast(toast.id)} className="ml-1 p-0.5 hover:opacity-60 transition-opacity">
                 <X className="w-3.5 h-3.5" />
               </button>

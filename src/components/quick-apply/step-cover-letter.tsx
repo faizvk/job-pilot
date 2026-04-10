@@ -28,7 +28,7 @@ export function StepCoverLetter({ coverLetterContent, onGenerate, onContentChang
     <div className="space-y-4">
       <div className="flex items-center gap-4 bg-white border rounded-lg p-4">
         <label className="text-sm font-medium">Template:</label>
-        <select value={selectedId} onChange={(e) => setSelectedId(e.target.value)} className="flex-1 border rounded-lg px-3 py-2 text-sm">
+        <select value={selectedId} onChange={(e) => setSelectedId(e.target.value)} className="flex-1 border rounded-xl px-3 py-2 text-sm">
           {templates.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
         </select>
         <button onClick={() => onGenerate(selectedId)} disabled={!selectedId} className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 disabled:opacity-50">
@@ -48,13 +48,13 @@ export function StepCoverLetter({ coverLetterContent, onGenerate, onContentChang
       )}
 
       {templates.length === 0 && (
-        <div className="text-center py-8 text-gray-500">
+        <div className="text-center py-8 text-slate-500">
           <p>No templates found. <a href="/cover-letters/new" className="text-blue-600 hover:underline">Create one first</a>.</p>
         </div>
       )}
 
       <div className="flex justify-between">
-        <button onClick={onBack} className="border px-4 py-2 rounded-lg text-sm hover:bg-gray-50">Back</button>
+        <button onClick={onBack} className="border px-4 py-2 rounded-lg text-sm hover:bg-slate-50">Back</button>
         <button onClick={onNext} className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
           {coverLetterContent ? "Review & Track" : "Skip"}
         </button>

@@ -14,12 +14,12 @@ export function StepIndicator({ steps, currentStep }: { steps: string[]; current
                   ? "bg-green-600 text-white"
                   : i === currentStep
                   ? "bg-blue-600 text-white"
-                  : "bg-gray-200 text-gray-500"
+                  : "bg-gray-200 text-slate-500"
               }`}
             >
               {i < currentStep ? <Check className="w-4 h-4" /> : i + 1}
             </div>
-            <span className={`text-sm hidden sm:inline ${i === currentStep ? "font-medium" : "text-gray-500"}`}>
+            <span className={`text-sm hidden sm:inline ${i === currentStep ? "font-medium" : "text-slate-500"}`}>
               {step}
             </span>
           </div>

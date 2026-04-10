@@ -70,8 +70,8 @@ export default function ApplicationDetailPage() {
     }
   };
 
-  if (loading) return <div className="animate-pulse h-96 bg-gray-100 rounded-lg" />;
-  if (!app) return <p className="text-gray-500">Application not found.</p>;
+  if (loading) return <div className="animate-pulse h-96 bg-slate-100 rounded-lg" />;
+  if (!app) return <p className="text-slate-500">Application not found.</p>;
 
   const statuses = ["saved", "applied", "phone_screen", "interview", "offer", "accepted", "rejected"];
 
@@ -82,7 +82,7 @@ export default function ApplicationDetailPage() {
           <CompanyLogo companyName={app.companyName} size={48} className="flex-shrink-0 shadow-xs" />
           <div>
             <h1 className="text-2xl font-bold">{app.jobTitle}</h1>
-            <p className="text-lg text-gray-600 flex items-center gap-2 mt-1">
+            <p className="text-lg text-slate-600 flex items-center gap-2 mt-1">
               <Building2 className="w-4 h-4" />
               {app.companyName}
             </p>
@@ -91,7 +91,7 @@ export default function ApplicationDetailPage() {
         <div className="flex items-center gap-2">
           <Link
             href={`/applications/${id}/edit`}
-            className="inline-flex items-center gap-1 px-3 py-2 text-sm border rounded-lg hover:bg-gray-50"
+            className="inline-flex items-center gap-1 px-3 py-2 text-sm border rounded-lg hover:bg-slate-50"
           >
             <PenLine className="w-4 h-4" /> Edit
           </Link>
@@ -116,7 +116,7 @@ export default function ApplicationDetailPage() {
                   ? "bg-blue-600 text-white"
                   : statuses.indexOf(s) < statuses.indexOf(app.status)
                   ? "bg-blue-100 text-blue-700"
-                  : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+                  : "bg-slate-100 text-slate-500 hover:bg-gray-200"
               }`}
             >
               {s.replace("_", " ").replace(/\b\w/g, (c: string) => c.toUpperCase())}
@@ -131,20 +131,20 @@ export default function ApplicationDetailPage() {
           <h2 className="font-semibold text-lg">Details</h2>
           {app.location && (
             <div className="flex items-center gap-2 text-sm">
-              <MapPin className="w-4 h-4 text-gray-400" />
+              <MapPin className="w-4 h-4 text-slate-400" />
               <span>{app.location}</span>
               {app.workType && <StatusBadge status={app.workType} />}
             </div>
           )}
           {(app.salaryMin || app.salaryMax) && (
             <div className="flex items-center gap-2 text-sm">
-              <DollarSign className="w-4 h-4 text-gray-400" />
+              <DollarSign className="w-4 h-4 text-slate-400" />
               <span>{formatSalary(app.salaryMin, app.salaryMax, app.salaryCurrency)}</span>
             </div>
           )}
           {app.jobUrl && (
             <div className="flex items-center gap-2 text-sm">
-              <Globe className="w-4 h-4 text-gray-400" />
+              <Globe className="w-4 h-4 text-slate-400" />
               <a href={app.jobUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center gap-1">
                 Job Posting <ExternalLink className="w-3 h-3" />
               </a>
@@ -152,25 +152,25 @@ export default function ApplicationDetailPage() {
           )}
           {app.deadline && (
             <div className="flex items-center gap-2 text-sm">
-              <Calendar className="w-4 h-4 text-gray-400" />
+              <Calendar className="w-4 h-4 text-slate-400" />
               <span>Deadline: {formatDate(app.deadline)}</span>
             </div>
           )}
           {app.contactName && (
             <div className="flex items-center gap-2 text-sm">
-              <User className="w-4 h-4 text-gray-400" />
+              <User className="w-4 h-4 text-slate-400" />
               <span>{app.contactName}</span>
             </div>
           )}
           {app.contactEmail && (
             <div className="flex items-center gap-2 text-sm">
-              <Mail className="w-4 h-4 text-gray-400" />
+              <Mail className="w-4 h-4 text-slate-400" />
               <a href={`mailto:${app.contactEmail}`} className="text-blue-600 hover:underline">{app.contactEmail}</a>
             </div>
           )}
           {app.matchScore != null && (
             <div className="flex items-center gap-2 text-sm">
-              <span className="text-gray-400">Match:</span>
+              <span className="text-slate-400">Match:</span>
               <div className="flex items-center gap-2">
                 <div className="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
                   <div
@@ -184,38 +184,38 @@ export default function ApplicationDetailPage() {
               </div>
             </div>
           )}
-          <p className="text-xs text-gray-400">Added {timeAgo(app.createdAt)}</p>
+          <p className="text-xs text-slate-400">Added {timeAgo(app.createdAt)}</p>
         </div>
 
         {/* Quick Actions */}
         <div className="bg-white rounded-lg border p-6 space-y-3">
           <h2 className="font-semibold text-lg">Tools</h2>
-          <Link href={`/applications/${id}/resume`} className="flex items-center gap-3 p-3 rounded-lg border hover:bg-gray-50 transition-colors">
+          <Link href={`/applications/${id}/resume`} className="flex items-center gap-3 p-3 rounded-lg border hover:bg-slate-50 transition-all">
             <FileText className="w-5 h-5 text-blue-600" />
             <div>
               <p className="font-medium text-sm">Tailored Resume</p>
-              <p className="text-xs text-gray-500">Customize resume for this job</p>
+              <p className="text-xs text-slate-500">Customize resume for this job</p>
             </div>
           </Link>
-          <Link href={`/applications/${id}/cover-letter`} className="flex items-center gap-3 p-3 rounded-lg border hover:bg-gray-50 transition-colors">
+          <Link href={`/applications/${id}/cover-letter`} className="flex items-center gap-3 p-3 rounded-lg border hover:bg-slate-50 transition-all">
             <Mail className="w-5 h-5 text-purple-600" />
             <div>
               <p className="font-medium text-sm">Cover Letter</p>
-              <p className="text-xs text-gray-500">Generate targeted cover letter</p>
+              <p className="text-xs text-slate-500">Generate targeted cover letter</p>
             </div>
           </Link>
-          <Link href={`/applications/${id}/interview-prep`} className="flex items-center gap-3 p-3 rounded-lg border hover:bg-gray-50 transition-colors">
+          <Link href={`/applications/${id}/interview-prep`} className="flex items-center gap-3 p-3 rounded-lg border hover:bg-slate-50 transition-all">
             <ClipboardList className="w-5 h-5 text-amber-600" />
             <div>
               <p className="font-medium text-sm">Interview Prep</p>
-              <p className="text-xs text-gray-500">Notes, questions, research</p>
+              <p className="text-xs text-slate-500">Notes, questions, research</p>
             </div>
           </Link>
-          <Link href={`/applications/${id}/follow-ups`} className="flex items-center gap-3 p-3 rounded-lg border hover:bg-gray-50 transition-colors">
+          <Link href={`/applications/${id}/follow-ups`} className="flex items-center gap-3 p-3 rounded-lg border hover:bg-slate-50 transition-all">
             <MessageSquare className="w-5 h-5 text-green-600" />
             <div>
               <p className="font-medium text-sm">Follow-ups</p>
-              <p className="text-xs text-gray-500">Schedule reminders and drafts</p>
+              <p className="text-xs text-slate-500">Schedule reminders and drafts</p>
             </div>
           </Link>
         </div>
@@ -223,7 +223,7 @@ export default function ApplicationDetailPage() {
 
       {/* Company Info from Wikipedia */}
       {companyInfo && (
-        <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-xs">
+        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
           <div className="flex items-center justify-between mb-3">
             <h2 className="font-semibold text-lg">About {app.companyName}</h2>
             <a
@@ -235,7 +235,7 @@ export default function ApplicationDetailPage() {
               Wikipedia →
             </a>
           </div>
-          <p className="text-sm text-gray-600 leading-relaxed">{companyInfo.extract}</p>
+          <p className="text-sm text-slate-600 leading-relaxed">{companyInfo.extract}</p>
         </div>
       )}
 
@@ -243,13 +243,13 @@ export default function ApplicationDetailPage() {
       {app.notes && (
         <div className="bg-white rounded-lg border p-6">
           <h2 className="font-semibold text-lg mb-3">Notes</h2>
-          <p className="text-sm text-gray-600 whitespace-pre-wrap">{app.notes}</p>
+          <p className="text-sm text-slate-600 whitespace-pre-wrap">{app.notes}</p>
         </div>
       )}
 
       {/* AI Analysis */}
       {app.jobDescription && (
-        <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-xs">
+        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-semibold text-lg flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-amber-500" /> AI Analysis
@@ -258,7 +258,7 @@ export default function ApplicationDetailPage() {
               <button
                 onClick={handleAIAnalyze}
                 disabled={analyzing}
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-violet-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:from-indigo-700 hover:to-violet-700 disabled:opacity-50 shadow-sm transition-all active:scale-[0.98]"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-violet-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:from-indigo-700 hover:to-violet-700 disabled:opacity-50 shadow-sm transition-all active:scale-[0.98]"
               >
                 {analyzing ? <><Loader2 className="w-4 h-4 animate-spin" /> Analyzing...</> : <><Sparkles className="w-4 h-4" /> Analyze with AI</>}
               </button>
@@ -282,21 +282,21 @@ export default function ApplicationDetailPage() {
                   </span>
                 )}
               </div>
-              <p className="text-sm text-gray-600 leading-relaxed">{aiAnalysis.summary}</p>
+              <p className="text-sm text-slate-600 leading-relaxed">{aiAnalysis.summary}</p>
               {aiAnalysis.techStack?.length > 0 && (
                 <div>
-                  <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Tech Stack</p>
+                  <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Tech Stack</p>
                   <div className="flex flex-wrap gap-1.5">
                     {aiAnalysis.techStack.map((t: string) => (
-                      <span key={t} className="text-[11px] px-2 py-0.5 rounded-md bg-gray-100 text-gray-700">{t}</span>
+                      <span key={t} className="text-[11px] px-2 py-0.5 rounded-md bg-slate-100 text-slate-700">{t}</span>
                     ))}
                   </div>
                 </div>
               )}
               {aiAnalysis.responsibilities?.length > 0 && (
                 <div>
-                  <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Key Responsibilities</p>
-                  <ul className="text-sm text-gray-600 space-y-1">
+                  <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Key Responsibilities</p>
+                  <ul className="text-sm text-slate-600 space-y-1">
                     {aiAnalysis.responsibilities.map((r: string, i: number) => (
                       <li key={i} className="flex items-start gap-2"><span className="text-indigo-400 mt-1">•</span> {r}</li>
                     ))}
@@ -322,16 +322,16 @@ export default function ApplicationDetailPage() {
               )}
             </div>
           ) : !analyzing ? (
-            <p className="text-sm text-gray-400">Click &ldquo;Analyze with AI&rdquo; to get insights about this role.</p>
+            <p className="text-sm text-slate-400">Click &ldquo;Analyze with AI&rdquo; to get insights about this role.</p>
           ) : null}
         </div>
       )}
 
       {/* Job Description */}
       {app.jobDescription && (
-        <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-xs">
+        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
           <h2 className="font-semibold text-lg mb-3">Job Description</h2>
-          <p className="text-sm text-gray-600 whitespace-pre-wrap">{app.jobDescription}</p>
+          <p className="text-sm text-slate-600 whitespace-pre-wrap">{app.jobDescription}</p>
         </div>
       )}
 
@@ -342,11 +342,11 @@ export default function ApplicationDetailPage() {
           <div className="space-y-3">
             {app.statusHistory.map((change: any) => (
               <div key={change.id} className="flex items-center gap-3 text-sm">
-                <span className="text-gray-400 w-32">{formatDate(change.changedAt)}</span>
+                <span className="text-slate-400 w-32">{formatDate(change.changedAt)}</span>
                 <StatusBadge status={change.fromStatus} />
-                <span className="text-gray-400">→</span>
+                <span className="text-slate-400">→</span>
                 <StatusBadge status={change.toStatus} />
-                {change.note && <span className="text-gray-500">— {change.note}</span>}
+                {change.note && <span className="text-slate-500">— {change.note}</span>}
               </div>
             ))}
           </div>
