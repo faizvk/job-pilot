@@ -7,7 +7,7 @@ import { useSidebar } from "./sidebar-context";
 import {
   LayoutDashboard, Briefcase, Zap, Layers, Search, FileText,
   Mail, Bell, BarChart3, User, Rocket, ClipboardPaste, BellRing,
-  Sparkles, ChevronsLeft, ChevronsRight
+  Sparkles, ChevronsLeft, ChevronsRight, Bot
 } from "lucide-react";
 
 const navGroups = [
@@ -40,6 +40,7 @@ const navGroups = [
     label: "Insights",
     items: [
       { href: "/analytics", label: "Analytics", icon: BarChart3 },
+      { href: "/automations", label: "Automations", icon: Bot },
       { href: "/profile", label: "Profile", icon: User },
     ],
   },
