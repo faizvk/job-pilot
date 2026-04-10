@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import {
   LayoutDashboard, Briefcase, Zap, Layers, Search, FileText,
-  Mail, Bell, BarChart3, User, Rocket, ClipboardPaste, BellRing, Github
+  Mail, Bell, BarChart3, User, Rocket, ClipboardPaste, BellRing
 } from "lucide-react";
 
 const navGroups = [
