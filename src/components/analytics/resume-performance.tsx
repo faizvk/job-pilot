@@ -13,10 +13,10 @@ export function ResumePerformance({ data }: { data: ResumePerf[] }) {
 
   return (
     <div className="space-y-3">
-      {data.map((r) => (
-        <div key={r.name} className="flex items-center gap-3">
+      {data.map((r, i) => (
+        <div key={`${r.name}-${i}`} className="flex items-center gap-3">
           <span className="text-sm w-40 truncate">{r.name}</span>
-          <div className="flex-1 h-3 bg-gray-200 rounded-full overflow-hidden">
+          <div className="flex-1 h-3 bg-slate-200 rounded-full overflow-hidden">
             <div
               className="h-full bg-blue-600 rounded-full"
               style={{ width: `${r.responseRate}%` }}
