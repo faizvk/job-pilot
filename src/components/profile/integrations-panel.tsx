@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Mail, CheckCircle, XCircle, ExternalLink, Search, Loader2, MessageCircle, Send, Calendar } from "lucide-react";
+import { Mail, CheckCircle, XCircle, ExternalLink, Search, Loader2, MessageCircle, Send, Calendar, RefreshCw, Unplug } from "lucide-react";
 
 export function IntegrationsPanel() {
   const [status, setStatus] = useState<any>(null);
@@ -15,10 +15,15 @@ export function IntegrationsPanel() {
   const [chatIdInput, setChatIdInput] = useState("");
   const [connectingTelegram, setConnectingTelegram] = useState(false);
   const [testingTelegram, setTestingTelegram] = useState(false);
+  const [disconnecting, setDisconnecting] = useState(false);
 
-  useEffect(() => {
+  const fetchStatus = () => {
     fetch("/api/ai/status").then((r) => r.json()).then(setStatus).catch(console.error).finally(() => setLoading(false));
     fetch("/api/telegram/setup").then((r) => r.json()).then(setTelegramStatus).catch(console.error);
+  };
+
+  useEffect(() => {
+    fetchStatus();
   }, []);
 
   const handleSearchEmails = async () => {
@@ -45,6 +50,15 @@ export function IntegrationsPanel() {
     setTelegramStatus(await res.json());
     setChatIdInput("");
     setConnectingTelegram(false);
+  };
+
+  const handleDisconnectGmail = async () => {
+    setDisconnecting(true);
+    try {
+      await fetch("/api/gmail/disconnect", { method: "POST" });
+      fetchStatus();
+    } catch (err) { console.error(err); }
+    finally { setDisconnecting(false); }
   };
 
   const handleTestTelegram = async () => {
@@ -94,9 +108,22 @@ export function IntegrationsPanel() {
             </div>
           </div>
           {gmailConnected ? (
-            <span className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full">
-              <CheckCircle className="w-3.5 h-3.5" /> Connected
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full">
+                <CheckCircle className="w-3.5 h-3.5" /> Connected
+              </span>
+              <a href="/api/gmail/auth" className="inline-flex items-center gap-1 text-xs text-indigo-600 hover:text-indigo-700 font-medium">
+                <RefreshCw className="w-3 h-3" /> Reconnect
+              </a>
+              <button
+                onClick={handleDisconnectGmail}
+                disabled={disconnecting}
+                className="inline-flex items-center gap-1 text-xs text-red-500 hover:text-red-600 font-medium disabled:opacity-50"
+              >
+                {disconnecting ? <Loader2 className="w-3 h-3 animate-spin" /> : <Unplug className="w-3 h-3" />}
+                Disconnect
+              </button>
+            </div>
           ) : gmailConfigured ? (
             <a href="/api/gmail/auth" className="inline-flex items-center gap-1.5 bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 shadow-sm shadow-indigo-600/20 transition-all active:scale-[0.98]">
               <ExternalLink className="w-4 h-4" /> Connect Google
