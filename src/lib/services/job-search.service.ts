@@ -655,13 +655,18 @@ export const jobSearchService = {
     if (filters?.imported !== undefined) where.imported = filters.imported;
     where.hidden = filters?.hidden ?? false;
 
+    // Only show jobs fetched in the last 24h
+    const oneDayAgo = new Date();
+    oneDayAgo.setDate(oneDayAgo.getDate() - 1);
+    where.fetchedAt = { gte: oneDayAgo };
+
     const page = filters?.page || 1;
     const limit = filters?.limit || 50;
 
     const [listings, total] = await Promise.all([
       prisma.jobListing.findMany({
         where,
-        orderBy: [{ matchScore: "desc" }, { fetchedAt: "desc" }],
+        orderBy: [{ fetchedAt: "desc" }, { matchScore: "desc" }],
         skip: (page - 1) * limit,
         take: limit,
       }),
@@ -692,11 +697,11 @@ export const jobSearchService = {
   },
 
   /**
-   * Clear old listings (older than 7 days)
+   * Clear stale listings (older than 1 day, not imported)
    */
   async clearOldListings() {
     const cutoff = new Date();
-    cutoff.setDate(cutoff.getDate() - 7);
+    cutoff.setDate(cutoff.getDate() - 1);
     await prisma.jobListing.deleteMany({
       where: { fetchedAt: { lt: cutoff }, imported: false },
     });

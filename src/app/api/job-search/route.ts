@@ -11,6 +11,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "At least one job title required" }, { status: 400 });
     }
 
+    // Prune stale listings (>24h old, non-imported) before fetching fresh ones
+    await jobSearchService.clearOldListings();
+
     // Fetch from external APIs
     const { jobs: fetchedJobs, sources } = await jobSearchService.fetchJobs({
       jobTitles,
