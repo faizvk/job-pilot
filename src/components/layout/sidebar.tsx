@@ -56,19 +56,21 @@ export function Sidebar() {
       )}
     >
       {/* Logo */}
-      <div className={cn(
-        "relative flex items-center h-16 border-b border-white/[0.06] transition-all duration-300",
-        collapsed ? "px-0 justify-center" : "px-5 gap-3"
-      )}>
-        <div className="flex items-center justify-center w-9 h-9 rounded-md bg-white text-[#0b0d10] flex-shrink-0 font-mono font-semibold text-[15px] tracking-tight">
-          P.
-        </div>
+      <Link
+        href="/dashboard"
+        className={cn(
+          "relative flex items-center h-16 border-b border-white/[0.06] transition-all duration-300",
+          collapsed ? "px-0 justify-center" : "px-5 gap-3"
+        )}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/icon-light.svg" alt="Pursuit" width={36} height={36} className="flex-shrink-0" />
         {!collapsed && (
           <div className="animate-fade-in">
             <span className="text-[15px] font-semibold text-white tracking-[-0.01em]">Pursuit</span>
           </div>
         )}
-      </div>
+      </Link>
 
       {/* Navigation */}
       <nav className={cn(
