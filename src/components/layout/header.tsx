@@ -52,7 +52,7 @@ export function Header() {
           </button>
 
           <nav className="flex items-center gap-1 sm:gap-1.5 text-[12px] sm:text-[13px] min-w-0 overflow-hidden">
-            <Link href="/dashboard" className="text-slate-400 hover:text-slate-600 transition-colors">
+            <Link href="/dashboard" className="text-slate-400 hover:text-slate-600 transition-colors hidden sm:inline">
               Home
             </Link>
             {segments.map((seg, i) => {
@@ -60,12 +60,12 @@ export function Header() {
               const href = "/" + segments.slice(0, i + 1).join("/");
               const isLast = i === segments.length - 1;
               return (
-                <span key={href} className="flex items-center gap-1.5">
-                  <ChevronRight className="w-3 h-3 text-slate-300" />
+                <span key={href} className="flex items-center gap-1 sm:gap-1.5 min-w-0">
+                  <ChevronRight className="w-3 h-3 text-slate-300 flex-shrink-0 hidden sm:inline" />
                   {isLast ? (
-                    <span className="font-semibold text-slate-800">{label}</span>
+                    <span className="font-semibold text-slate-800 truncate">{label}</span>
                   ) : (
-                    <Link href={href} className="text-slate-400 hover:text-slate-600 transition-colors">
+                    <Link href={href} className="text-slate-400 hover:text-slate-600 transition-colors truncate hidden sm:inline">
                       {label}
                     </Link>
                   )}
