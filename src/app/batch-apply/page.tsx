@@ -443,42 +443,44 @@ Join our team building next-gen cloud services. Requirements: Java, AWS, distrib
                   "border-slate-200/80"
                 }`}
               >
-                <div className="flex items-center gap-3 p-3">
-                  <input
-                    type="checkbox"
-                    checked={selectedJobs.has(job.id)}
-                    onChange={() => toggleSelect(job.id)}
-                    className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 flex-shrink-0"
-                  />
-                  <span className="text-[11px] text-slate-400 w-6 font-mono">{index + 1}</span>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 p-3">
+                  <div className="flex items-center gap-3 flex-shrink-0">
+                    <input
+                      type="checkbox"
+                      checked={selectedJobs.has(job.id)}
+                      onChange={() => toggleSelect(job.id)}
+                      className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                    />
+                    <span className="text-[11px] text-slate-400 w-6 font-mono">{index + 1}</span>
+                  </div>
 
                   {job.status === "pending" ? (
-                    <>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 flex-1 w-full">
                       <input
                         value={job.companyName}
                         onChange={(e) => updateJob(job.id, { companyName: e.target.value })}
                         placeholder="Company"
-                        className="border border-slate-200 rounded-lg px-2.5 py-1.5 text-sm w-40 shadow-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 focus:outline-none transition-all"
+                        className="border border-slate-200 rounded-lg px-2.5 py-1.5 text-sm shadow-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 focus:outline-none transition-all"
                       />
                       <input
                         value={job.jobTitle}
                         onChange={(e) => updateJob(job.id, { jobTitle: e.target.value })}
                         placeholder="Job Title"
-                        className="border border-slate-200 rounded-lg px-2.5 py-1.5 text-sm flex-1 shadow-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 focus:outline-none transition-all"
+                        className="border border-slate-200 rounded-lg px-2.5 py-1.5 text-sm shadow-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 focus:outline-none transition-all"
                       />
                       <input
                         value={job.jobUrl}
                         onChange={(e) => updateJob(job.id, { jobUrl: e.target.value, platform: detectPlatform(e.target.value) })}
                         placeholder="URL (optional)"
-                        className="border border-slate-200 rounded-lg px-2.5 py-1.5 text-sm w-48 shadow-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 focus:outline-none transition-all"
+                        className="border border-slate-200 rounded-lg px-2.5 py-1.5 text-sm shadow-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 focus:outline-none transition-all"
                       />
                       <input
                         value={job.location}
                         onChange={(e) => updateJob(job.id, { location: e.target.value })}
                         placeholder="Location"
-                        className="border border-slate-200 rounded-lg px-2.5 py-1.5 text-sm w-32 shadow-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 focus:outline-none transition-all"
+                        className="border border-slate-200 rounded-lg px-2.5 py-1.5 text-sm shadow-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 focus:outline-none transition-all"
                       />
-                    </>
+                    </div>
                   ) : (
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
