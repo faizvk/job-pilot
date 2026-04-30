@@ -154,7 +154,7 @@ export function FollowUpList({ followUps, onMarkSent }: { followUps: any[]; onMa
                   </div>
                 )}
                 {!emailEnabled && fu.status === "pending" && (
-                  <p className="mt-2 text-[10px] text-slate-400">Set RESEND_API_KEY in .env to send emails directly</p>
+                  <p className="mt-2 text-[10px] text-slate-400">Connect Gmail in Profile → Integrations, or set RESEND_API_KEY + RESEND_FROM_EMAIL to send directly.</p>
                 )}
               </div>
             )}
