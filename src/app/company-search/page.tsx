@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import {
-  Search, Loader2, ExternalLink, Building2, MapPin, Briefcase, Clock, Star, Sparkles,
+  Search, Loader2, ExternalLink, Building2, MapPin, Briefcase, Clock, Star,
 } from "lucide-react";
 
 interface ScoredJob {
@@ -146,11 +146,8 @@ export default function CompanySearchPage() {
           </div>
         </div>
 
-        <div className="flex items-start gap-2 text-xs text-indigo-700 bg-indigo-50/70 border border-indigo-100 rounded-lg p-2.5">
-          <Sparkles className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
-          <span>
-            Results are scored against <strong>your profile</strong> — match % uses your skills, senior roles are filtered out if you&apos;re junior, and your saved exclude-keywords are honored. Edit your profile in <a href="/profile" className="underline hover:text-indigo-800">Profile</a> or preferences in <a href="/job-feed" className="underline hover:text-indigo-800">Job Feed</a>.
-          </span>
+        <div className="text-xs text-slate-600 bg-slate-50 border border-slate-200 rounded-md p-2.5">
+          Results are scored against <strong className="text-slate-900">your profile</strong>. Match % uses your skills, senior roles drop out if you&apos;re junior, and your saved exclude-keywords are honored. Edit in <a href="/profile" className="underline hover:text-slate-900">Profile</a> or <a href="/job-feed" className="underline hover:text-slate-900">Job Feed preferences</a>.
         </div>
         <p className="text-xs text-slate-400">
           Powered by JSearch (LinkedIn / Indeed / Glassdoor) and Adzuna. Set

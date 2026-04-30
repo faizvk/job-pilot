@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "JobPilot — Quick Import",
+  "name": "Pursuit — Quick Import",
   "version": "1.0.0",
-  "description": "Import job postings to JobPilot with one click. Works on LinkedIn, Indeed, Glassdoor, and any job page.",
+  "description": "Import job postings to Pursuit with one click. Works on LinkedIn, Indeed, Glassdoor, and any job page.",
   "permissions": ["activeTab", "storage", "scripting"],
   "action": {
     "default_popup": "popup.html",

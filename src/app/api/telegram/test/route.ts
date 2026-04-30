@@ -13,6 +13,6 @@ export async function POST() {
     return NextResponse.json({ error: "Telegram chat ID not set" }, { status: 400 });
   }
 
-  const ok = await sendMessage(user.telegramChatId, "🧪 <b>Test Message</b>\n\nJobPilot notifications are working! 🎉");
+  const ok = await sendMessage(user.telegramChatId, "🧪 <b>Test Message</b>\n\nPursuit notifications are working! 🎉");
   return NextResponse.json({ ok });
 }

@@ -119,26 +119,20 @@ export default function AutomationsPage() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      {/* Hero */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-violet-600 via-purple-500 to-indigo-600 p-6 text-white shadow-lg shadow-purple-500/20">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2230%22%20height%3D%2230%22%20viewBox%3D%220%200%2030%2030%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Ccircle%20cx%3D%221%22%20cy%3D%221%22%20r%3D%221%22%20fill%3D%22rgba(255%2C255%2C255%2C0.07)%22%2F%3E%3C%2Fsvg%3E')] pointer-events-none" />
-        <div className="relative flex items-center justify-between">
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <Bot className="w-5 h-5" />
-              <h1 className="text-2xl font-bold tracking-tight">Automations</h1>
-            </div>
-            <p className="text-purple-100 text-sm">Let JobPilot handle the repetitive tasks. Run individually or all at once.</p>
-          </div>
-          <button
-            onClick={runAll}
-            disabled={runningAll}
-            className="group inline-flex items-center gap-2 bg-white text-purple-600 px-5 py-2.5 rounded-xl text-sm font-semibold shadow-lg shadow-black/10 hover:shadow-xl transition-all active:scale-[0.97] disabled:opacity-50"
-          >
-            {runningAll ? <Loader2 className="w-4 h-4 animate-spin" /> : <Zap className="w-4 h-4" />}
-            Run All
-          </button>
+      {/* Header */}
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight text-slate-900">Automations</h1>
+          <p className="text-sm text-slate-500 mt-0.5">Repetitive tasks, handled. Run individually or all at once.</p>
         </div>
+        <button
+          onClick={runAll}
+          disabled={runningAll}
+          className="inline-flex items-center gap-2 bg-slate-900 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-slate-800 transition-all active:scale-[0.98] disabled:opacity-50"
+        >
+          {runningAll ? <Loader2 className="w-4 h-4 animate-spin" /> : <Zap className="w-4 h-4" />}
+          Run all
+        </button>
       </div>
 
       {/* Automation Cards */}

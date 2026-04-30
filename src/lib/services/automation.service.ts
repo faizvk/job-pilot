@@ -410,7 +410,7 @@ export async function sendDailyDigest(): Promise<{ sent: boolean; sections: stri
     lines.push("✨ All clear! No pending items today.");
   }
 
-  lines.push("\n<i>— JobPilot Daily Digest</i>");
+  lines.push("\n<i>— Pursuit Daily Digest</i>");
 
   await telegram.sendMessage(chatId, lines.join("\n"));
   return { sent: true, sections };
@@ -459,7 +459,7 @@ export async function syncInterviewsToCalendar(): Promise<{
 
       const result = await createCalendarEvent({
         title,
-        description: `Application: ${app.jobTitle} at ${app.companyName}\n${app.jobUrl || ""}\n\nAdjust the time as needed — this was auto-created by JobPilot.`,
+        description: `Application: ${app.jobTitle} at ${app.companyName}\n${app.jobUrl || ""}\n\nAdjust the time as needed — this was auto-created by Pursuit.`,
         startTime: tomorrow.toISOString(),
         endTime: endTime.toISOString(),
       });

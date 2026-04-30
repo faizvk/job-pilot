@@ -1,5 +1,5 @@
 const GITHUB_API = "https://api.github.com";
-const headers = { "User-Agent": "JobPilot-App", Accept: "application/vnd.github.v3+json" };
+const headers = { "User-Agent": "Pursuit-App", Accept: "application/vnd.github.v3+json" };
 
 export interface GitHubProfile {
   name: string | null;

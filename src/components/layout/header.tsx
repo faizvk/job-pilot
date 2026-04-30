@@ -2,13 +2,14 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { Menu, Rocket, ChevronRight, Search, Briefcase, Zap, Layers,
-  FileText, BarChart3, User, LayoutDashboard, X, Sparkles, BellRing, Bot } from "lucide-react";
+import { Menu, ChevronRight, Search, Briefcase, Zap, Layers,
+  FileText, BarChart3, User, LayoutDashboard, X, BellRing, Bot, Building2 } from "lucide-react";
 import { useState } from "react";
 
 const links = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/job-feed", label: "Job Feed", icon: Search },
+  { href: "/company-search", label: "Company Search", icon: Building2 },
   { href: "/job-alerts", label: "Job Alerts", icon: BellRing },
   { href: "/applications", label: "Applications", icon: Briefcase },
   { href: "/quick-apply", label: "Quick Apply", icon: Zap },
@@ -22,6 +23,7 @@ const links = [
 const PAGE_TITLES: Record<string, string> = {
   dashboard: "Dashboard",
   "job-feed": "Job Feed",
+  "company-search": "Company Search",
   "job-alerts": "Job Alerts",
   applications: "Applications",
   "quick-apply": "Quick Apply",
@@ -79,16 +81,15 @@ export function Header() {
         <div className="md:hidden fixed inset-0 z-50">
           <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
           <div
-            className="relative w-72 h-full bg-slate-950 shadow-2xl animate-slide-in overflow-hidden"
+            className="relative w-72 h-full bg-[#0b0d10] shadow-2xl animate-slide-in overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="absolute inset-0 bg-gradient-to-b from-indigo-950/20 via-transparent to-purple-950/10 pointer-events-none" />
             <div className="relative flex items-center justify-between px-5 h-16 border-b border-white/[0.06]">
               <div className="flex items-center gap-3">
-                <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lg shadow-indigo-500/25">
-                  <Rocket className="w-[18px] h-[18px] text-white" />
+                <div className="flex items-center justify-center w-9 h-9 rounded-md bg-white text-[#0b0d10] font-mono font-semibold text-[15px] tracking-tight">
+                  P.
                 </div>
-                <span className="text-[15px] font-bold text-white">JobPilot</span>
+                <span className="text-[15px] font-semibold text-white tracking-[-0.01em]">Pursuit</span>
               </div>
               <button onClick={() => setMobileOpen(false)} className="p-1.5 text-slate-400 hover:text-white transition-colors rounded-lg hover:bg-white/[0.05]">
                 <X className="w-5 h-5" />
@@ -102,13 +103,13 @@ export function Header() {
                     key={href}
                     href={href}
                     onClick={() => setMobileOpen(false)}
-                    className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[13px] transition-all duration-200 ${
+                    className={`flex items-center gap-2.5 px-3 py-2.5 rounded-md text-[13px] transition-all duration-200 ${
                       isActive
-                        ? "bg-gradient-to-r from-indigo-500/15 to-purple-500/10 text-indigo-300 font-medium"
-                        : "text-slate-400 hover:bg-white/[0.04] hover:text-slate-200"
+                        ? "bg-white/[0.06] text-white font-medium"
+                        : "text-slate-400 hover:bg-white/[0.03] hover:text-slate-200"
                     }`}
                   >
-                    <Icon className={`w-[18px] h-[18px] ${isActive ? "text-indigo-400" : "text-slate-500"}`} />
+                    <Icon className={`w-[18px] h-[18px] ${isActive ? "text-white" : "text-slate-500"}`} />
                     {label}
                   </Link>
                 );
@@ -118,9 +119,9 @@ export function Header() {
               <Link
                 href="/quick-apply"
                 onClick={() => setMobileOpen(false)}
-                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-[13px] font-medium shadow-lg shadow-indigo-500/20"
+                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-md bg-white text-[#0b0d10] text-[13px] font-medium"
               >
-                <Sparkles className="w-4 h-4" />
+                <Zap className="w-4 h-4" />
                 Quick Apply
               </Link>
             </div>

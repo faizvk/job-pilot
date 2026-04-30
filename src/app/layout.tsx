@@ -18,8 +18,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "JobPilot - Smart Job Application Tracker",
-  description: "Track applications, tailor resumes, and land your dream job faster",
+  title: "Pursuit",
+  description: "A focused job-hunt workspace.",
 };
 
 export default function RootLayout({

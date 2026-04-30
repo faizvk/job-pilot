@@ -5,7 +5,7 @@ import { StatsCards } from "@/components/dashboard/stats-cards";
 import { ActivityFeed } from "@/components/dashboard/activity-feed";
 import { WeeklyGoalRing } from "@/components/dashboard/weekly-goal-ring";
 import { UpcomingDeadlines } from "@/components/dashboard/upcoming-deadlines";
-import { Sparkles, ArrowRight } from "lucide-react";
+import { Zap, ArrowRight } from "lucide-react";
 import type { DashboardStats, ActivityItem } from "@/types";
 
 interface DashboardData {
@@ -58,23 +58,20 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      {/* Hero Banner */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 p-6 text-white shadow-lg shadow-indigo-500/20">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2230%22%20height%3D%2230%22%20viewBox%3D%220%200%2030%2030%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Ccircle%20cx%3D%221%22%20cy%3D%221%22%20r%3D%221%22%20fill%3D%22rgba(255%2C255%2C255%2C0.07)%22%2F%3E%3C%2Fsvg%3E')] pointer-events-none" />
-        <div className="relative flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">Welcome back</h1>
-            <p className="text-indigo-100 mt-1 text-sm">Your job search at a glance. Keep the momentum going!</p>
-          </div>
-          <a
-            href="/quick-apply"
-            className="group inline-flex items-center gap-2 bg-white text-indigo-600 px-5 py-2.5 rounded-xl text-sm font-semibold shadow-lg shadow-black/10 hover:shadow-xl hover:shadow-black/15 transition-all active:scale-[0.97]"
-          >
-            <Sparkles className="w-4 h-4" />
-            Quick Apply
-            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
-          </a>
+      {/* Header */}
+      <div className="flex items-end justify-between border-b border-slate-200/70 pb-5">
+        <div>
+          <h1 className="text-[28px] font-semibold tracking-[-0.02em] text-slate-900">Today</h1>
+          <p className="text-sm text-slate-500 mt-1">Your search at a glance.</p>
         </div>
+        <a
+          href="/quick-apply"
+          className="group inline-flex items-center gap-2 bg-slate-900 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-slate-800 transition-all active:scale-[0.98]"
+        >
+          <Zap className="w-4 h-4" />
+          Quick Apply
+          <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+        </a>
       </div>
 
       <StatsCards stats={data.stats} />

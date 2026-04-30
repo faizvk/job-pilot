@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
 
     // Send welcome message
     if (isTelegramConfigured()) {
-      await sendMessage(String(chatId), "✅ <b>JobPilot Connected!</b>\n\nYou'll receive notifications for:\n• New job matches\n• Interview reminders\n• Application deadlines\n• Status updates");
+      await sendMessage(String(chatId), "✅ <b>Pursuit Connected!</b>\n\nYou'll receive notifications for:\n• New job matches\n• Interview reminders\n• Application deadlines\n• Status updates");
     }
 
     return NextResponse.json({ ok: true });
