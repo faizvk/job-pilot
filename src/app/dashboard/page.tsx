@@ -59,14 +59,14 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Header */}
-      <div className="flex items-end justify-between border-b border-slate-200/70 pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 border-b border-slate-200/70 pb-4 sm:pb-5">
         <div>
-          <h1 className="text-[28px] font-semibold tracking-[-0.02em] text-slate-900">Today</h1>
+          <h1 className="text-2xl sm:text-[28px] font-semibold tracking-[-0.02em] text-slate-900">Today</h1>
           <p className="text-sm text-slate-500 mt-1">Your search at a glance.</p>
         </div>
         <a
           href="/quick-apply"
-          className="group inline-flex items-center gap-2 bg-slate-900 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-slate-800 transition-all active:scale-[0.98]"
+          className="group inline-flex items-center justify-center gap-2 bg-slate-900 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-slate-800 transition-all active:scale-[0.98] self-start sm:self-auto"
         >
           <Zap className="w-4 h-4" />
           Quick Apply
