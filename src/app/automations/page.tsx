@@ -120,7 +120,7 @@ export default function AutomationsPage() {
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Header */}
-      <div className="flex items-start justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight text-slate-900">Automations</h1>
           <p className="text-sm text-slate-500 mt-0.5">Repetitive tasks, handled. Run individually or all at once.</p>
@@ -128,7 +128,7 @@ export default function AutomationsPage() {
         <button
           onClick={runAll}
           disabled={runningAll}
-          className="inline-flex items-center gap-2 bg-slate-900 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-slate-800 transition-all active:scale-[0.98] disabled:opacity-50"
+          className="inline-flex items-center justify-center gap-2 bg-slate-900 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-slate-800 transition-all active:scale-[0.98] disabled:opacity-50 self-start sm:self-auto"
         >
           {runningAll ? <Loader2 className="w-4 h-4 animate-spin" /> : <Zap className="w-4 h-4" />}
           Run all
