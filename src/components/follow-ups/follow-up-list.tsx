@@ -21,7 +21,7 @@ export function FollowUpList({ followUps, onMarkSent }: { followUps: any[]; onMa
   useEffect(() => {
     fetch("/api/ai/status")
       .then((r) => r.json())
-      .then((s) => setEmailEnabled(s.resend))
+      .then((s) => setEmailEnabled(!!s.email))
       .catch(() => {});
   }, []);
 
