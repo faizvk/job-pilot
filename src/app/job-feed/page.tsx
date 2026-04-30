@@ -551,7 +551,7 @@ export default function JobFeedPage() {
 
       {/* Filters */}
       {showFilters && (
-        <div className="flex items-center gap-4 bg-white border border-slate-200/80 rounded-xl shadow-card p-3 animate-scale-in">
+        <div className="flex flex-wrap items-center gap-3 sm:gap-4 bg-white border border-slate-200/80 rounded-xl shadow-card p-3 animate-scale-in">
           <div className="flex items-center gap-2">
             <label className="text-xs text-slate-500 font-medium">Platform:</label>
             <select
