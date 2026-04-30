@@ -107,7 +107,7 @@ export default function JobAlertsPage() {
       {showForm && (
         <div className="bg-white border border-slate-200 rounded-xl p-5 space-y-4">
           <h3 className="text-sm font-semibold text-slate-900">Create Job Alert</h3>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <input
               placeholder="Alert name (e.g. React Jobs)"
               value={form.name}
