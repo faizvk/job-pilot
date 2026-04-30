@@ -17,8 +17,24 @@ export async function GET(
       );
     }
 
-    const fileBuffer = await readFile(resume.filePath);
-    const ext = resume.filePath.split(".").pop()?.toLowerCase() || "pdf";
+    let fileBuffer: Buffer;
+    const isRemote = /^https?:\/\//i.test(resume.filePath);
+
+    if (isRemote) {
+      const res = await fetch(resume.filePath);
+      if (!res.ok) {
+        return NextResponse.json(
+          { error: `Could not fetch stored file (${res.status})` },
+          { status: 502 }
+        );
+      }
+      const arrayBuf = await res.arrayBuffer();
+      fileBuffer = Buffer.from(arrayBuf);
+    } else {
+      fileBuffer = await readFile(resume.filePath);
+    }
+
+    const ext = resume.filePath.split(/[.?#]/).filter(Boolean).pop()?.toLowerCase() || "pdf";
     const contentType =
       ext === "pdf"
         ? "application/pdf"
@@ -26,7 +42,7 @@ export async function GET(
           ? "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
           : "application/octet-stream";
 
-    return new NextResponse(fileBuffer, {
+    return new NextResponse(new Uint8Array(fileBuffer), {
       headers: {
         "Content-Type": contentType,
         "Content-Disposition": `attachment; filename="${resume.name}.${ext}"`,
