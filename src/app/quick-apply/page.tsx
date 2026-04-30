@@ -632,25 +632,27 @@ export default function QuickApplyPage() {
           <div className="bg-white border border-slate-200/60 rounded-2xl shadow-card p-5 space-y-4">
             <h2 className="text-base font-semibold text-slate-900">Generate Cover Letter</h2>
 
-            <div className="flex items-center gap-3">
-              <label className="text-xs font-medium text-slate-600">Tone:</label>
-              <div className="flex gap-1 bg-slate-100 p-1 rounded-xl">
-                {(["professional", "technical", "casual"] as const).map((t) => (
-                  <button
-                    key={t}
-                    onClick={() => setTone(t)}
-                    className={`px-3 py-1.5 text-xs rounded-lg transition-all capitalize ${
-                      tone === t ? "bg-white shadow-sm font-medium text-slate-900" : "text-slate-500 hover:text-slate-700"
-                    }`}
-                  >
-                    {t}
-                  </button>
-                ))}
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+              <div className="flex items-center gap-3 flex-wrap">
+                <label className="text-xs font-medium text-slate-600">Tone:</label>
+                <div className="flex gap-1 bg-slate-100 p-1 rounded-xl">
+                  {(["professional", "technical", "casual"] as const).map((t) => (
+                    <button
+                      key={t}
+                      onClick={() => setTone(t)}
+                      className={`px-3 py-1.5 text-xs rounded-lg transition-all capitalize ${
+                        tone === t ? "bg-white shadow-sm font-medium text-slate-900" : "text-slate-500 hover:text-slate-700"
+                      }`}
+                    >
+                      {t}
+                    </button>
+                  ))}
+                </div>
               </div>
               <button
                 onClick={handleGenerateCoverLetter}
                 disabled={generatingCL}
-                className="ml-auto inline-flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-indigo-500 text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:from-indigo-500 hover:to-indigo-600 disabled:opacity-50 shadow-sm shadow-indigo-600/20 transition-all active:scale-[0.97]"
+                className="sm:ml-auto inline-flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-indigo-500 text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:from-indigo-500 hover:to-indigo-600 disabled:opacity-50 shadow-sm shadow-indigo-600/20 transition-all active:scale-[0.97]"
               >
                 {generatingCL ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
                 {generatingCL ? "Generating..." : "Generate"}
