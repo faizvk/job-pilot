@@ -44,3 +44,7 @@ next-env.d.ts
 
 # uploaded files
 /uploads/
+
+# claude code (personal config — not for team)
+.claude/settings.local.json
+.claude/hooks/

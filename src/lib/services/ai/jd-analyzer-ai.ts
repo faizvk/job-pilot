@@ -1,4 +1,4 @@
-import { generateJSON, isGeminiConfigured } from "./gemini";
+import { generateJSON, isAIConfigured } from "./gemini";
 
 interface AIJdAnalysis {
   seniorityLevel: "intern" | "junior" | "mid" | "senior" | "lead" | "principal" | "unknown";
@@ -14,7 +14,7 @@ interface AIJdAnalysis {
 }
 
 export async function analyzeJDWithAI(jobDescription: string, jobTitle: string, companyName: string): Promise<AIJdAnalysis | null> {
-  if (!isGeminiConfigured()) return null;
+  if (!isAIConfigured()) return null;
 
   const prompt = `Analyze this job description and return structured JSON.
 

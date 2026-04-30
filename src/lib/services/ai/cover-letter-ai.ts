@@ -1,4 +1,4 @@
-import { generateText, isGeminiConfigured } from "./gemini";
+import { generateText, isAIConfigured } from "./gemini";
 
 interface CoverLetterContext {
   jobTitle: string;
@@ -15,7 +15,7 @@ interface CoverLetterContext {
 }
 
 export async function generateAICoverLetter(ctx: CoverLetterContext): Promise<string | null> {
-  if (!isGeminiConfigured()) return null;
+  if (!isAIConfigured()) return null;
 
   const prompt = `Write a cover letter for the following job application. Return ONLY the cover letter text, no markdown formatting, no extra commentary.
 

@@ -129,18 +129,26 @@ export const batchService = {
    * Auto-tailor resumes for multiple applications in batch
    */
   async bulkTailorResumes(applicationIds: string[], baseResumeId: string) {
-    let tailored = 0;
     const errors: string[] = [];
+    const CONCURRENCY = 4;
 
-    for (const appId of applicationIds) {
-      try {
-        await resumeService.tailorResume(baseResumeId, appId);
-        tailored++;
-      } catch (err: any) {
-        errors.push(`${appId}: ${err.message}`);
+    const queue = [...applicationIds];
+    let tailored = 0;
+
+    const workers = Array.from({ length: Math.min(CONCURRENCY, queue.length) }, async () => {
+      while (queue.length > 0) {
+        const appId = queue.shift();
+        if (!appId) break;
+        try {
+          await resumeService.tailorResume(baseResumeId, appId);
+          tailored++;
+        } catch (err: any) {
+          errors.push(`${appId}: ${err.message}`);
+        }
       }
-    }
+    });
 
+    await Promise.all(workers);
     return { tailored, errors };
   },
 

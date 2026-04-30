@@ -1,4 +1,4 @@
-import { generateJSON, isGeminiConfigured } from "./gemini";
+import { generateJSON, isAIConfigured } from "./gemini";
 
 interface InterviewQuestion {
   question: string;
@@ -17,7 +17,7 @@ interface InterviewContext {
 }
 
 export async function generateAIInterviewQuestions(ctx: InterviewContext): Promise<InterviewQuestion[] | null> {
-  if (!isGeminiConfigured()) return null;
+  if (!isAIConfigured()) return null;
 
   const prompt = `Generate interview questions for this job application. Return a JSON array of objects.
 

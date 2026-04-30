@@ -1,4 +1,4 @@
-import { generateText, isGeminiConfigured } from "./gemini";
+import { generateText, isAIConfigured } from "./gemini";
 
 interface ResumeTailorContext {
   resumeContent: string;
@@ -10,7 +10,7 @@ interface ResumeTailorContext {
 }
 
 export async function tailorResumeWithAI(ctx: ResumeTailorContext): Promise<string | null> {
-  if (!isGeminiConfigured()) return null;
+  if (!isAIConfigured()) return null;
 
   const prompt = `Tailor this resume for the following job. Return ONLY the tailored resume content in markdown format.
 
@@ -41,7 +41,7 @@ INSTRUCTIONS:
 }
 
 export async function suggestResumeImprovements(resumeContent: string, jobDescription: string): Promise<string | null> {
-  if (!isGeminiConfigured()) return null;
+  if (!isAIConfigured()) return null;
 
   const prompt = `Analyze this resume against the job description and give specific, actionable suggestions.
 
