@@ -60,14 +60,32 @@ export async function POST(req: NextRequest) {
       .replace(/[-_]/g, " ")
       .replace(/\b\w/g, (c) => c.toUpperCase());
 
-    // Save the original file to disk
+    // Persist the original file. On Vercel (read-only fs) use Blob storage;
+    // locally, fall back to writing under uploads/resumes. Best-effort — never
+    // block the upload on storage failure since the parsed text is already saved.
     let filePath: string | undefined;
     if (ext === "pdf" || ext === "docx" || ext === "doc") {
-      const uploadsDir = path.join(process.cwd(), "uploads", "resumes");
-      await mkdir(uploadsDir, { recursive: true });
-      const savedFileName = `${Date.now()}-${fileName.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
-      filePath = path.join(uploadsDir, savedFileName);
-      await writeFile(filePath, buffer);
+      const safeName = fileName.replace(/[^a-zA-Z0-9._-]/g, "_");
+      const objectKey = `resumes/${Date.now()}-${safeName}`;
+
+      try {
+        if (process.env.BLOB_READ_WRITE_TOKEN) {
+          const { put } = await import("@vercel/blob");
+          const blob = await put(objectKey, buffer, {
+            access: "public",
+            contentType: file.type || undefined,
+          });
+          filePath = blob.url;
+        } else {
+          const uploadsDir = path.join(process.cwd(), "uploads", "resumes");
+          await mkdir(uploadsDir, { recursive: true });
+          const local = path.join(uploadsDir, path.basename(objectKey));
+          await writeFile(local, buffer);
+          filePath = local;
+        }
+      } catch (storageErr: any) {
+        console.warn("Original file persistence failed (text content still saved):", storageErr.message);
+      }
     }
 
     const resume = await resumeService.create(DEFAULT_USER_ID, {
