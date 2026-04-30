@@ -1,13 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendGmail, isGmailConnected } from "@/lib/services/gmail.service";
+import { sendResendEmail, isResendConfigured } from "@/lib/services/resend.service";
 import prisma from "@/lib/db";
+import { DEFAULT_USER_ID } from "@/lib/constants";
 
 /**
  * Parse an email draft string into subject and body.
  * Expected format:
- * Subject: <subject line>
+ *   Subject: <subject line>
  *
- * <body>
+ *   <body>
  */
 function parseEmailDraft(draft: string): { subject: string; body: string } {
   const lines = draft.split("\n");
@@ -34,15 +36,6 @@ function parseEmailDraft(draft: string): { subject: string; body: string } {
 
 export async function POST(req: NextRequest) {
   try {
-    const hasGmail = await isGmailConnected();
-
-    if (!hasGmail) {
-      return NextResponse.json(
-        { error: "No email provider configured. Connect Gmail in Profile → Integrations." },
-        { status: 503 }
-      );
-    }
-
     const { followUpId, to, draft } = await req.json();
 
     if (!to || !draft) {
@@ -50,10 +43,39 @@ export async function POST(req: NextRequest) {
     }
 
     const { subject, body } = parseEmailDraft(draft);
-    const result = await sendGmail(to, subject, body);
-    const emailId = result.id ?? undefined;
 
-    // Mark follow-up as sent if followUpId provided
+    // Prefer Gmail (sends as the user); fall back to Resend (transactional, but
+    // recruiters reply to the user's email via replyTo).
+    const hasGmail = await isGmailConnected();
+    const hasResend = isResendConfigured();
+
+    if (!hasGmail && !hasResend) {
+      return NextResponse.json(
+        {
+          error:
+            "No email provider configured. Connect Gmail in Profile → Integrations, " +
+            "or set RESEND_API_KEY + RESEND_FROM_EMAIL in env.",
+        },
+        { status: 503 }
+      );
+    }
+
+    let emailId: string | undefined;
+    let provider: "gmail" | "resend";
+
+    if (hasGmail) {
+      const result = await sendGmail(to, subject, body);
+      emailId = result.id ?? undefined;
+      provider = "gmail";
+    } else {
+      const user = await prisma.user.findUnique({ where: { id: DEFAULT_USER_ID } });
+      const result = await sendResendEmail(to, subject, body, {
+        replyTo: user?.email || undefined,
+      });
+      emailId = result.id;
+      provider = "resend";
+    }
+
     if (followUpId) {
       await prisma.followUp.update({
         where: { id: followUpId },
@@ -61,7 +83,7 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    return NextResponse.json({ success: true, emailId });
+    return NextResponse.json({ success: true, emailId, provider });
   } catch (error: any) {
     console.error("Email send error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
