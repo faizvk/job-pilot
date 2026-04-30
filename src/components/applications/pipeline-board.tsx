@@ -38,7 +38,7 @@ export function PipelineBoard({ applications, onStatusChange }: PipelineBoardPro
   };
 
   return (
-    <div className="flex gap-4 overflow-x-auto pb-4">
+    <div className="flex gap-3 sm:gap-4 overflow-x-auto pb-4 -mx-3 px-3 sm:-mx-0 sm:px-0 snap-x snap-mandatory sm:snap-none">
       {APPLICATION_STATUSES.map((status) => {
         const config = STATUS_CONFIG[status];
         const statusApps = applications.filter((a) => a.status === status);
@@ -47,7 +47,7 @@ export function PipelineBoard({ applications, onStatusChange }: PipelineBoardPro
         return (
           <div
             key={status}
-            className={`flex-shrink-0 w-72 rounded-lg ${isDragOver ? "bg-blue-50 border-blue-300" : "bg-slate-50"} border p-3`}
+            className={`flex-shrink-0 w-[85vw] max-w-72 sm:w-72 snap-start rounded-lg ${isDragOver ? "bg-blue-50 border-blue-300" : "bg-slate-50"} border p-3`}
             onDragOver={handleDragOver(status)}
             onDrop={handleDrop(status)}
             onDragLeave={() => setDragOverStatus(null)}
