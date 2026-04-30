@@ -43,7 +43,7 @@ export function EducationForm({ education, onRefresh }: { education: any[]; onRe
 
       {adding ? (
         <form onSubmit={handleAdd} className="border border-slate-200 rounded-xl p-4 space-y-3 animate-scale-in">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <input placeholder="Institution" value={form.institution} onChange={(e) => setForm({ ...form, institution: e.target.value })} className="border border-slate-200 rounded-xl px-3 py-2 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all" required />
             <input placeholder="Degree (e.g. B.Tech)" value={form.degree} onChange={(e) => setForm({ ...form, degree: e.target.value })} className="border border-slate-200 rounded-xl px-3 py-2 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all" required />
             <input placeholder="Field of Study (e.g. Computer Science)" value={form.field} onChange={(e) => setForm({ ...form, field: e.target.value })} className="border border-slate-200 rounded-xl px-3 py-2 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all" required />
