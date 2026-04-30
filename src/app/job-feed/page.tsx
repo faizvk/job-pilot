@@ -317,7 +317,7 @@ export default function JobFeedPage() {
   return (
     <div className="space-y-4 animate-fade-in">
       {/* Header */}
-      <div className="flex items-start justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Job Feed</h1>
           <p className="text-sm text-slate-500 mt-0.5">
@@ -325,7 +325,7 @@ export default function JobFeedPage() {
             {lastFetched && ` \u00b7 Last fetched: ${lastFetched}`}
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={() => setShowCopyPanel(!showCopyPanel)}
             className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm transition-all ${
