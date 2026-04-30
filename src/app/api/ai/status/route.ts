@@ -8,10 +8,12 @@ import { isDeepSeekConfigured } from "@/lib/services/ai/deepseek";
 import { isCohereConfigured } from "@/lib/services/ai/cohere";
 import { isTogetherConfigured } from "@/lib/services/ai/together";
 import { isGmailConfigured, isGmailConnected } from "@/lib/services/gmail.service";
+import { isResendConfigured } from "@/lib/services/resend.service";
 
 export async function GET() {
   const gmailConfigured = isGmailConfigured();
   const gmailConnected = gmailConfigured ? await isGmailConnected() : false;
+  const resendConfigured = isResendConfigured();
 
   return NextResponse.json({
     gemini: isGeminiConfigured(),
@@ -25,5 +27,7 @@ export async function GET() {
     ai: isAIConfigured(),
     providers: getConfiguredProviders(),
     gmail: { configured: gmailConfigured, connected: gmailConnected },
+    resend: resendConfigured,
+    email: gmailConnected || resendConfigured,
   });
 }
