@@ -228,6 +228,83 @@ export const jobSearchService = {
   },
 
   /**
+   * Search openings at a specific company in a specific Indian state.
+   * Hits JSearch + Adzuna (when keys configured), then filters strictly by
+   * company-name match (the APIs are loose with employer matching).
+   */
+  async searchByCompany(company: string, state: string): Promise<{ jobs: FetchedJob[]; sources: string[] }> {
+    const sources: string[] = [];
+    const all: FetchedJob[] = [];
+
+    const stateLabel = state?.trim() || "India";
+    const locationLabel = stateLabel.toLowerCase().includes("india") ? stateLabel : `${stateLabel}, India`;
+
+    const jsearchKey = process.env.RAPIDAPI_KEY;
+    if (jsearchKey) {
+      try {
+        // JSearch query is free-text; "<Company> jobs in <State>, India" works well.
+        const jobs = await this.fetchFromJSearch(
+          `${company} jobs`,
+          locationLabel,
+          jsearchKey,
+          [],
+          1
+        );
+        all.push(...jobs);
+        if (jobs.length > 0) sources.push("JSearch");
+      } catch (e: any) {
+        console.error("JSearch (by-company) error:", e.message);
+      }
+    }
+
+    const adzunaAppId = process.env.ADZUNA_APP_ID;
+    const adzunaKey = process.env.ADZUNA_API_KEY;
+    if (adzunaAppId && adzunaKey) {
+      try {
+        const jobs = await this.fetchFromAdzuna(
+          company,
+          locationLabel,
+          adzunaAppId,
+          adzunaKey,
+          1
+        );
+        all.push(...jobs);
+        if (jobs.length > 0) sources.push("Adzuna");
+      } catch (e: any) {
+        console.error("Adzuna (by-company) error:", e.message);
+      }
+    }
+
+    // Dedupe by externalId/url
+    const seen = new Set<string>();
+    const deduped = all.filter((job) => {
+      const key = job.externalId || job.url;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+
+    // Strict filter: company name must appear in the company field
+    // (case-insensitive, ignore punctuation like "Inc.", "Pvt Ltd")
+    const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9 ]/g, "").trim();
+    const companyNorm = norm(company);
+    const stateNorm = norm(stateLabel);
+
+    const filtered = deduped.filter((job) => {
+      const jc = norm(job.company);
+      if (!jc.includes(companyNorm) && !companyNorm.includes(jc)) return false;
+      // Loose state match — JSearch returns "City, State Country", Adzuna varies.
+      if (stateLabel && !stateLabel.toLowerCase().includes("india")) {
+        const jl = norm(job.location || "");
+        if (jl && !jl.includes(stateNorm)) return false;
+      }
+      return true;
+    });
+
+    return { jobs: filtered, sources };
+  },
+
+  /**
    * JSearch API (RapidAPI) - aggregates LinkedIn, Indeed, Glassdoor, ZipRecruiter
    */
   async fetchFromJSearch(

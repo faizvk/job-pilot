@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { useSidebar } from "./sidebar-context";
 import {
   LayoutDashboard, Briefcase, Zap, Layers, Search, FileText,
-  BarChart3, User, Rocket, BellRing,
+  BarChart3, User, Rocket, BellRing, Building2,
   Sparkles, ChevronsLeft, ChevronsRight, Bot
 } from "lucide-react";
 
@@ -16,6 +16,7 @@ const navGroups = [
     items: [
       { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
       { href: "/job-feed", label: "Job Feed", icon: Search },
+      { href: "/company-search", label: "Company Search", icon: Building2 },
       { href: "/job-alerts", label: "Job Alerts", icon: BellRing },
     ],
   },
