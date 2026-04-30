@@ -86,9 +86,8 @@ export function Header() {
           >
             <div className="relative flex items-center justify-between px-5 h-16 border-b border-white/[0.06]">
               <div className="flex items-center gap-3">
-                <div className="flex items-center justify-center w-9 h-9 rounded-md bg-white text-[#0b0d10] font-mono font-semibold text-[15px] tracking-tight">
-                  P.
-                </div>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/icon-light.svg" alt="Pursuit" width={36} height={36} />
                 <span className="text-[15px] font-semibold text-white tracking-[-0.01em]">Pursuit</span>
               </div>
               <button onClick={() => setMobileOpen(false)} className="p-1.5 text-slate-400 hover:text-white transition-colors rounded-lg hover:bg-white/[0.05]">
