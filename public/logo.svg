@@ -1,0 +1,19 @@
+<svg width="160" height="32" viewBox="0 0 160 32" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Pursuit">
+  <!-- Mark -->
+  <rect width="32" height="32" rx="6.5" fill="#0b0d10"/>
+  <rect x="9" y="7" width="3.25" height="18" fill="white"/>
+  <rect x="9" y="7" width="13" height="3.25" fill="white"/>
+  <rect x="18.75" y="7" width="3.25" height="9.25" fill="white"/>
+  <rect x="9" y="13.25" width="13" height="3.25" fill="white"/>
+  <rect x="25" y="22.5" width="2.5" height="2.5" rx="0.5" fill="white" opacity="0.6"/>
+
+  <!-- Wordmark -->
+  <text
+    x="44" y="22"
+    font-family="-apple-system, BlinkMacSystemFont, 'Inter', 'Geist', 'Segoe UI', sans-serif"
+    font-size="18"
+    font-weight="600"
+    letter-spacing="-0.4"
+    fill="#0b0d10"
+  >Pursuit</text>
+</svg>
