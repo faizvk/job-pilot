@@ -85,7 +85,7 @@ export function GitHubStats({ username }: { username: string | null }) {
       {data && (
         <>
           {/* Overview Cards */}
-          <div className="grid grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <StatCard label="Repos" value={data.profile.publicRepos} />
             <StatCard label="Stars" value={data.totalStars} />
             <StatCard label="Followers" value={data.profile.followers} />
