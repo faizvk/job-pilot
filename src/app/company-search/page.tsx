@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import {
-  Search, Loader2, ExternalLink, Building2, MapPin, Briefcase, Clock,
+  Search, Loader2, ExternalLink, Building2, MapPin, Briefcase, Clock, Star, Sparkles,
 } from "lucide-react";
 
-interface FetchedJob {
+interface ScoredJob {
   externalId: string;
   title: string;
   company: string;
@@ -17,6 +17,9 @@ interface FetchedJob {
   experienceLevel: string;
   postedAt: string;
   platform: string;
+  matchScore: number | null;
+  matchedSkills: string[];
+  extractedSkills: string[];
 }
 
 const INDIAN_STATES = [
@@ -31,7 +34,7 @@ const INDIAN_STATES = [
 export default function CompanySearchPage() {
   const [company, setCompany] = useState("");
   const [state, setState] = useState("");
-  const [jobs, setJobs] = useState<FetchedJob[]>([]);
+  const [jobs, setJobs] = useState<ScoredJob[]>([]);
   const [sources, setSources] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -143,6 +146,12 @@ export default function CompanySearchPage() {
           </div>
         </div>
 
+        <div className="flex items-start gap-2 text-xs text-indigo-700 bg-indigo-50/70 border border-indigo-100 rounded-lg p-2.5">
+          <Sparkles className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
+          <span>
+            Results are scored against <strong>your profile</strong> — match % uses your skills, senior roles are filtered out if you&apos;re junior, and your saved exclude-keywords are honored. Edit your profile in <a href="/profile" className="underline hover:text-indigo-800">Profile</a> or preferences in <a href="/job-feed" className="underline hover:text-indigo-800">Job Feed</a>.
+          </span>
+        </div>
         <p className="text-xs text-slate-400">
           Powered by JSearch (LinkedIn / Indeed / Glassdoor) and Adzuna. Set
           <code className="mx-1 bg-slate-100 px-1 py-0.5 rounded font-mono">RAPIDAPI_KEY</code>
@@ -202,6 +211,15 @@ export default function CompanySearchPage() {
                       </span>
                     )}
                   </div>
+                  {job.matchedSkills && job.matchedSkills.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {job.matchedSkills.slice(0, 8).map((s) => (
+                        <span key={s} className="text-[11px] bg-indigo-50/80 text-indigo-700 px-1.5 py-0.5 rounded font-medium">
+                          {s}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                   {job.salary && (
                     <p className="text-xs text-emerald-600 font-medium mt-1.5">{job.salary}</p>
                   )}
@@ -212,6 +230,19 @@ export default function CompanySearchPage() {
                   )}
                 </div>
                 <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
+                  {job.matchScore != null && (
+                    <div
+                      className={`flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-lg ${
+                        job.matchScore >= 70 ? "bg-emerald-50 text-emerald-700"
+                          : job.matchScore >= 40 ? "bg-amber-50 text-amber-700"
+                          : "bg-slate-50 text-slate-500"
+                      }`}
+                      title="Match score against your profile skills"
+                    >
+                      <Star className="w-3 h-3" />
+                      {job.matchScore}%
+                    </div>
+                  )}
                   <span className="text-[11px] px-2 py-0.5 rounded-md font-medium bg-slate-50 text-slate-600 ring-1 ring-inset ring-slate-500/10">
                     {job.platform}
                   </span>

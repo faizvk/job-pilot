@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jobSearchService } from "@/lib/services/job-search.service";
+import { DEFAULT_USER_ID } from "@/lib/constants";
 
 export async function GET(req: NextRequest) {
   try {
@@ -11,7 +12,9 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "company is required" }, { status: 400 });
     }
 
-    const { jobs, sources } = await jobSearchService.searchByCompany(company, state);
+    const { jobs, sources } = await jobSearchService.searchByCompany(company, state, {
+      userId: DEFAULT_USER_ID,
+    });
 
     return NextResponse.json({
       company,

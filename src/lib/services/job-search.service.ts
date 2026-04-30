@@ -2,6 +2,23 @@ import prisma from "@/lib/db";
 import { DEFAULT_USER_ID } from "@/lib/constants";
 import { jdAnalyzerService } from "./jd-analyzer.service";
 
+export interface ScoredFetchedJob {
+  externalId: string;
+  title: string;
+  company: string;
+  location: string;
+  workType: string;
+  description: string;
+  url: string;
+  salary: string;
+  experienceLevel: string;
+  postedAt: string;
+  platform: string;
+  matchScore: number | null;
+  matchedSkills: string[];
+  extractedSkills: string[];
+}
+
 export interface SearchParams {
   jobTitles: string[];
   locations: string[];
@@ -229,10 +246,18 @@ export const jobSearchService = {
 
   /**
    * Search openings at a specific company in a specific Indian state.
-   * Hits JSearch + Adzuna (when keys configured), then filters strictly by
-   * company-name match (the APIs are loose with employer matching).
+   * Hits JSearch + Adzuna, strict-filters by company match, then enriches
+   * each result against the user's profile (skills + experience prefs):
+   *   - jobs are scored against user.skills (matchScore + matched/extracted)
+   *   - if user is junior (experienceMax <= 2), senior-title roles are dropped
+   *   - excludeKeywords from saved search preferences are honored
+   *   - results sorted by matchScore desc
    */
-  async searchByCompany(company: string, state: string): Promise<{ jobs: FetchedJob[]; sources: string[] }> {
+  async searchByCompany(
+    company: string,
+    state: string,
+    opts?: { userId?: string }
+  ): Promise<{ jobs: ScoredFetchedJob[]; sources: string[] }> {
     const sources: string[] = [];
     const all: FetchedJob[] = [];
 
@@ -242,14 +267,7 @@ export const jobSearchService = {
     const jsearchKey = process.env.RAPIDAPI_KEY;
     if (jsearchKey) {
       try {
-        // JSearch query is free-text; "<Company> jobs in <State>, India" works well.
-        const jobs = await this.fetchFromJSearch(
-          `${company} jobs`,
-          locationLabel,
-          jsearchKey,
-          [],
-          1
-        );
+        const jobs = await this.fetchFromJSearch(`${company} jobs`, locationLabel, jsearchKey, [], 1);
         all.push(...jobs);
         if (jobs.length > 0) sources.push("JSearch");
       } catch (e: any) {
@@ -261,13 +279,7 @@ export const jobSearchService = {
     const adzunaKey = process.env.ADZUNA_API_KEY;
     if (adzunaAppId && adzunaKey) {
       try {
-        const jobs = await this.fetchFromAdzuna(
-          company,
-          locationLabel,
-          adzunaAppId,
-          adzunaKey,
-          1
-        );
+        const jobs = await this.fetchFromAdzuna(company, locationLabel, adzunaAppId, adzunaKey, 1);
         all.push(...jobs);
         if (jobs.length > 0) sources.push("Adzuna");
       } catch (e: any) {
@@ -275,7 +287,7 @@ export const jobSearchService = {
       }
     }
 
-    // Dedupe by externalId/url
+    // Dedupe
     const seen = new Set<string>();
     const deduped = all.filter((job) => {
       const key = job.externalId || job.url;
@@ -284,16 +296,14 @@ export const jobSearchService = {
       return true;
     });
 
-    // Strict filter: company name must appear in the company field
-    // (case-insensitive, ignore punctuation like "Inc.", "Pvt Ltd")
+    // Strict company filter
     const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9 ]/g, "").trim();
     const companyNorm = norm(company);
     const stateNorm = norm(stateLabel);
 
-    const filtered = deduped.filter((job) => {
+    let filtered = deduped.filter((job) => {
       const jc = norm(job.company);
       if (!jc.includes(companyNorm) && !companyNorm.includes(jc)) return false;
-      // Loose state match — JSearch returns "City, State Country", Adzuna varies.
       if (stateLabel && !stateLabel.toLowerCase().includes("india")) {
         const jl = norm(job.location || "");
         if (jl && !jl.includes(stateNorm)) return false;
@@ -301,7 +311,81 @@ export const jobSearchService = {
       return true;
     });
 
-    return { jobs: filtered, sources };
+    // Profile-aware enrichment + filtering
+    const userId = opts?.userId;
+    let userSkills: { name: string; category: string }[] = [];
+    let experienceMax = 99;
+    let excludes: string[] = [];
+
+    if (userId) {
+      const [user, prefs] = await Promise.all([
+        prisma.user.findUnique({ where: { id: userId }, include: { skills: true } }),
+        prisma.searchPreference.findUnique({ where: { userId } }),
+      ]);
+      userSkills = user?.skills.map((s) => ({ name: s.name, category: s.category })) || [];
+      if (prefs) {
+        experienceMax = prefs.experienceMax ?? 99;
+        if (prefs.excludeKeywords) {
+          excludes = prefs.excludeKeywords.toLowerCase().split(",").map((k) => k.trim()).filter(Boolean);
+        }
+      }
+    }
+
+    // exclude-keyword filter
+    if (excludes.length > 0) {
+      filtered = filtered.filter((job) => {
+        const text = `${job.title} ${job.description} ${job.company}`.toLowerCase();
+        return !excludes.some((ex) => text.includes(ex));
+      });
+    }
+
+    // junior filter (drop senior-titled roles if user is junior)
+    if (experienceMax <= 2) {
+      const seniorTitlePatterns = [
+        "senior", "sr.", "sr ", "lead", "principal", "staff", "architect",
+        "manager", "director", "head of", "vp ", "chief", "sde ii", "sde iii",
+        "sde 2", "sde 3", "level 3", "level 4", "l3", "l4", "l5",
+        "tech lead", "team lead",
+      ];
+      const juniorIndicators = ["junior", "jr.", "jr ", "entry", "associate", "intern", "trainee", "fresher", "graduate", "new grad"];
+      filtered = filtered.filter((job) => {
+        const title = job.title.normalize("NFKD").toLowerCase();
+        const hasSenior = seniorTitlePatterns.some((p) => title.includes(p));
+        const hasJunior = juniorIndicators.some((p) => title.includes(p));
+        return !(hasSenior && !hasJunior);
+      });
+    }
+
+    // Score each job against user skills (fall back to common dev skills if profile empty)
+    const skillsForScoring = userSkills.length > 0 ? userSkills : [
+      { name: "JavaScript", category: "technical" },
+      { name: "TypeScript", category: "technical" },
+      { name: "React", category: "technical" },
+      { name: "Node.js", category: "technical" },
+      { name: "Python", category: "technical" },
+      { name: "HTML", category: "technical" },
+      { name: "CSS", category: "technical" },
+      { name: "SQL", category: "technical" },
+      { name: "Git", category: "tool" },
+    ];
+
+    const scored: ScoredFetchedJob[] = filtered.map((job) => {
+      let matchScore: number | null = null;
+      let matchedSkills: string[] = [];
+      let extractedSkills: string[] = [];
+      if (job.description && job.description.length >= 30) {
+        const a = jdAnalyzerService.analyze(job.description, skillsForScoring);
+        matchScore = a.matchScore;
+        matchedSkills = a.matchedSkills;
+        extractedSkills = a.extractedSkills;
+      }
+      return { ...job, matchScore, matchedSkills, extractedSkills };
+    });
+
+    // Sort: highest matchScore first; null scores go last
+    scored.sort((a, b) => (b.matchScore ?? -1) - (a.matchScore ?? -1));
+
+    return { jobs: scored, sources };
   },
 
   /**
