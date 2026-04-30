@@ -81,7 +81,7 @@ export function Header() {
         <div className="md:hidden fixed inset-0 z-50">
           <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
           <div
-            className="relative w-72 h-full bg-[#0b0d10] shadow-2xl animate-slide-in overflow-hidden"
+            className="relative w-[80vw] max-w-72 h-full bg-[#0b0d10] shadow-2xl animate-slide-in overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="relative flex items-center justify-between px-5 h-16 border-b border-white/[0.06]">
