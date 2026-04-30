@@ -20,6 +20,11 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: "Pursuit",
   description: "A focused job-hunt workspace.",
+  icons: {
+    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+    shortcut: "/icon.svg",
+    apple: "/icon.svg",
+  },
 };
 
 export default function RootLayout({
