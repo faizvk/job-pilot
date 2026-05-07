@@ -75,8 +75,8 @@ export default function JobAlertsPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="max-w-4xl mx-auto space-y-5 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <h1 className="text-xl font-bold text-slate-900 flex items-center gap-2">
             <BellRing className="w-5 h-5 text-indigo-500" />
@@ -84,7 +84,7 @@ export default function JobAlertsPage() {
           </h1>
           <p className="text-sm text-slate-500 mt-0.5">Automated job searches with notifications</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={handleRunAll}
             disabled={runningAll || alerts.length === 0}
