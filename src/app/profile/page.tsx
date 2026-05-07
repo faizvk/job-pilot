@@ -71,12 +71,12 @@ export default function ProfilePage() {
 
   return (
     <div className="space-y-5 animate-fade-in">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Profile</h1>
           <p className="text-sm text-slate-500 mt-0.5">Your info is used for job matching, resume tailoring, and quick-fill</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={handleImportFromResume}
             disabled={importing}
