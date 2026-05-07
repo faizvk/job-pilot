@@ -106,7 +106,7 @@ export function SkillsManager({ skills, onRefresh }: { skills: any[]; onRefresh:
               placeholder="Paste skills separated by commas or new lines:&#10;JavaScript, React, Node.js, TypeScript, Python, Git, Docker..."
               className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 resize-none transition-all"
             />
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-3">
               <div className="flex items-center gap-2">
                 <label className="text-xs text-slate-500">Category:</label>
                 <select
@@ -131,7 +131,7 @@ export function SkillsManager({ skills, onRefresh }: { skills: any[]; onRefresh:
                   ))}
                 </select>
               </div>
-              <div className="flex-1" />
+              <div className="hidden sm:block flex-1" />
               {bulkText && (
                 <span className="text-xs text-slate-400">
                   {bulkText.split(/[,\n]/).filter((s) => s.trim()).length} skills
@@ -140,7 +140,7 @@ export function SkillsManager({ skills, onRefresh }: { skills: any[]; onRefresh:
               <button
                 onClick={handleBulkAdd}
                 disabled={!bulkText.trim() || bulkLoading}
-                className="bg-indigo-600 text-white px-3 py-1.5 rounded-xl text-xs font-medium hover:bg-indigo-700 disabled:opacity-50 shadow-sm transition-all active:scale-[0.98]"
+                className="bg-indigo-600 text-white px-3 py-1.5 rounded-xl text-xs font-medium hover:bg-indigo-700 disabled:opacity-50 shadow-sm transition-all active:scale-[0.98] ml-auto sm:ml-0"
               >
                 {bulkLoading ? "Adding..." : "Add All"}
               </button>
