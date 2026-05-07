@@ -80,7 +80,7 @@ export default function NewResumePage() {
 
   return (
     <div className="space-y-5 animate-fade-in">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Create Resume</h1>
           <p className="text-sm text-slate-500 mt-0.5">Upload a file or write from scratch</p>
@@ -88,7 +88,7 @@ export default function NewResumePage() {
         <button
           onClick={handleSave}
           disabled={!name || !content || saving}
-          className="bg-indigo-600 text-white px-4 py-2.5 rounded-xl text-sm font-medium shadow-sm shadow-indigo-600/20 hover:bg-indigo-700 disabled:opacity-50 transition-all active:scale-[0.98]"
+          className="bg-indigo-600 text-white px-4 py-2.5 rounded-xl text-sm font-medium shadow-sm shadow-indigo-600/20 hover:bg-indigo-700 disabled:opacity-50 transition-all active:scale-[0.98] self-start sm:self-auto"
         >
           {saving ? "Saving..." : "Save Resume"}
         </button>
