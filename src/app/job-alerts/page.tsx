@@ -164,9 +164,9 @@ export default function JobAlertsPage() {
       ) : (
         <div className="space-y-3">
           {alerts.map((alert) => (
-            <div key={alert.id} className={`bg-white border rounded-xl p-4 flex items-center justify-between transition-all ${alert.isActive ? "border-slate-200" : "border-slate-100 opacity-60"}`}>
+            <div key={alert.id} className={`bg-white border rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-all ${alert.isActive ? "border-slate-200" : "border-slate-100 opacity-60"}`}>
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <h3 className="text-sm font-semibold text-slate-900">{alert.name}</h3>
                   {alert.newJobCount > 0 && (
                     <span className="bg-indigo-100 text-indigo-700 text-[10px] font-bold px-1.5 py-0.5 rounded-full">
@@ -177,7 +177,7 @@ export default function JobAlertsPage() {
                     {alert.isActive ? "Active" : "Paused"}
                   </span>
                 </div>
-                <div className="flex items-center gap-3 mt-1 text-xs text-slate-500">
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1 text-xs text-slate-500">
                   <span>{alert.keywords}</span>
                   {alert.location && (
                     <span className="flex items-center gap-0.5"><MapPin className="w-3 h-3" />{alert.location}</span>
@@ -188,7 +188,7 @@ export default function JobAlertsPage() {
                   )}
                 </div>
               </div>
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-1.5 self-start sm:self-auto">
                 <button
                   onClick={() => handleRun(alert.id)}
                   disabled={runningId === alert.id}
