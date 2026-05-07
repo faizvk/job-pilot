@@ -23,26 +23,28 @@ export function ActivityFeed({ activities }: { activities: ActivityItem[] }) {
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200/60 shadow-card p-5">
+    <div className="bg-white rounded-2xl border border-slate-200/60 shadow-card p-4 sm:p-5">
       <h2 className="text-[15px] font-semibold text-slate-900 mb-4">Recent Activity</h2>
       <div className="space-y-1">
         {activities.map((item) => (
           <Link
             key={item.id}
             href={`/applications/${item.applicationId}`}
-            className="flex items-center gap-3 p-2.5 -mx-1 rounded-xl hover:bg-slate-50 transition-all group"
+            className="flex items-start gap-3 p-2.5 -mx-1 rounded-xl hover:bg-slate-50 transition-all group"
           >
-            <div className="w-2 h-2 rounded-full bg-gradient-to-br from-indigo-400 to-purple-400 flex-shrink-0" />
+            <div className="w-2 h-2 mt-1.5 rounded-full bg-gradient-to-br from-indigo-400 to-purple-400 flex-shrink-0" />
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-slate-800 truncate group-hover:text-indigo-600 transition-colors">{item.jobTitle}</p>
-              <p className="text-xs text-slate-400">{item.companyName}</p>
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-sm font-medium text-slate-800 truncate group-hover:text-indigo-600 transition-colors">{item.jobTitle}</p>
+                <span className="text-[11px] text-slate-400 whitespace-nowrap flex-shrink-0">{timeAgo(item.changedAt)}</span>
+              </div>
+              <p className="text-xs text-slate-400 truncate">{item.companyName}</p>
+              <div className="flex items-center gap-1.5 text-xs mt-1.5 flex-wrap">
+                {item.fromStatus && <StatusBadge status={item.fromStatus} />}
+                {item.fromStatus && <ArrowRight className="w-3 h-3 text-slate-300" />}
+                <StatusBadge status={item.toStatus} />
+              </div>
             </div>
-            <div className="flex items-center gap-1.5 text-xs flex-shrink-0">
-              {item.fromStatus && <StatusBadge status={item.fromStatus} />}
-              {item.fromStatus && <ArrowRight className="w-3 h-3 text-slate-300" />}
-              <StatusBadge status={item.toStatus} />
-            </div>
-            <span className="text-[11px] text-slate-400 whitespace-nowrap">{timeAgo(item.changedAt)}</span>
           </Link>
         ))}
       </div>
