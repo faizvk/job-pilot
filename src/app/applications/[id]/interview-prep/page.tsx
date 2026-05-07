@@ -89,7 +89,7 @@ export default function InterviewPrepPage() {
     return (
       <div className="space-y-6 animate-fade-in">
         <div className="h-8 w-64 bg-slate-100 rounded-lg animate-shimmer" />
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           <div className="space-y-6">
             <div className="h-64 bg-slate-100 rounded-xl animate-shimmer" />
             <div className="h-32 bg-slate-100 rounded-xl animate-shimmer" />
@@ -147,7 +147,7 @@ export default function InterviewPrepPage() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         <div className="space-y-6">
           <PrepNotesEditor
             notes={prep?.notes || ""}
