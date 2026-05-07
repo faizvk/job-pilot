@@ -340,14 +340,14 @@ We're looking for a Senior Frontend Engineer with 5+ years experience in React..
 Amazon | Software Development Engineer II | https://indeed.com/job/456 | Seattle, WA
 Join our team building next-gen cloud services. Requirements: Java, AWS, distributed systems...`}
             />
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
               <p className="text-xs text-slate-400">
                 {bulkText ? `~${bulkText.split(/\n{3,}|---+/).filter((b) => b.trim()).length} jobs detected` : ""}
               </p>
               <button
                 onClick={parseBulkJobs}
                 disabled={!bulkText.trim()}
-                className="bg-indigo-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-indigo-700 disabled:opacity-50 shadow-sm shadow-indigo-600/20 transition-all active:scale-[0.98]"
+                className="bg-indigo-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-indigo-700 disabled:opacity-50 shadow-sm shadow-indigo-600/20 transition-all active:scale-[0.98] self-start sm:self-auto"
               >
                 Parse & Add Jobs
               </button>
