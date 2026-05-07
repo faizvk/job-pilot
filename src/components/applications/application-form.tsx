@@ -38,7 +38,7 @@ export function ApplicationForm({ onSubmit, defaultValues }: ApplicationFormProp
   const update = (field: string, value: string) => setForm((prev) => ({ ...prev, [field]: value }));
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white border rounded-lg p-6 space-y-4">
+    <form onSubmit={handleSubmit} className="bg-white border rounded-lg p-4 sm:p-6 space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-1">Company Name *</label>
