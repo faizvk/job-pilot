@@ -92,21 +92,21 @@ export default function ApplicationCoverLetterPage() {
   }
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Link href={`/applications/${id}`} className="text-slate-400 hover:text-slate-600 transition-colors">
+    <div className="space-y-5 sm:space-y-6 animate-fade-in">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div className="flex items-center gap-3 min-w-0">
+          <Link href={`/applications/${id}`} className="text-slate-400 hover:text-slate-600 transition-colors flex-shrink-0">
             <ArrowLeft className="w-5 h-5" />
           </Link>
-          <div>
+          <div className="min-w-0">
             <h1 className="text-xl font-bold text-slate-900">Cover Letter</h1>
-            <p className="text-sm text-slate-500">{app?.jobTitle} at {app?.companyName}</p>
+            <p className="text-sm text-slate-500 truncate">{app?.jobTitle} at {app?.companyName}</p>
           </div>
         </div>
         {generatedContent && (
           <button
             onClick={handleCopy}
-            className="inline-flex items-center gap-1.5 text-sm text-indigo-600 hover:text-indigo-700 font-medium"
+            className="inline-flex items-center gap-1.5 text-sm text-indigo-600 hover:text-indigo-700 font-medium self-start sm:self-auto"
           >
             {copied ? <><Check className="w-4 h-4" /> Copied</> : <><Copy className="w-4 h-4" /> Copy</>}
           </button>
@@ -114,13 +114,13 @@ export default function ApplicationCoverLetterPage() {
       </div>
 
       {/* Generation Options */}
-      <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs space-y-4">
+      <div className="bg-white border border-slate-200 rounded-xl p-4 sm:p-5 shadow-xs space-y-4">
         {/* Template-based generation */}
         <div>
           <h3 className="text-[13px] font-semibold text-slate-700 mb-2 flex items-center gap-2">
             <FileText className="w-4 h-4 text-slate-400" /> Template-Based
           </h3>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
             <select
               value={selectedTemplateId}
               onChange={(e) => setSelectedTemplateId(e.target.value)}
@@ -134,7 +134,7 @@ export default function ApplicationCoverLetterPage() {
             <button
               onClick={handleGenerate}
               disabled={!selectedTemplateId || generating}
-              className="bg-indigo-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-indigo-700 disabled:opacity-50 shadow-sm shadow-indigo-600/20 transition-all active:scale-[0.98]"
+              className="bg-indigo-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-indigo-700 disabled:opacity-50 shadow-sm shadow-indigo-600/20 transition-all active:scale-[0.98] sm:flex-shrink-0"
             >
               {generating ? "Generating..." : "Generate"}
             </button>
@@ -143,15 +143,15 @@ export default function ApplicationCoverLetterPage() {
 
         {/* AI generation */}
         <div className="border-t border-slate-100 pt-4">
-          <h3 className="text-[13px] font-semibold text-slate-700 mb-2 flex items-center gap-2">
+          <h3 className="text-[13px] font-semibold text-slate-700 mb-2 flex flex-wrap items-center gap-2">
             <Sparkles className="w-4 h-4 text-amber-500" /> AI-Powered
             {!aiAvailable && <span className="text-[10px] text-slate-400 font-normal">(Set GEMINI_API_KEY or GROQ_API_KEY in .env)</span>}
           </h3>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
             <select
               value={aiTone}
               onChange={(e) => setAiTone(e.target.value as any)}
-              className="border border-slate-200 rounded-xl px-3 py-2 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
+              className="w-full sm:w-auto border border-slate-200 rounded-xl px-3 py-2 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
             >
               <option value="professional">Professional</option>
               <option value="technical">Technical</option>
@@ -160,7 +160,7 @@ export default function ApplicationCoverLetterPage() {
             <button
               onClick={handleAIGenerate}
               disabled={!aiAvailable || aiGenerating}
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-violet-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:from-indigo-700 hover:to-violet-700 disabled:opacity-50 shadow-sm transition-all active:scale-[0.98]"
+              className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-violet-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:from-indigo-700 hover:to-violet-700 disabled:opacity-50 shadow-sm transition-all active:scale-[0.98]"
             >
               <Sparkles className="w-4 h-4" />
               {aiGenerating ? "Writing..." : "Generate with AI"}
@@ -170,13 +170,13 @@ export default function ApplicationCoverLetterPage() {
       </div>
 
       {generatedContent ? (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           <div>
             <h3 className="text-[13px] font-semibold text-slate-700 mb-2">Edit</h3>
             <textarea
               value={generatedContent}
               onChange={(e) => setGeneratedContent(e.target.value)}
-              className="w-full h-[500px] border border-slate-200 rounded-xl p-4 text-sm font-mono resize-none shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all"
+              className="w-full h-[400px] sm:h-[500px] border border-slate-200 rounded-xl p-3 sm:p-4 text-sm font-mono resize-none shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all"
             />
           </div>
           <div>
