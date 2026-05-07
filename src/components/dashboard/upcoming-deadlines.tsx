@@ -12,7 +12,7 @@ interface FollowUp {
 
 export function UpcomingDeadlines({ followUps }: { followUps: FollowUp[] }) {
   return (
-    <div className="bg-white rounded-2xl border border-slate-200/60 shadow-card p-5">
+    <div className="bg-white rounded-2xl border border-slate-200/60 shadow-card p-4 sm:p-5">
       <h2 className="text-[15px] font-semibold text-slate-900 mb-4">Upcoming</h2>
       {followUps.length === 0 ? (
         <div className="text-center py-6">
