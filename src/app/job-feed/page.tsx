@@ -498,8 +498,8 @@ export default function JobFeedPage() {
 
       {/* Action bar */}
       {listings.length > 0 && (
-        <div className="flex items-center justify-between bg-white border border-slate-200/80 rounded-xl shadow-card p-3">
-          <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-2 bg-white border border-slate-200/80 rounded-xl shadow-card p-3">
+          <div className="flex flex-wrap items-center gap-3">
             <label className="flex items-center gap-2 text-sm cursor-pointer">
               <input
                 type="checkbox"
@@ -512,7 +512,7 @@ export default function JobFeedPage() {
             </label>
 
             {selectedJobs.size > 0 && (
-              <div className="flex items-center gap-1.5 ml-2 pl-3 border-l border-slate-200">
+              <div className="flex flex-wrap items-center gap-1.5 sm:ml-2 sm:pl-3 sm:border-l sm:border-slate-200">
                 <button
                   onClick={openAndApply}
                   disabled={applyingAll}
