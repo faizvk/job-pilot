@@ -147,38 +147,42 @@ export function SkillsManager({ skills, onRefresh }: { skills: any[]; onRefresh:
             </div>
           </div>
         ) : adding ? (
-          <form onSubmit={handleAdd} className="flex items-end gap-2 border border-slate-200 rounded-xl p-3 animate-scale-in">
-            <div>
+          <form onSubmit={handleAdd} className="flex flex-col sm:flex-row sm:items-end gap-2 border border-slate-200 rounded-xl p-3 animate-scale-in flex-1 w-full">
+            <div className="flex-1 min-w-0">
               <label className="block text-[11px] text-slate-500 mb-1 font-medium">Skill</label>
               <input
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
-                className="border border-slate-200 rounded-lg px-2.5 py-1.5 text-sm w-40 shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
+                className="w-full border border-slate-200 rounded-lg px-2.5 py-1.5 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
                 required
               />
             </div>
-            <div>
-              <label className="block text-[11px] text-slate-500 mb-1 font-medium">Category</label>
-              <select
-                value={form.category}
-                onChange={(e) => setForm({ ...form, category: e.target.value })}
-                className="border border-slate-200 rounded-lg px-2.5 py-1.5 text-sm shadow-xs"
-              >
-                {SKILL_CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
-              </select>
+            <div className="grid grid-cols-2 sm:flex sm:items-end gap-2">
+              <div>
+                <label className="block text-[11px] text-slate-500 mb-1 font-medium">Category</label>
+                <select
+                  value={form.category}
+                  onChange={(e) => setForm({ ...form, category: e.target.value })}
+                  className="w-full border border-slate-200 rounded-lg px-2.5 py-1.5 text-sm shadow-xs"
+                >
+                  {SKILL_CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className="block text-[11px] text-slate-500 mb-1 font-medium">Level</label>
+                <select
+                  value={form.level}
+                  onChange={(e) => setForm({ ...form, level: e.target.value })}
+                  className="w-full border border-slate-200 rounded-lg px-2.5 py-1.5 text-sm shadow-xs"
+                >
+                  {SKILL_LEVELS.map((l) => <option key={l} value={l}>{l}</option>)}
+                </select>
+              </div>
             </div>
-            <div>
-              <label className="block text-[11px] text-slate-500 mb-1 font-medium">Level</label>
-              <select
-                value={form.level}
-                onChange={(e) => setForm({ ...form, level: e.target.value })}
-                className="border border-slate-200 rounded-lg px-2.5 py-1.5 text-sm shadow-xs"
-              >
-                {SKILL_LEVELS.map((l) => <option key={l} value={l}>{l}</option>)}
-              </select>
+            <div className="flex gap-2">
+              <button type="submit" className="bg-indigo-600 text-white px-3 py-1.5 rounded-xl text-sm font-medium hover:bg-indigo-700 shadow-sm transition-all flex-1 sm:flex-initial">Add</button>
+              <button type="button" onClick={() => setAdding(false)} className="border border-slate-200 px-3 py-1.5 rounded-lg text-sm text-slate-600 hover:bg-slate-50 shadow-xs transition-all flex-1 sm:flex-initial">Cancel</button>
             </div>
-            <button type="submit" className="bg-indigo-600 text-white px-3 py-1.5 rounded-xl text-sm font-medium hover:bg-indigo-700 shadow-sm transition-all">Add</button>
-            <button type="button" onClick={() => setAdding(false)} className="border border-slate-200 px-3 py-1.5 rounded-lg text-sm text-slate-600 hover:bg-slate-50 shadow-xs transition-all">Cancel</button>
           </form>
         ) : (
           <div className="flex items-center gap-2">
