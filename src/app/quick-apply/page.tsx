@@ -616,7 +616,7 @@ export default function QuickApplyPage() {
               </div>
 
               {showResumePreview && (
-                <div ref={resumePreviewRef} className={`border border-slate-200 rounded-xl max-h-[600px] overflow-y-auto ${isLatex ? "bg-slate-900" : "bg-white p-6"}`}>
+                <div ref={resumePreviewRef} className={`border border-slate-200 rounded-xl max-h-[600px] overflow-y-auto ${isLatex ? "bg-slate-900" : "bg-white p-4 sm:p-6"}`}>
                   {isLatex ? (
                     <pre className="p-4 text-sm text-gray-100 font-mono whitespace-pre-wrap break-words leading-relaxed"><code>{generatedResume}</code></pre>
                   ) : (
