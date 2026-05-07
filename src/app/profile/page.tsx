@@ -104,14 +104,14 @@ export default function ProfilePage() {
 
       {/* Import result banner */}
       {importResult && !importResult.error && (
-        <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center gap-3">
+        <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center gap-3">
           <CheckCircle className="w-5 h-5 text-emerald-500 shrink-0" />
-          <p className="text-sm text-emerald-700">
+          <p className="text-sm text-emerald-700 flex-1">
             Imported from base resume: {importResult.profileFields} profile fields, {importResult.skills} skills, {importResult.education} education entries.
           </p>
           <button
             onClick={() => setImportResult(null)}
-            className="ml-auto text-emerald-400 hover:text-emerald-600 text-xs"
+            className="text-emerald-400 hover:text-emerald-600 text-xs self-start sm:self-auto"
           >
             Dismiss
           </button>
