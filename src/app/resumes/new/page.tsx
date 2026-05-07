@@ -107,7 +107,7 @@ export default function NewResumePage() {
         <button
           onClick={() => fileInputRef.current?.click()}
           disabled={uploading}
-          className="w-full p-6 border-b border-dashed border-slate-200 hover:bg-indigo-50/30 transition-all group disabled:opacity-50"
+          className="w-full p-4 sm:p-6 border-b border-dashed border-slate-200 hover:bg-indigo-50/30 transition-all group disabled:opacity-50"
         >
           <div className="flex flex-col items-center gap-3">
             <div className="w-12 h-12 rounded-2xl bg-slate-100 group-hover:bg-indigo-100 flex items-center justify-center transition-colors">
