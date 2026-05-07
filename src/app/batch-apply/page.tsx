@@ -234,14 +234,14 @@ export default function BatchApplyPage() {
   return (
     <div className="space-y-5 animate-fade-in">
       {/* Header */}
-      <div className="flex items-start justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Batch Apply</h1>
           <p className="text-sm text-slate-500 mt-0.5">Import jobs, auto-tailor resumes, track everything</p>
         </div>
         {startTime && (
-          <div className="text-right bg-white border border-slate-200/80 rounded-xl shadow-card px-4 py-2.5">
-            <div className="flex items-center gap-2 text-lg font-mono font-bold text-indigo-600">
+          <div className="sm:text-right bg-white border border-slate-200/80 rounded-xl shadow-card px-4 py-2.5 self-start sm:self-auto">
+            <div className="flex sm:justify-end items-center gap-2 text-lg font-mono font-bold text-indigo-600">
               <Clock className="w-4 h-4" />
               {formatTime(elapsedTime)}
             </div>
