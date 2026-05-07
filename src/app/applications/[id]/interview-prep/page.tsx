@@ -101,23 +101,23 @@ export default function InterviewPrepPage() {
   }
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
+    <div className="space-y-5 sm:space-y-6 animate-fade-in">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div className="flex items-center gap-3 min-w-0">
           <Link
             href={`/applications/${id}`}
-            className="text-slate-400 hover:text-slate-600 transition-colors"
+            className="text-slate-400 hover:text-slate-600 transition-colors flex-shrink-0"
           >
             <ArrowLeft className="w-5 h-5" />
           </Link>
-          <div>
+          <div className="min-w-0">
             <h1 className="text-xl font-bold text-slate-900">Interview Prep</h1>
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-slate-500 truncate">
               {app?.jobTitle} at {app?.companyName}
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {(saving || saved) && (
             <span className="inline-flex items-center gap-1 text-xs text-slate-400">
               {saved ? <><Check className="w-3 h-3 text-emerald-500" /> Saved</> : "Saving..."}
