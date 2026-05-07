@@ -298,20 +298,19 @@ export default function QuickApplyPage() {
 
   return (
     <div className="space-y-5 animate-fade-in">
-      {/* Hero */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 p-6 text-white shadow-lg shadow-indigo-500/20">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2230%22%20height%3D%2230%22%20viewBox%3D%220%200%2030%2030%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Ccircle%20cx%3D%221%22%20cy%3D%221%22%20r%3D%221%22%20fill%3D%22rgba(255%2C255%2C255%2C0.07)%22%2F%3E%3C%2Fsvg%3E')] pointer-events-none" />
-        <div className="relative">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 border-b border-slate-200/70 pb-4 sm:pb-5">
+        <div>
           <div className="flex items-center gap-2 mb-1">
-            <Zap className="w-5 h-5" />
-            <h1 className="text-2xl font-bold tracking-tight">Quick Apply</h1>
+            <Zap className="w-5 h-5 text-slate-700" />
+            <h1 className="text-2xl font-semibold tracking-tight text-slate-900">Quick Apply</h1>
           </div>
-          <p className="text-indigo-100 text-sm">Paste any job posting — analyze, tailor resume, generate cover letter, and track your application</p>
+          <p className="text-slate-500 text-sm">Paste any job posting — analyze, tailor resume, generate cover letter, and track your application</p>
         </div>
       </div>
 
       {/* Paste Area */}
-      <div className="bg-white border border-slate-200/60 rounded-2xl shadow-card p-5 space-y-4">
+      <div className="bg-white border border-slate-200/60 rounded-2xl shadow-card p-4 sm:p-5 space-y-4">
         <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
           <ClipboardPaste className="w-4 h-4 text-indigo-500" />
           Paste Job Posting
@@ -321,16 +320,16 @@ export default function QuickApplyPage() {
           onChange={(e) => setRawText(e.target.value)}
           placeholder="Paste the full job posting here — title, description, requirements, anything you copied from the job page..."
           rows={8}
-          className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 resize-y"
+          className="w-full border border-slate-200 rounded-xl px-3 sm:px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 resize-y"
         />
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
           <span className="text-xs text-slate-400">
             {rawText.length > 0 ? `${rawText.length.toLocaleString()} characters` : "Supports messy copy-paste from any job site"}
           </span>
           <button
             onClick={handleAnalyze}
             disabled={analyzing || !rawText.trim()}
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-indigo-500 text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:from-indigo-500 hover:to-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm shadow-indigo-600/20 transition-all active:scale-[0.97]"
+            className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-indigo-500 text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:from-indigo-500 hover:to-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm shadow-indigo-600/20 transition-all active:scale-[0.97] self-start sm:self-auto"
           >
             {analyzing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
             {analyzing ? "Analyzing..." : "Analyze"}
