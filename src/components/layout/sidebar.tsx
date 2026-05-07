@@ -37,6 +37,7 @@ const navGroups = [
   {
     label: "Insights",
     items: [
+      { href: "/insights", label: "Insights", icon: TrendingUp },
       { href: "/analytics", label: "Analytics", icon: BarChart3 },
       { href: "/automations", label: "Automations", icon: Bot },
       { href: "/profile", label: "Profile", icon: User },
