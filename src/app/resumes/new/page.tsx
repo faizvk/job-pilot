@@ -135,7 +135,7 @@ export default function NewResumePage() {
         )}
 
         {/* Name and options */}
-        <div className="flex items-center gap-4 p-4">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 p-3 sm:p-4">
           <input
             type="text"
             placeholder="Resume name (e.g., 'Full-Stack Developer Resume')"
