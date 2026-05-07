@@ -30,6 +30,7 @@ const PAGE_TITLES: Record<string, string> = {
   "quick-apply": "Quick Apply",
   "batch-apply": "Batch Apply",
   resumes: "Resumes",
+  insights: "Insights",
   analytics: "Analytics",
   automations: "Automations",
   profile: "Profile",
