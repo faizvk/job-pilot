@@ -89,7 +89,7 @@ export function SkillsManager({ skills, onRefresh }: { skills: any[]; onRefresh:
         </div>
       ))}
 
-      <div className="flex items-center gap-3 pt-2">
+      <div className="flex flex-wrap items-center gap-3 pt-2">
         {/* Bulk add */}
         {bulkMode ? (
           <div className="flex-1 border border-slate-200 rounded-xl p-4 space-y-3 animate-scale-in">
