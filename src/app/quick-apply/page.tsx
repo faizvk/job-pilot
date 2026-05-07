@@ -348,7 +348,7 @@ export default function QuickApplyPage() {
       {result && (
         <div className="space-y-4 stagger-children">
           {/* Extracted Job Info */}
-          <div className="bg-white border border-slate-200/60 rounded-2xl shadow-card p-5 space-y-4">
+          <div className="bg-white border border-slate-200/60 rounded-2xl shadow-card p-4 sm:p-5 space-y-4">
             <h2 className="text-base font-semibold text-slate-900">Extracted Job Details</h2>
 
             <div className="flex flex-wrap items-start gap-x-6 gap-y-3">
@@ -425,7 +425,7 @@ export default function QuickApplyPage() {
           </div>
 
           {/* Skill Match */}
-          <div className="bg-white border border-slate-200/60 rounded-2xl shadow-card p-5 space-y-4">
+          <div className="bg-white border border-slate-200/60 rounded-2xl shadow-card p-4 sm:p-5 space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="text-base font-semibold text-slate-900">Skill Match</h2>
               <span className={`text-lg font-bold px-3 py-1 rounded-xl ${scoreColor}`}>
@@ -569,7 +569,7 @@ export default function QuickApplyPage() {
 
           {/* Generated Resume Preview */}
           {generatedResume && (
-            <div className="bg-white border border-slate-200/60 rounded-2xl shadow-card p-5 space-y-4">
+            <div className="bg-white border border-slate-200/60 rounded-2xl shadow-card p-4 sm:p-5 space-y-4">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-base font-semibold text-slate-900 flex items-center gap-2">
@@ -628,7 +628,7 @@ export default function QuickApplyPage() {
           )}
 
           {/* Cover Letter Generator */}
-          <div className="bg-white border border-slate-200/60 rounded-2xl shadow-card p-5 space-y-4">
+          <div className="bg-white border border-slate-200/60 rounded-2xl shadow-card p-4 sm:p-5 space-y-4">
             <h2 className="text-base font-semibold text-slate-900">Generate Cover Letter</h2>
 
             <div className="flex flex-col sm:flex-row sm:items-center gap-3">
@@ -675,7 +675,7 @@ export default function QuickApplyPage() {
           </div>
 
           {/* Track Application */}
-          <div className="bg-white border border-slate-200/60 rounded-2xl shadow-card p-5 space-y-4">
+          <div className="bg-white border border-slate-200/60 rounded-2xl shadow-card p-4 sm:p-5 space-y-4">
             <h2 className="text-base font-semibold text-slate-900 flex items-center gap-2">
               <Save className="w-4 h-4 text-indigo-500" />
               Track Application
