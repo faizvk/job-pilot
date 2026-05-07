@@ -360,8 +360,8 @@ Join our team building next-gen cloud services. Requirements: Java, AWS, distrib
       {jobs.length > 0 && (
         <div className="space-y-3">
           {/* Batch action bar */}
-          <div className="flex items-center justify-between bg-white border border-slate-200/80 rounded-xl shadow-card p-3">
-            <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center justify-between gap-2 bg-white border border-slate-200/80 rounded-xl shadow-card p-3">
+            <div className="flex flex-wrap items-center gap-3">
               <label className="flex items-center gap-2 text-sm cursor-pointer">
                 <input
                   type="checkbox"
