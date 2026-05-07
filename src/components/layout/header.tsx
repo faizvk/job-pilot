@@ -15,6 +15,7 @@ const links = [
   { href: "/quick-apply", label: "Quick Apply", icon: Zap },
   { href: "/batch-apply", label: "Batch Apply", icon: Layers },
   { href: "/resumes", label: "Resumes", icon: FileText },
+  { href: "/insights", label: "Insights", icon: TrendingUp },
   { href: "/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/automations", label: "Automations", icon: Bot },
   { href: "/profile", label: "Profile", icon: User },
