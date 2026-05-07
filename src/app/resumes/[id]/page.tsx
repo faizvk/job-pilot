@@ -52,10 +52,10 @@ export default function ResumeDetailPage() {
   if (!resume) return <p className="text-slate-500">Resume not found.</p>;
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-5 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <h1 className="text-2xl font-bold">Edit Resume</h1>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {resume.filePath && (
             <a
               href={`/api/resumes/${id}/download`}
@@ -80,7 +80,7 @@ export default function ResumeDetailPage() {
         </div>
       </div>
 
-      <div className="flex items-center gap-4 bg-white border rounded-lg p-4">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 bg-white border rounded-lg p-3 sm:p-4">
         <input
           type="text"
           value={name}
@@ -98,7 +98,7 @@ export default function ResumeDetailPage() {
         </label>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         <div>
           <h3 className="font-medium mb-2">Edit</h3>
           <ResumeEditor content={content} onChange={setContent} />
