@@ -96,19 +96,19 @@ export function IntegrationsPanel() {
       </div>
 
       {/* Gmail Integration */}
-      <div className="border border-slate-200 rounded-xl p-5 space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-red-50 rounded-lg flex items-center justify-center">
+      <div className="border border-slate-200 rounded-xl p-4 sm:p-5 space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div className="flex items-start gap-3">
+            <div className="w-10 h-10 bg-red-50 rounded-lg flex items-center justify-center flex-shrink-0">
               <Mail className="w-5 h-5 text-red-500" />
             </div>
-            <div>
+            <div className="min-w-0">
               <h3 className="text-sm font-semibold text-slate-900">Gmail & Calendar</h3>
               <p className="text-xs text-slate-500">Send emails, detect confirmations & schedule interviews</p>
             </div>
           </div>
           {gmailConnected ? (
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <span className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full">
                 <CheckCircle className="w-3.5 h-3.5" /> Connected
               </span>
