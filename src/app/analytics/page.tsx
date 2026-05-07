@@ -32,23 +32,23 @@ export default function AnalyticsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5 sm:space-y-6">
       <h1 className="text-2xl font-bold">Analytics</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white border rounded-lg p-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+        <div className="bg-white border rounded-lg p-4 sm:p-6 overflow-x-auto">
           <h2 className="font-semibold mb-4">Application Funnel</h2>
           <FunnelChart data={data?.funnel || []} />
         </div>
-        <div className="bg-white border rounded-lg p-6">
+        <div className="bg-white border rounded-lg p-4 sm:p-6 overflow-x-auto">
           <h2 className="font-semibold mb-4">Applications Over Time</h2>
           <TimelineChart data={data?.timeline || []} />
         </div>
-        <div className="bg-white border rounded-lg p-6">
+        <div className="bg-white border rounded-lg p-4 sm:p-6 overflow-x-auto">
           <h2 className="font-semibold mb-4">Response Rate</h2>
           <ResponseRateChart data={data?.responseRate || []} />
         </div>
-        <div className="bg-white border rounded-lg p-6">
+        <div className="bg-white border rounded-lg p-4 sm:p-6 overflow-x-auto">
           <h2 className="font-semibold mb-4">Resume Performance</h2>
           <ResumePerformance data={data?.resumePerformance || []} />
         </div>
