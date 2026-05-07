@@ -188,7 +188,7 @@ export default function ApplicationDetailPage() {
         </div>
 
         {/* Quick Actions */}
-        <div className="bg-white rounded-lg border p-6 space-y-3">
+        <div className="bg-white rounded-lg border p-4 sm:p-6 space-y-3">
           <h2 className="font-semibold text-lg">Tools</h2>
           <Link href={`/applications/${id}/resume`} className="flex items-center gap-3 p-3 rounded-lg border hover:bg-slate-50 transition-all">
             <FileText className="w-5 h-5 text-blue-600" />
