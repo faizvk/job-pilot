@@ -223,7 +223,7 @@ export default function ApplicationDetailPage() {
 
       {/* Company Info from Wikipedia */}
       {companyInfo && (
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
+        <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-xs">
           <div className="flex items-center justify-between mb-3">
             <h2 className="font-semibold text-lg">About {app.companyName}</h2>
             <a
@@ -249,7 +249,7 @@ export default function ApplicationDetailPage() {
 
       {/* AI Analysis */}
       {app.jobDescription && (
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
+        <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-xs">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-semibold text-lg flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-amber-500" /> AI Analysis
@@ -329,7 +329,7 @@ export default function ApplicationDetailPage() {
 
       {/* Job Description */}
       {app.jobDescription && (
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
+        <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-xs">
           <h2 className="font-semibold text-lg mb-3">Job Description</h2>
           <p className="text-sm text-slate-600 whitespace-pre-wrap">{app.jobDescription}</p>
         </div>
