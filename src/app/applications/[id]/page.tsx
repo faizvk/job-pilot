@@ -241,7 +241,7 @@ export default function ApplicationDetailPage() {
 
       {/* Notes */}
       {app.notes && (
-        <div className="bg-white rounded-lg border p-6">
+        <div className="bg-white rounded-lg border p-4 sm:p-6">
           <h2 className="font-semibold text-lg mb-3">Notes</h2>
           <p className="text-sm text-slate-600 whitespace-pre-wrap">{app.notes}</p>
         </div>
@@ -337,7 +337,7 @@ export default function ApplicationDetailPage() {
 
       {/* Status History */}
       {app.statusHistory?.length > 0 && (
-        <div className="bg-white rounded-lg border p-6">
+        <div className="bg-white rounded-lg border p-4 sm:p-6">
           <h2 className="font-semibold text-lg mb-3">Status History</h2>
           <div className="space-y-3">
             {app.statusHistory.map((change: any) => (
