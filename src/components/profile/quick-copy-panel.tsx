@@ -86,7 +86,7 @@ export function QuickCopyPanel({ profile }: { profile: any }) {
 
   return (
     <div className="bg-white border border-slate-200/60 rounded-xl shadow-card animate-scale-in">
-      <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100">
+      <div className="flex flex-wrap items-center justify-between gap-2 px-3 sm:px-4 py-3 border-b border-slate-100">
         <p className="text-[13px] font-semibold text-slate-900">Quick Copy — Click any field to copy</p>
         <button
           onClick={copyAll}
