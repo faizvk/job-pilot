@@ -76,19 +76,19 @@ export default function ApplicationDetailPage() {
   const statuses = ["saved", "applied", "phone_screen", "interview", "offer", "accepted", "rejected"];
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      <div className="flex items-start justify-between">
-        <div className="flex items-start gap-4">
+    <div className="max-w-4xl mx-auto space-y-5 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+        <div className="flex items-start gap-3 sm:gap-4 min-w-0">
           <CompanyLogo companyName={app.companyName} size={48} className="flex-shrink-0 shadow-xs" />
-          <div>
-            <h1 className="text-2xl font-bold">{app.jobTitle}</h1>
-            <p className="text-lg text-slate-600 flex items-center gap-2 mt-1">
-              <Building2 className="w-4 h-4" />
-              {app.companyName}
+          <div className="min-w-0">
+            <h1 className="text-xl sm:text-2xl font-bold break-words">{app.jobTitle}</h1>
+            <p className="text-base sm:text-lg text-slate-600 flex items-center gap-2 mt-1">
+              <Building2 className="w-4 h-4 flex-shrink-0" />
+              <span className="truncate">{app.companyName}</span>
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <Link
             href={`/applications/${id}/edit`}
             className="inline-flex items-center gap-1 px-3 py-2 text-sm border rounded-lg hover:bg-slate-50"
@@ -105,13 +105,13 @@ export default function ApplicationDetailPage() {
       </div>
 
       {/* Status Pipeline */}
-      <div className="bg-white rounded-lg border p-4">
-        <div className="flex items-center gap-1 overflow-x-auto">
+      <div className="bg-white rounded-lg border p-3 sm:p-4">
+        <div className="flex items-center gap-1 overflow-x-auto -mx-1 px-1">
           {statuses.map((s) => (
             <button
               key={s}
               onClick={() => handleStatusChange(s)}
-              className={`flex-1 py-2 px-3 text-xs font-medium rounded transition-colors ${
+              className={`flex-shrink-0 sm:flex-1 py-2 px-3 text-xs font-medium rounded transition-colors whitespace-nowrap ${
                 s === app.status
                   ? "bg-blue-600 text-white"
                   : statuses.indexOf(s) < statuses.indexOf(app.status)
@@ -126,8 +126,8 @@ export default function ApplicationDetailPage() {
       </div>
 
       {/* Info Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white rounded-lg border p-6 space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+        <div className="bg-white rounded-lg border p-4 sm:p-6 space-y-4">
           <h2 className="font-semibold text-lg">Details</h2>
           {app.location && (
             <div className="flex items-center gap-2 text-sm">
