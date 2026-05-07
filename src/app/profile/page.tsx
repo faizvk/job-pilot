@@ -134,12 +134,12 @@ export default function ProfilePage() {
         <QuickCopyPanel profile={profile} />
       )}
 
-      <div className="flex gap-1 bg-slate-100 p-1 rounded-xl w-fit">
+      <div className="flex gap-1 bg-slate-100 p-1 rounded-xl overflow-x-auto -mx-3 px-3 sm:mx-0 sm:px-1 w-auto sm:w-fit max-w-full">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`px-4 py-2 text-sm rounded-lg transition-all ${
+            className={`px-3 sm:px-4 py-2 text-sm rounded-lg transition-all whitespace-nowrap flex-shrink-0 ${
               activeTab === tab.id
                 ? "bg-white shadow-sm font-medium text-slate-900"
                 : "text-slate-500 hover:text-slate-700"
@@ -150,7 +150,7 @@ export default function ProfilePage() {
         ))}
       </div>
 
-      <div className="bg-white border border-slate-200/60 rounded-2xl shadow-card p-6">
+      <div className="bg-white border border-slate-200/60 rounded-2xl shadow-card p-4 sm:p-6">
         {activeTab === "personal" && (
           <PersonalInfoForm profile={profile} onSave={handleUpdateProfile} />
         )}
