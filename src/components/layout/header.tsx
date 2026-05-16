@@ -77,6 +77,9 @@ export function Header() {
             })}
           </nav>
         </div>
+        <div className="flex-shrink-0">
+          <UserMenu />
+        </div>
       </header>
 
       {/* Mobile nav overlay */}
