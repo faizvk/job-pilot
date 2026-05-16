@@ -1,5 +1,5 @@
 import prisma from "@/lib/db";
-import { DEFAULT_USER_ID } from "@/lib/constants";
+import { getPrimaryUserId } from "@/lib/services/primary-user";
 import { jdAnalyzerService } from "./jd-analyzer.service";
 
 export interface ScoredFetchedJob {
@@ -60,11 +60,11 @@ export const jobSearchService = {
     platforms: string[];
   }) {
     const existing = await prisma.searchPreference.findUnique({
-      where: { userId: DEFAULT_USER_ID },
+      where: { userId: (await getPrimaryUserId()) },
     });
 
     const data = {
-      userId: DEFAULT_USER_ID,
+      userId: (await getPrimaryUserId()),
       jobTitles: JSON.stringify(prefs.jobTitles),
       locations: JSON.stringify(prefs.locations),
       workTypes: JSON.stringify(prefs.workTypes),
@@ -77,7 +77,7 @@ export const jobSearchService = {
     };
 
     if (existing) {
-      return prisma.searchPreference.update({ where: { userId: DEFAULT_USER_ID }, data });
+      return prisma.searchPreference.update({ where: { userId: (await getPrimaryUserId()) }, data });
     }
     return prisma.searchPreference.create({ data });
   },
@@ -87,7 +87,7 @@ export const jobSearchService = {
    */
   async getPreferences() {
     const pref = await prisma.searchPreference.findUnique({
-      where: { userId: DEFAULT_USER_ID },
+      where: { userId: (await getPrimaryUserId()) },
     });
 
     if (!pref) return null;
@@ -718,7 +718,7 @@ export const jobSearchService = {
   async storeAndScoreJobs(fetchedJobs: FetchedJob[]) {
     // Get user skills for match scoring
     const user = await prisma.user.findUnique({
-      where: { id: DEFAULT_USER_ID },
+      where: { id: (await getPrimaryUserId()) },
       include: { skills: true },
     });
     const userSkills = user?.skills.map((s) => ({ name: s.name, category: s.category })) || [];

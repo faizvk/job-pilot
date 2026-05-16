@@ -1,6 +1,6 @@
 import { google } from "googleapis";
 import prisma from "@/lib/db";
-import { DEFAULT_USER_ID } from "@/lib/constants";
+import { getPrimaryUserId } from "@/lib/services/primary-user";
 
 function getOAuth2Client() {
   const clientId = process.env.GMAIL_CLIENT_ID;
@@ -43,7 +43,7 @@ export async function handleCallback(code: string) {
 
   // Store tokens in the database
   await prisma.user.update({
-    where: { id: DEFAULT_USER_ID },
+    where: { id: (await getPrimaryUserId()) },
     data: {
       gmailTokens: JSON.stringify(tokens),
     },
@@ -56,7 +56,7 @@ export async function handleCallback(code: string) {
  * Get authenticated Gmail client
  */
 async function getGmailClient() {
-  const user = await prisma.user.findUnique({ where: { id: DEFAULT_USER_ID } });
+  const user = await prisma.user.findUnique({ where: { id: (await getPrimaryUserId()) } });
   if (!user?.gmailTokens) {
     throw new Error("Gmail not connected. Please authorize first.");
   }
@@ -69,7 +69,7 @@ async function getGmailClient() {
   oauth2.on("tokens", async (newTokens) => {
     const merged = { ...tokens, ...newTokens };
     await prisma.user.update({
-      where: { id: DEFAULT_USER_ID },
+      where: { id: (await getPrimaryUserId()) },
       data: { gmailTokens: JSON.stringify(merged) },
     });
   });
@@ -156,7 +156,7 @@ export async function searchApplicationEmails(companyName?: string, limit = 20) 
 export async function isGmailConnected(): Promise<boolean> {
   try {
     if (!isGmailConfigured()) return false;
-    const user = await prisma.user.findUnique({ where: { id: DEFAULT_USER_ID } });
+    const user = await prisma.user.findUnique({ where: { id: (await getPrimaryUserId()) } });
     return !!user?.gmailTokens;
   } catch {
     return false;

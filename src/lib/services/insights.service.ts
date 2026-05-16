@@ -1,5 +1,5 @@
 import prisma from "@/lib/db";
-import { DEFAULT_USER_ID } from "@/lib/constants";
+import { getPrimaryUserId } from "@/lib/services/primary-user";
 
 // Status ordering for funnel + response detection
 const STATUS_ORDER = ["saved", "applied", "phone_screen", "interview", "offer", "accepted"] as const;
@@ -50,7 +50,7 @@ export interface InsightsReport {
 }
 
 export const insightsService = {
-  async generate(userId: string = DEFAULT_USER_ID, days: number = 90): Promise<InsightsReport> {
+  async generate(userId: string = (await getPrimaryUserId()), days: number = 90): Promise<InsightsReport> {
     const from = new Date();
     from.setDate(from.getDate() - days);
 

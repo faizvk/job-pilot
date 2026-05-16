@@ -1,6 +1,6 @@
 import { google } from "googleapis";
 import prisma from "@/lib/db";
-import { DEFAULT_USER_ID } from "@/lib/constants";
+import { getPrimaryUserId } from "@/lib/services/primary-user";
 import * as telegram from "./telegram.service";
 import { createCalendarEvent } from "./calendar.service";
 
@@ -83,7 +83,7 @@ function getOAuth2Client() {
 }
 
 async function getGmailClient() {
-  const user = await prisma.user.findUnique({ where: { id: DEFAULT_USER_ID } });
+  const user = await prisma.user.findUnique({ where: { id: (await getPrimaryUserId()) } });
   if (!user?.gmailTokens) return null;
 
   const tokens = JSON.parse(user.gmailTokens);
@@ -93,7 +93,7 @@ async function getGmailClient() {
   oauth2.on("tokens", async (newTokens) => {
     const merged = { ...tokens, ...newTokens };
     await prisma.user.update({
-      where: { id: DEFAULT_USER_ID },
+      where: { id: (await getPrimaryUserId()) },
       data: { gmailTokens: JSON.stringify(merged) },
     });
   });
@@ -111,7 +111,7 @@ export async function scanGmailForUpdates(): Promise<{
   // Get all active applications (applied or later, not rejected/accepted)
   const applications = await prisma.application.findMany({
     where: {
-      userId: DEFAULT_USER_ID,
+      userId: (await getPrimaryUserId()),
       status: { in: ["applied", "phone_screen", "interview"] },
     },
   });
@@ -230,7 +230,7 @@ export async function scheduleAutoFollowUps(): Promise<{
 
   const applications = await prisma.application.findMany({
     where: {
-      userId: DEFAULT_USER_ID,
+      userId: (await getPrimaryUserId()),
       status: "applied",
       appliedAt: { lte: sevenDaysAgo },
     },
@@ -254,7 +254,7 @@ export async function scheduleAutoFollowUps(): Promise<{
 
     await prisma.followUp.create({
       data: {
-        userId: DEFAULT_USER_ID,
+        userId: (await getPrimaryUserId()),
         applicationId: app.id,
         type: "follow_up",
         dueDate,
@@ -320,7 +320,7 @@ export async function sendDailyDigest(): Promise<{ sent: boolean; sections: stri
   // 1. Follow-ups due today
   const dueFollowUps = await prisma.followUp.findMany({
     where: {
-      userId: DEFAULT_USER_ID,
+      userId: (await getPrimaryUserId()),
       status: "pending",
       dueDate: { gte: today, lt: tomorrow },
     },
@@ -339,7 +339,7 @@ export async function sendDailyDigest(): Promise<{ sent: boolean; sections: stri
   // 2. Upcoming interviews this week
   const interviews = await prisma.application.findMany({
     where: {
-      userId: DEFAULT_USER_ID,
+      userId: (await getPrimaryUserId()),
       status: "interview",
     },
   });
@@ -370,7 +370,7 @@ export async function sendDailyDigest(): Promise<{ sent: boolean; sections: stri
   const fourteenDaysAgo = new Date(now.getTime() - 14 * 86400000);
   const staleApps = await prisma.application.findMany({
     where: {
-      userId: DEFAULT_USER_ID,
+      userId: (await getPrimaryUserId()),
       status: "applied",
       updatedAt: { lte: fourteenDaysAgo },
     },
@@ -389,7 +389,7 @@ export async function sendDailyDigest(): Promise<{ sent: boolean; sections: stri
   // 5. Pipeline summary
   const pipeline = await prisma.application.groupBy({
     by: ["status"],
-    where: { userId: DEFAULT_USER_ID },
+    where: { userId: (await getPrimaryUserId()) },
     _count: true,
   });
 
@@ -429,7 +429,7 @@ export async function syncInterviewsToCalendar(): Promise<{
   // Find all applications in interview/phone_screen status
   const apps = await prisma.application.findMany({
     where: {
-      userId: DEFAULT_USER_ID,
+      userId: (await getPrimaryUserId()),
       status: { in: ["interview", "phone_screen"] },
     },
   });
@@ -509,7 +509,7 @@ export async function runAllAutomations(): Promise<{
 
   // Gmail scan (only if connected)
   try {
-    const user = await prisma.user.findUnique({ where: { id: DEFAULT_USER_ID } });
+    const user = await prisma.user.findUnique({ where: { id: (await getPrimaryUserId()) } });
     if (user?.gmailTokens) {
       gmailScan = await scanGmailForUpdates();
       calendarSync = await syncInterviewsToCalendar();
@@ -529,6 +529,6 @@ export async function runAllAutomations(): Promise<{
 
 // Helper
 async function getChatId(): Promise<string | null> {
-  const user = await prisma.user.findUnique({ where: { id: DEFAULT_USER_ID } });
+  const user = await prisma.user.findUnique({ where: { id: (await getPrimaryUserId()) } });
   return user?.telegramChatId || null;
 }

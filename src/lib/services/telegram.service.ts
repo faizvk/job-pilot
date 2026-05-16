@@ -1,5 +1,5 @@
 import prisma from "@/lib/db";
-import { DEFAULT_USER_ID } from "@/lib/constants";
+import { getPrimaryUserId } from "@/lib/services/primary-user";
 
 const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 
@@ -8,7 +8,7 @@ export function isTelegramConfigured(): boolean {
 }
 
 export async function isUserTelegramConnected(): Promise<boolean> {
-  const user = await prisma.user.findUnique({ where: { id: DEFAULT_USER_ID } });
+  const user = await prisma.user.findUnique({ where: { id: (await getPrimaryUserId()) } });
   return !!user?.telegramChatId;
 }
 
@@ -30,7 +30,7 @@ export async function sendMessage(chatId: string, text: string, parseMode: strin
 }
 
 async function getUserChatId(): Promise<string | null> {
-  const user = await prisma.user.findUnique({ where: { id: DEFAULT_USER_ID } });
+  const user = await prisma.user.findUnique({ where: { id: (await getPrimaryUserId()) } });
   return user?.telegramChatId || null;
 }
 

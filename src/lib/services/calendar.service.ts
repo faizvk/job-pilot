@@ -1,6 +1,6 @@
 import { google } from "googleapis";
 import prisma from "@/lib/db";
-import { DEFAULT_USER_ID } from "@/lib/constants";
+import { getPrimaryUserId } from "@/lib/services/primary-user";
 
 function getOAuth2Client() {
   return new google.auth.OAuth2(
@@ -11,7 +11,7 @@ function getOAuth2Client() {
 }
 
 async function getAuthedClient() {
-  const user = await prisma.user.findUnique({ where: { id: DEFAULT_USER_ID } });
+  const user = await prisma.user.findUnique({ where: { id: (await getPrimaryUserId()) } });
   if (!user?.gmailTokens) throw new Error("Google not connected. Connect via Gmail integration first.");
 
   const oauth2 = getOAuth2Client();

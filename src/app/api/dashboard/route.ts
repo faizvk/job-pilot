@@ -7,10 +7,11 @@ import { getCurrentUserId } from "@/lib/auth-helpers";
 
 export async function GET() {
   try {
+    const userId = await getCurrentUserId();
     const [stats, weeklyGoal, upcomingFollowUps, recentChanges] = await Promise.all([
-      analyticsService.getStats(await getCurrentUserId()),
-      weeklyGoalService.getCurrent(await getCurrentUserId()),
-      followUpService.list(await getCurrentUserId(), { status: "pending" }),
+      analyticsService.getStats(userId),
+      weeklyGoalService.getCurrent(userId),
+      followUpService.list(userId, { status: "pending" }),
       prisma.statusChange.findMany({
         take: 10,
         orderBy: { changedAt: "desc" },
@@ -21,7 +22,7 @@ export async function GET() {
     ]);
 
     const recentActivity = recentChanges
-      .filter((c) => c.application.userId === await getCurrentUserId())
+      .filter((c) => c.application.userId === userId)
       .map((c) => ({
         id: c.id,
         applicationId: c.applicationId,
