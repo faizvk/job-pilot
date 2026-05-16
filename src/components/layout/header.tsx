@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Menu, ChevronRight, Search, Briefcase, Zap, Layers,
   FileText, BarChart3, User, LayoutDashboard, X, BellRing, Bot, Building2, TrendingUp } from "lucide-react";
+import { UserMenu } from "@/components/layout/user-menu";
 import { useState } from "react";
 
 const links = [
