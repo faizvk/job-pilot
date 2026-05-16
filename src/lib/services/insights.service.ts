@@ -50,7 +50,8 @@ export interface InsightsReport {
 }
 
 export const insightsService = {
-  async generate(userId: string = (await getPrimaryUserId()), days: number = 90): Promise<InsightsReport> {
+  async generate(userId?: string, days: number = 90): Promise<InsightsReport> {
+    const effectiveUserId = userId ?? (await getPrimaryUserId());
     const from = new Date();
     from.setDate(from.getDate() - days);
 
