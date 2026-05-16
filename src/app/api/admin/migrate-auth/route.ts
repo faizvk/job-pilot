@@ -4,8 +4,8 @@ import prisma from "@/lib/db";
 // One-shot migration: adds Auth.js columns + tables. Idempotent.
 // Protected by AUTH_SECRET — delete this file after running.
 export async function POST(req: NextRequest) {
-  const secret = process.env.AUTH_SECRET;
-  if (!secret) return NextResponse.json({ error: "AUTH_SECRET not set" }, { status: 500 });
+  const secret = process.env.MIGRATE_SECRET || process.env.AUTH_SECRET;
+  if (!secret) return NextResponse.json({ error: "MIGRATE_SECRET not set" }, { status: 500 });
   const auth = req.headers.get("authorization");
   if (auth !== `Bearer ${secret}`) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
