@@ -57,7 +57,7 @@ export const insightsService = {
 
     const apps = await prisma.application.findMany({
       where: {
-        userId,
+        userId: effectiveUserId,
         status: { not: "saved" },
         OR: [
           { appliedAt: { gte: from } },
