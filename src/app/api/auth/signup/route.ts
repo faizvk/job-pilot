@@ -18,23 +18,30 @@ export async function POST(req: NextRequest) {
     }
 
     const existing = await prisma.user.findUnique({ where: { email } });
-    if (existing) {
-      return NextResponse.json(
-        { error: "An account with this email already exists. Try logging in instead." },
-        { status: 409 },
-      );
-    }
-
     const hashed = await bcrypt.hash(password, 10);
 
-    const user = await prisma.user.create({
-      data: {
-        name,
-        email,
-        password: hashed,
-      },
-      select: { id: true, name: true, email: true },
-    });
+    let user;
+    if (existing) {
+      // If the account already has a password set, this is a real conflict.
+      if (existing.password) {
+        return NextResponse.json(
+          { error: "An account with this email already exists. Try logging in instead." },
+          { status: 409 },
+        );
+      }
+      // Legacy / passwordless row → let the user claim it by setting a password.
+      // This preserves any data already tied to that user ID.
+      user = await prisma.user.update({
+        where: { email },
+        data: { name, password: hashed },
+        select: { id: true, name: true, email: true },
+      });
+    } else {
+      user = await prisma.user.create({
+        data: { name, email, password: hashed },
+        select: { id: true, name: true, email: true },
+      });
+    }
 
     return NextResponse.json({ ok: true, user }, { status: 201 });
   } catch (err: any) {
