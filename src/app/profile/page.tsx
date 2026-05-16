@@ -9,7 +9,28 @@ import { SkillsManager } from "@/components/profile/skills-manager";
 import { QuickCopyPanel } from "@/components/profile/quick-copy-panel";
 import { IntegrationsPanel } from "@/components/profile/integrations-panel";
 import { GitHubStats } from "@/components/profile/github-stats";
-import { Copy, FileText, Loader2, CheckCircle } from "lucide-react";
+import { Copy, FileText, Loader2, CheckCircle, Sparkles, X } from "lucide-react";
+
+function WelcomeBanner() {
+  const sp = useSearchParams();
+  const [dismissed, setDismissed] = useState(false);
+  if (dismissed || sp.get("welcome") !== "1") return null;
+  return (
+    <div className="bg-slate-900 text-white rounded-xl p-4 sm:p-5 flex items-start gap-3">
+      <Sparkles className="w-5 h-5 mt-0.5 flex-shrink-0 text-amber-300" />
+      <div className="flex-1 min-w-0">
+        <p className="font-semibold text-[15px]">Welcome to Pursuit!</p>
+        <p className="text-sm text-slate-300 mt-0.5">
+          Fill out your profile so Pursuit can tailor resumes, match jobs to your skills, and auto-fill forms for you.
+          Start with <strong>Personal Info</strong>, then add your <strong>Work History</strong> and <strong>Skills</strong>.
+        </p>
+      </div>
+      <button onClick={() => setDismissed(true)} className="text-slate-400 hover:text-white transition flex-shrink-0">
+        <X className="w-4 h-4" />
+      </button>
+    </div>
+  );
+}
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState<any>(null);
