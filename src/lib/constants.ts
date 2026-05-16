@@ -18,4 +18,3 @@ export const WORK_TYPES = ["remote", "hybrid", "onsite"] as const;
 export const SKILL_CATEGORIES = ["technical", "soft", "language", "tool"] as const;
 export const SKILL_LEVELS = ["beginner", "intermediate", "advanced", "expert"] as const;
 export const FOLLOW_UP_TYPES = ["follow_up", "thank_you", "check_in"] as const;
-export const DEFAULT_USER_ID = "default-user";
