@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/db";
-import { DEFAULT_USER_ID } from "@/lib/constants";
+import { getCurrentUserId } from "@/lib/auth-helpers";
 
 export async function POST() {
   try {
     await prisma.user.update({
-      where: { id: DEFAULT_USER_ID },
+      where: { id: await getCurrentUserId() },
       data: { gmailTokens: null },
     });
     return NextResponse.json({ success: true });

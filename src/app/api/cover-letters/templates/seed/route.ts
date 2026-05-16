@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { coverLetterService } from "@/lib/services/cover-letter.service";
-import { DEFAULT_USER_ID } from "@/lib/constants";
+import { getCurrentUserId } from "@/lib/auth-helpers";
 
 export async function POST() {
   try {
-    const created = await coverLetterService.seedStarterTemplates(DEFAULT_USER_ID);
+    const created = await coverLetterService.seedStarterTemplates(await getCurrentUserId());
     return NextResponse.json(created, { status: 201 });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { sendGmail, isGmailConnected } from "@/lib/services/gmail.service";
 import { sendResendEmail, isResendConfigured } from "@/lib/services/resend.service";
 import prisma from "@/lib/db";
-import { DEFAULT_USER_ID } from "@/lib/constants";
+import { getCurrentUserId } from "@/lib/auth-helpers";
 
 /**
  * Parse an email draft string into subject and body.
@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
       emailId = result.id ?? undefined;
       provider = "gmail";
     } else {
-      const user = await prisma.user.findUnique({ where: { id: DEFAULT_USER_ID } });
+      const user = await prisma.user.findUnique({ where: { id: await getCurrentUserId() } });
       const result = await sendResendEmail(to, subject, body, {
         replyTo: user?.email || undefined,
       });

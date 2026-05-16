@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { resumeService } from "@/lib/services/resume.service";
 import { createResumeSchema } from "@/lib/validators";
-import { DEFAULT_USER_ID } from "@/lib/constants";
+import { getCurrentUserId } from "@/lib/auth-helpers";
 
 export async function GET() {
   try {
-    const resumes = await resumeService.list(DEFAULT_USER_ID);
+    const resumes = await resumeService.list(await getCurrentUserId());
     return NextResponse.json(resumes);
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const data = createResumeSchema.parse(body);
-    const resume = await resumeService.create(DEFAULT_USER_ID, data);
+    const resume = await resumeService.create(await getCurrentUserId(), data);
     return NextResponse.json(resume, { status: 201 });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 400 });

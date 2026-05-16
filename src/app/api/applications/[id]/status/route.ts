@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { applicationService } from "@/lib/services/application.service";
 import { updateStatusSchema } from "@/lib/validators";
 import { weeklyGoalService } from "@/lib/services/weekly-goal.service";
-import { DEFAULT_USER_ID } from "@/lib/constants";
+import { getCurrentUserId } from "@/lib/auth-helpers";
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -12,7 +12,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     const app = await applicationService.updateStatus(id, status, note);
 
     if (status === "applied") {
-      await weeklyGoalService.incrementAchieved(DEFAULT_USER_ID);
+      await weeklyGoalService.incrementAchieved(await getCurrentUserId());
     }
 
     return NextResponse.json(app);

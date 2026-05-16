@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { generateJSON, isAIConfigured } from "@/lib/services/ai/gemini";
 import { profileService } from "@/lib/services/profile.service";
 import prisma from "@/lib/db";
-import { DEFAULT_USER_ID } from "@/lib/constants";
+import { getCurrentUserId } from "@/lib/auth-helpers";
 
 interface ExtractedProfile {
   name: string;
@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
     const resume = resumeId
       ? await prisma.resume.findUnique({ where: { id: resumeId } })
       : await prisma.resume.findFirst({
-          where: { userId: DEFAULT_USER_ID, isBase: true },
+          where: { userId: await getCurrentUserId(), isBase: true },
         });
 
     if (!resume) {
@@ -86,7 +86,7 @@ ${resume.content.slice(0, 5000)}`,
     );
 
     // Get current profile
-    const profile = await profileService.getProfile(DEFAULT_USER_ID);
+    const profile = await profileService.getProfile(await getCurrentUserId());
 
     // Update personal info (only fill empty fields, don't overwrite existing data)
     const profileUpdate: Record<string, string> = {};
@@ -104,7 +104,7 @@ ${resume.content.slice(0, 5000)}`,
     if (extracted.summary && !profile.summary) profileUpdate.summary = extracted.summary;
 
     if (Object.keys(profileUpdate).length > 0) {
-      await profileService.updateProfile(DEFAULT_USER_ID, profileUpdate);
+      await profileService.updateProfile(await getCurrentUserId(), profileUpdate);
     }
 
     // Add skills (skip duplicates — fuzzy match to avoid "JavaScript" + "JavaScript (ES6+)")
@@ -131,7 +131,7 @@ ${resume.content.slice(0, 5000)}`,
     for (const skill of extracted.skills) {
       if (!skill.name || isDuplicate(skill.name)) continue;
       try {
-        await profileService.addSkill(DEFAULT_USER_ID, {
+        await profileService.addSkill(await getCurrentUserId(), {
           name: skill.name,
           category: skill.category,
           level: skill.level,
@@ -152,7 +152,7 @@ ${resume.content.slice(0, 5000)}`,
     for (const edu of extracted.education) {
       if (!edu.institution || existingInstitutions.has(edu.institution.toLowerCase())) continue;
       try {
-        await profileService.addEducation(DEFAULT_USER_ID, {
+        await profileService.addEducation(await getCurrentUserId(), {
           institution: edu.institution,
           degree: edu.degree || "Degree",
           field: edu.field || "Not specified",

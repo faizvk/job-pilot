@@ -26,6 +26,7 @@ export const batchService = {
    * Import multiple jobs at once, optionally auto-analyze and auto-tailor
    */
   async bulkImport(
+    userId: string,
     jobs: BulkJobEntry[],
     options: { autoAnalyze?: boolean; autoTailor?: boolean; baseResumeId?: string }
   ): Promise<BatchResult> {
@@ -35,7 +36,7 @@ export const batchService = {
     let userSkills: { name: string; category: string }[] = [];
     if (options.autoAnalyze) {
       const user = await prisma.user.findUnique({
-        where: { id: DEFAULT_USER_ID },
+        where: { id: userId },
         include: { skills: true },
       });
       userSkills = user?.skills.map((s) => ({ name: s.name, category: s.category })) || [];
@@ -56,7 +57,7 @@ export const batchService = {
         // Create application
         const app = await prisma.application.create({
           data: {
-            userId: DEFAULT_USER_ID,
+            userId,
             companyName: job.companyName,
             jobTitle: job.jobTitle,
             jobUrl: job.jobUrl || null,

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { resumeService } from "@/lib/services/resume.service";
-import { DEFAULT_USER_ID } from "@/lib/constants";
+import { getCurrentUserId } from "@/lib/auth-helpers";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 
@@ -88,7 +88,7 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    const resume = await resumeService.create(DEFAULT_USER_ID, {
+    const resume = await resumeService.create(await getCurrentUserId(), {
       name: resumeName,
       content: markdownContent,
       isBase,

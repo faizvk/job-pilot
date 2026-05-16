@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
-import { DEFAULT_USER_ID } from "@/lib/constants";
+import { getCurrentUserId } from "@/lib/auth-helpers";
 import { sendMessage, isTelegramConfigured } from "@/lib/services/telegram.service";
 
 export async function POST(req: NextRequest) {
@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
     if (!chatId) return NextResponse.json({ error: "chatId required" }, { status: 400 });
 
     await prisma.user.update({
-      where: { id: DEFAULT_USER_ID },
+      where: { id: await getCurrentUserId() },
       data: { telegramChatId: String(chatId) },
     });
 
@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET() {
-  const user = await prisma.user.findUnique({ where: { id: DEFAULT_USER_ID } });
+  const user = await prisma.user.findUnique({ where: { id: await getCurrentUserId() } });
   return NextResponse.json({
     configured: isTelegramConfigured(),
     connected: !!user?.telegramChatId,

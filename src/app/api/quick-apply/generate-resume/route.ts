@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { generateText, isAIConfigured } from "@/lib/services/ai/gemini";
 import { resumeService } from "@/lib/services/resume.service";
 import prisma from "@/lib/db";
-import { DEFAULT_USER_ID } from "@/lib/constants";
+import { getCurrentUserId } from "@/lib/auth-helpers";
 
 /**
  * POST /api/smart-paste/generate-resume
@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
 
     // Fetch base resume
     const baseResume = await prisma.resume.findFirst({
-      where: { userId: DEFAULT_USER_ID, isBase: true },
+      where: { userId: await getCurrentUserId(), isBase: true },
     });
 
     if (!baseResume) {
@@ -120,7 +120,7 @@ INSTRUCTIONS:
     }
 
     // Save as a new resume in the Resumes section
-    const savedResume = await resumeService.create(DEFAULT_USER_ID, {
+    const savedResume = await resumeService.create(await getCurrentUserId(), {
       name: `${baseResume.name} — ${companyName || jobTitle || "Tailored"}`,
       content: hasLatex ? baseResume.content : cleanedResume,
       isBase: false,

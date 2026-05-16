@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jobSearchService } from "@/lib/services/job-search.service";
-import { DEFAULT_USER_ID } from "@/lib/constants";
+import { getCurrentUserId } from "@/lib/auth-helpers";
 
 export async function GET(req: NextRequest) {
   try {
@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
     }
 
     const { jobs, sources } = await jobSearchService.searchByCompany(company, state, {
-      userId: DEFAULT_USER_ID,
+      userId: await getCurrentUserId(),
     });
 
     return NextResponse.json({

@@ -3,7 +3,7 @@ import { generateJSON, isAIConfigured } from "@/lib/services/ai/gemini";
 import { suggestResumeImprovements } from "@/lib/services/ai/resume-ai";
 import { generateAICoverLetter } from "@/lib/services/ai/cover-letter-ai";
 import prisma from "@/lib/db";
-import { DEFAULT_USER_ID } from "@/lib/constants";
+import { getCurrentUserId } from "@/lib/auth-helpers";
 
 /**
  * POST /api/smart-paste
@@ -59,7 +59,7 @@ ${rawText.slice(0, 5000)}`,
 
       // Fetch base resume
       const baseResume = await prisma.resume.findFirst({
-        where: { userId: DEFAULT_USER_ID, isBase: true },
+        where: { userId: await getCurrentUserId(), isBase: true },
       });
 
       let resumeSuggestions: string | null = null;
@@ -72,7 +72,7 @@ ${rawText.slice(0, 5000)}`,
 
       // Skill matching: check profile skills AND base resume content
       const user = await prisma.user.findUnique({
-        where: { id: DEFAULT_USER_ID },
+        where: { id: await getCurrentUserId() },
         include: { skills: true },
       });
 
@@ -124,7 +124,7 @@ ${rawText.slice(0, 5000)}`,
       const { jobTitle, companyName, description, tone } = body;
 
       const user = await prisma.user.findUnique({
-        where: { id: DEFAULT_USER_ID },
+        where: { id: await getCurrentUserId() },
         include: {
           skills: true,
           workHistory: { orderBy: { startDate: "desc" }, take: 1 },
@@ -134,7 +134,7 @@ ${rawText.slice(0, 5000)}`,
 
       // Also fetch base resume to enrich context
       const baseResume = await prisma.resume.findFirst({
-        where: { userId: DEFAULT_USER_ID, isBase: true },
+        where: { userId: await getCurrentUserId(), isBase: true },
       });
 
       const recentJob = user?.workHistory?.[0];

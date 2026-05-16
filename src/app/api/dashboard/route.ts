@@ -3,14 +3,14 @@ import { analyticsService } from "@/lib/services/analytics.service";
 import { weeklyGoalService } from "@/lib/services/weekly-goal.service";
 import { followUpService } from "@/lib/services/follow-up.service";
 import prisma from "@/lib/db";
-import { DEFAULT_USER_ID } from "@/lib/constants";
+import { getCurrentUserId } from "@/lib/auth-helpers";
 
 export async function GET() {
   try {
     const [stats, weeklyGoal, upcomingFollowUps, recentChanges] = await Promise.all([
-      analyticsService.getStats(DEFAULT_USER_ID),
-      weeklyGoalService.getCurrent(DEFAULT_USER_ID),
-      followUpService.list(DEFAULT_USER_ID, { status: "pending" }),
+      analyticsService.getStats(await getCurrentUserId()),
+      weeklyGoalService.getCurrent(await getCurrentUserId()),
+      followUpService.list(await getCurrentUserId(), { status: "pending" }),
       prisma.statusChange.findMany({
         take: 10,
         orderBy: { changedAt: "desc" },
@@ -21,7 +21,7 @@ export async function GET() {
     ]);
 
     const recentActivity = recentChanges
-      .filter((c) => c.application.userId === DEFAULT_USER_ID)
+      .filter((c) => c.application.userId === await getCurrentUserId())
       .map((c) => ({
         id: c.id,
         applicationId: c.applicationId,
