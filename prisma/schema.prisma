@@ -8,29 +8,72 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  name      String
-  email     String   @unique
-  phone     String?
-  location  String?
-  linkedin  String?
-  github    String?
-  portfolio String?
-  summary     String?
-  gmailTokens String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  password      String?
+  emailVerified DateTime?
+  image         String?
+  phone         String?
+  location      String?
+  linkedin      String?
+  github        String?
+  portfolio     String?
+  summary       String?
+  gmailTokens   String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
-  workHistory  WorkHistory[]
-  education    Education[]
-  skills       Skill[]
-  applications Application[]
-  resumes      Resume[]
-  coverLetters CoverLetterTemplate[]
+  workHistory    WorkHistory[]
+  education      Education[]
+  skills         Skill[]
+  applications   Application[]
+  resumes        Resume[]
+  coverLetters   CoverLetterTemplate[]
   followUps      FollowUp[]
   weeklyGoals    WeeklyGoal[]
   jobAlerts      JobAlert[]
+  accounts       Account[]
+  sessions       Session[]
   telegramChatId String?
+}
+
+// Auth.js (NextAuth v5) Account model — for OAuth providers
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+// Auth.js Session model — for database session strategy
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// Auth.js VerificationToken — for email verification, magic links
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
 }
 
 model WorkHistory {
