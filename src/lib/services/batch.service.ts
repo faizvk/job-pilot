@@ -1,5 +1,4 @@
 import prisma from "@/lib/db";
-import { DEFAULT_USER_ID } from "@/lib/constants";
 import { jdAnalyzerService } from "./jd-analyzer.service";
 import { resumeService } from "./resume.service";
 
