@@ -9,6 +9,7 @@ const PUBLIC_PATHS = [
 const PUBLIC_API_PREFIXES = [
   "/api/auth",     // NextAuth's own routes + signup
   "/api/cron",     // Vercel cron — protected by CRON_SECRET
+  "/api/admin",    // Admin/migration endpoints — protected by AUTH_SECRET
 ];
 
 export async function middleware(req: NextRequest) {
