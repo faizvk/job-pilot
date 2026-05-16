@@ -93,6 +93,9 @@ export default function ProfilePage() {
 
   return (
     <div className="space-y-5 animate-fade-in">
+      <Suspense fallback={null}>
+        <WelcomeBanner />
+      </Suspense>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Profile</h1>
