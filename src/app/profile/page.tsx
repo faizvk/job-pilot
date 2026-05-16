@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { PersonalInfoForm } from "@/components/profile/personal-info-form";
 import { WorkHistoryForm } from "@/components/profile/work-history-form";
 import { EducationForm } from "@/components/profile/education-form";
