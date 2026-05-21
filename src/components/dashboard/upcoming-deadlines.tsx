@@ -1,43 +1,58 @@
 "use client";
 
 import { formatDate } from "@/lib/utils";
-import { Clock, Calendar } from "lucide-react";
+import Link from "next/link";
 
 interface FollowUp {
   id: string;
+  applicationId?: string;
   dueDate: string;
   type: string;
   application: { companyName: string; jobTitle: string };
 }
 
 export function UpcomingDeadlines({ followUps }: { followUps: FollowUp[] }) {
+  if (followUps.length === 0) {
+    return (
+      <section className="rounded-xl border border-slate-200/70 bg-white">
+        <header className="px-4 sm:px-5 py-3 border-b border-slate-100">
+          <h2 className="text-sm font-semibold text-slate-900">Upcoming follow-ups</h2>
+        </header>
+        <div className="px-4 sm:px-5 py-8 text-center">
+          <p className="text-sm text-slate-500">No pending follow-ups.</p>
+        </div>
+      </section>
+    );
+  }
+
   return (
-    <div className="bg-white rounded-xl border border-slate-200/70 p-4 sm:p-5 transition-all duration-150 hover:border-emerald-300 hover:shadow-sm">
-      <h2 className="text-[15px] font-semibold text-slate-900 mb-4">Upcoming</h2>
-      {followUps.length === 0 ? (
-        <div className="text-center py-6">
-          <div className="w-11 h-11 rounded-md bg-slate-100 flex items-center justify-center mx-auto mb-3">
-            <Calendar className="w-5 h-5 text-slate-400" />
-          </div>
-          <p className="text-sm font-medium text-slate-500">No upcoming follow-ups</p>
-        </div>
-      ) : (
-        <div className="space-y-1">
-          {followUps.map((fu) => (
-            <div key={fu.id} className="flex items-start gap-3 p-2.5 -mx-1 rounded-md hover:bg-slate-50 transition-colors duration-100 cursor-pointer">
-              <div className="p-1.5 rounded-md bg-amber-50 flex-shrink-0 mt-0.5">
-                <Clock className="w-3.5 h-3.5 text-amber-500" />
-              </div>
-              <div className="min-w-0">
-                <p className="text-sm font-medium text-slate-800 truncate">{fu.application.companyName}</p>
-                <p className="text-xs text-slate-400 mt-0.5">
-                  {fu.type.replace("_", " ")} &middot; {formatDate(fu.dueDate)}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+    <section className="rounded-xl border border-slate-200/70 bg-white">
+      <header className="flex items-center justify-between px-4 sm:px-5 py-3 border-b border-slate-100">
+        <h2 className="text-sm font-semibold text-slate-900">Upcoming follow-ups</h2>
+        <span className="text-xs text-slate-400">{followUps.length}</span>
+      </header>
+      <ul className="divide-y divide-slate-100">
+        {followUps.slice(0, 5).map((fu) => {
+          const isOverdue = new Date(fu.dueDate) < new Date();
+          return (
+            <li key={fu.id}>
+              <Link
+                href={fu.applicationId ? `/applications/${fu.applicationId}` : "#"}
+                className="flex items-center gap-3 px-4 sm:px-5 py-3 hover:bg-slate-50/70 transition-colors duration-100 group"
+              >
+                <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${isOverdue ? "bg-rose-500" : "bg-emerald-500"}`} />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-slate-800 truncate group-hover:text-emerald-700 transition-colors">{fu.application.companyName}</p>
+                  <p className="text-xs text-slate-500 truncate">{fu.type.replace("_", " ")}</p>
+                </div>
+                <span className={`text-[11px] whitespace-nowrap font-medium tabular-nums ${isOverdue ? "text-rose-600" : "text-slate-500"}`}>
+                  {isOverdue ? "Overdue " : ""}{formatDate(fu.dueDate)}
+                </span>
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
   );
 }
