@@ -144,7 +144,7 @@ export default async function Home() {
               <Link
                 key={role.title}
                 href={authed ? `/company-search` : "/auth/signup"}
-                className="group bg-white border border-slate-200/80 rounded-xl p-5 hover:border-emerald-300 hover:shadow-sm transition"
+                className="group bg-white border border-slate-200/80 rounded-xl p-5 hover:border-emerald-300 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
               >
                 <h3 className="text-base font-semibold text-slate-900 group-hover:text-emerald-700 transition">
                   {role.title}
