@@ -6,10 +6,13 @@ import { Header } from "@/components/layout/header";
 import { SidebarProvider } from "@/components/layout/sidebar-context";
 
 const CHROME_FREE_PREFIXES = ["/auth"];
+const CHROME_FREE_EXACT = ["/"];
 
 export function LayoutShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() || "";
-  const isChromeFree = CHROME_FREE_PREFIXES.some((p) => pathname === p || pathname.startsWith(p + "/"));
+  const isChromeFree =
+    CHROME_FREE_EXACT.includes(pathname) ||
+    CHROME_FREE_PREFIXES.some((p) => pathname === p || pathname.startsWith(p + "/"));
 
   if (isChromeFree) {
     return <>{children}</>;
