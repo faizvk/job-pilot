@@ -36,7 +36,7 @@ export function UserMenu() {
     <div className="relative" ref={ref}>
       <button
         onClick={() => setOpen((v) => !v)}
-        className="flex items-center gap-2 p-1 rounded-full hover:bg-slate-100 transition-colors"
+        className="flex items-center gap-2 p-0.5 rounded-full ring-2 ring-transparent hover:ring-emerald-300 transition-all duration-150"
         aria-label="Account menu"
       >
         {session.user.image ? (
