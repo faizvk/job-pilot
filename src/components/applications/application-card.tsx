@@ -18,7 +18,7 @@ export function ApplicationCard({ app, draggable, onDragStart }: ApplicationCard
       href={`/applications/${app.id}`}
       draggable={draggable}
       onDragStart={onDragStart}
-      className="block bg-white rounded-2xl border border-slate-200 p-4 card-hover cursor-pointer"
+      className="block bg-white rounded-xl border border-slate-200 p-4 transition-all duration-150 hover:border-emerald-300 hover:shadow-sm hover:-translate-y-px cursor-pointer"
     >
       <div className="flex items-start gap-3">
         <CompanyLogo companyName={app.companyName} size={36} className="flex-shrink-0 mt-0.5 shadow-xs" />
