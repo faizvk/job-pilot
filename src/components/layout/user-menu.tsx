@@ -64,14 +64,14 @@ export function UserMenu() {
           <Link
             href="/profile"
             onClick={() => setOpen(false)}
-            className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
+            className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-emerald-50/60 hover:text-emerald-700 transition-colors duration-100 group"
           >
-            <User className="w-4 h-4 text-slate-400" />
+            <User className="w-4 h-4 text-slate-400 group-hover:text-emerald-600 transition-colors" />
             Profile
           </Link>
           <button
             onClick={() => signOut({ callbackUrl: "/auth/login" })}
-            className="w-full flex items-center gap-2 px-3 py-2 text-sm text-rose-600 hover:bg-rose-50"
+            className="w-full flex items-center gap-2 px-3 py-2 text-sm text-rose-600 hover:bg-rose-50 transition-colors duration-100"
           >
             <LogOut className="w-4 h-4" />
             Sign out
