@@ -69,24 +69,24 @@ export function ResearchLinks({ links: linksJson, onChange }: { links: string; o
           <p className="text-xs text-slate-400">Add links to company pages, Glassdoor reviews, news articles...</p>
         )}
       </div>
-      <div className="flex gap-2">
+      <div className="flex flex-col sm:flex-row gap-2">
         <input
           value={newTitle}
           onChange={(e) => setNewTitle(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Title"
-          className="flex-1 border border-slate-200 rounded-lg px-2.5 py-1.5 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400 transition-all"
+          className="flex-1 border border-slate-200 rounded-md px-2.5 py-1.5 text-sm shadow-xs hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/15 focus:border-emerald-500 transition-colors duration-150"
         />
         <input
           value={newUrl}
           onChange={(e) => setNewUrl(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="URL"
-          className="flex-1 border border-slate-200 rounded-lg px-2.5 py-1.5 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400 transition-all"
+          className="flex-1 border border-slate-200 rounded-md px-2.5 py-1.5 text-sm shadow-xs hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/15 focus:border-emerald-500 transition-colors duration-150"
         />
         <button
           onClick={addLink}
-          className="text-emerald-600 hover:text-emerald-700 transition-colors px-2"
+          className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 transition-colors duration-150 px-3 py-1.5 rounded-md flex items-center justify-center"
         >
           <Plus className="w-4 h-4" />
         </button>
