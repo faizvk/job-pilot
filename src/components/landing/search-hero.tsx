@@ -58,7 +58,7 @@ export function SearchHero() {
 
       <button
         type="submit"
-        className="bg-emerald-600 text-white px-6 py-3 rounded-xl text-sm font-semibold hover:bg-emerald-700 transition active:scale-[0.98]"
+        className="bg-emerald-600 text-white px-6 py-3 rounded-xl text-sm font-semibold hover:bg-emerald-700 hover:shadow-md hover:shadow-emerald-600/30 transition-all duration-150 active:scale-[0.98]"
       >
         Find jobs
       </button>
