@@ -63,7 +63,7 @@ export function QuestionList({ questions: questionsJson, onChange }: { questions
   const answered = questions.filter((q) => q.answer.trim()).length;
 
   return (
-    <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs">
+    <div className="bg-white border border-slate-200/70 rounded-xl p-4 sm:p-5 shadow-xs transition-shadow duration-200 hover:shadow-sm">
       <div className="flex items-center justify-between mb-4">
         <div>
           <h3 className="font-semibold text-[14px] text-slate-900">Practice Questions</h3>
