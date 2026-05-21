@@ -29,7 +29,7 @@ export function VariableInserter({ onInsert }: { onInsert: (variable: string) =>
             key={v.key}
             type="button"
             onClick={() => onInsert(v.key)}
-            className="px-2 py-1 text-[11px] bg-emerald-50 text-emerald-700 rounded-md hover:bg-emerald-100 transition-colors font-mono ring-1 ring-inset ring-emerald-600/10"
+            className="px-2 py-1 text-[11px] bg-emerald-50 text-emerald-700 rounded-md hover:bg-emerald-100 hover:-translate-y-px transition-all duration-100 font-mono ring-1 ring-inset ring-emerald-600/10 active:scale-95"
             title={`Insert {{${v.key}}}`}
           >
             {v.label}
