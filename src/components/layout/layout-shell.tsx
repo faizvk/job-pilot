@@ -1,12 +1,10 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { Sidebar } from "@/components/layout/sidebar";
-import { Header } from "@/components/layout/header";
-import { SidebarProvider } from "@/components/layout/sidebar-context";
+import { TopNav } from "@/components/layout/top-nav";
 
 const CHROME_FREE_PREFIXES = ["/auth"];
-const CHROME_FREE_EXACT = ["/"];
+const CHROME_FREE_EXACT = ["/"]; // landing page has its own chrome
 
 export function LayoutShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() || "";
@@ -19,18 +17,13 @@ export function LayoutShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <SidebarProvider>
-      <div className="flex h-screen overflow-hidden bg-[#fafbfc]">
-        <Sidebar />
-        <div className="flex-1 flex flex-col overflow-hidden">
-          <Header />
-          <main className="flex-1 overflow-y-auto">
-            <div className="max-w-[1400px] mx-auto px-3 sm:px-6 py-4 sm:py-6">
-              {children}
-            </div>
-          </main>
+    <div className="min-h-screen bg-slate-50">
+      <TopNav />
+      <main>
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-6">
+          {children}
         </div>
-      </div>
-    </SidebarProvider>
+      </main>
+    </div>
   );
 }
