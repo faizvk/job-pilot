@@ -196,8 +196,8 @@ export function IntegrationsPanel() {
               </ol>
             </div>
             <div className="flex items-center gap-2">
-              <input type="text" value={chatIdInput} onChange={(e) => setChatIdInput(e.target.value)} placeholder="Your Telegram Chat ID" className="flex-1 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400" />
-              <button onClick={handleConnectTelegram} disabled={connectingTelegram || !chatIdInput.trim()} className="inline-flex items-center gap-1.5 bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-blue-700 disabled:opacity-50 transition-all active:scale-[0.98]">
+              <input type="text" value={chatIdInput} onChange={(e) => setChatIdInput(e.target.value)} placeholder="Your Telegram Chat ID" className="flex-1 border border-slate-200 rounded-md px-3 py-2 text-sm hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/15 focus:border-emerald-500 transition-colors duration-150" />
+              <button onClick={handleConnectTelegram} disabled={connectingTelegram || !chatIdInput.trim()} className="inline-flex items-center gap-1.5 bg-emerald-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-emerald-700 disabled:opacity-50 transition-all duration-150 active:scale-[0.98]">
                 {connectingTelegram ? <Loader2 className="w-4 h-4 animate-spin" /> : <MessageCircle className="w-4 h-4" />}
                 Connect
               </button>
