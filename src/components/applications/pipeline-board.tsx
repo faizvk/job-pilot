@@ -47,7 +47,7 @@ export function PipelineBoard({ applications, onStatusChange }: PipelineBoardPro
         return (
           <div
             key={status}
-            className={`flex-shrink-0 w-[85vw] max-w-72 sm:w-72 snap-start rounded-lg ${isDragOver ? "bg-blue-50 border-blue-300" : "bg-slate-50"} border p-3`}
+            className={`flex-shrink-0 w-[85vw] max-w-72 sm:w-72 snap-start rounded-xl ${isDragOver ? "bg-emerald-50 border-emerald-300 ring-2 ring-emerald-200/40" : "bg-slate-50 border-slate-200/70"} border p-3 transition-all duration-150`}
             onDragOver={handleDragOver(status)}
             onDrop={handleDrop(status)}
             onDragLeave={() => setDragOverStatus(null)}
