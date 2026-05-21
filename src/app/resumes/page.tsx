@@ -143,7 +143,7 @@ export default function ResumesPage() {
             <Link
               key={resume.id}
               href={`/resumes/${resume.id}`}
-              className="bg-white border border-slate-200/80 rounded-xl p-5 shadow-card hover:shadow-card-hover transition-all card-hover"
+              className="bg-white border border-slate-200/80 rounded-xl p-5 transition-all duration-150 hover:border-emerald-300 hover:shadow-md hover:-translate-y-0.5 group"
             >
               <div className="flex items-start justify-between mb-3">
                 <div className="p-2 rounded-xl bg-emerald-50">
