@@ -145,7 +145,7 @@ export default function AutomationsPage() {
           return (
             <div
               key={auto.id}
-              className="bg-white rounded-2xl border border-slate-200/60 shadow-card p-4 sm:p-5 card-hover space-y-4"
+              className="bg-white rounded-xl border border-slate-200/70 p-4 sm:p-5 space-y-4 transition-all duration-150 hover:border-emerald-300 hover:shadow-sm"
             >
               <div className="flex items-start justify-between">
                 <div className="flex items-start gap-3">
