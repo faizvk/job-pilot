@@ -115,7 +115,7 @@ export function GitHubStats({ username }: { username: string | null }) {
             <h4 className="text-xs font-semibold text-slate-600 mb-2">Top Repositories</h4>
             <div className="space-y-2">
               {data.repos.slice(0, 6).map((repo) => (
-                <div key={repo.name} className="border border-slate-100 rounded-lg p-3 hover:border-slate-200 transition-all">
+                <div key={repo.name} className="border border-slate-100 rounded-lg p-3 transition-all duration-150 hover:border-emerald-300 hover:shadow-sm hover:-translate-y-px">
                   <div className="flex items-center justify-between">
                     <a href={repo.url} target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-emerald-600 hover:text-emerald-700 flex items-center gap-1">
                       {repo.name} <ExternalLink className="w-3 h-3" />
