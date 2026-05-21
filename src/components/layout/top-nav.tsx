@@ -25,7 +25,6 @@ const SECONDARY = [
   { href: "/resumes", label: "Resumes", icon: FileText },
   { href: "/job-alerts", label: "Job Alerts", icon: BellRing },
   { href: "/automations", label: "Automations", icon: Bot },
-  { href: "/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/profile", label: "Profile", icon: User },
 ];
 
