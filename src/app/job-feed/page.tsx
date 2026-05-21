@@ -608,7 +608,7 @@ export default function JobFeedPage() {
           {listings.map((job, index) => (
             <div
               key={job.id}
-              className={`bg-white border rounded-xl overflow-hidden transition-all duration-150 shadow-card hover:shadow-card-hover ${
+              className={`bg-white border rounded-xl overflow-hidden transition-all duration-150 hover:shadow-md hover:-translate-y-px ${
                 selectedJobs.has(job.id) ? "border-emerald-300 ring-1 ring-emerald-200/50" : "border-slate-200/80"
               }`}
               style={{ animationDelay: `${index * 30}ms` }}
