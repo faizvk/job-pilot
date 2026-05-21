@@ -28,7 +28,7 @@ export function WorkHistoryForm({ workHistory, onRefresh }: { workHistory: any[]
   return (
     <div className="space-y-4">
       {workHistory.map((w) => (
-        <div key={w.id} className="border border-slate-200 rounded-xl p-4 flex justify-between card-hover">
+        <div key={w.id} className="border border-slate-200 rounded-xl p-4 flex justify-between transition-all duration-150 hover:border-emerald-300 hover:shadow-sm">
           <div>
             <p className="font-semibold text-[14px] text-slate-900">{w.title}</p>
             <p className="text-sm text-slate-500">{w.company}</p>
