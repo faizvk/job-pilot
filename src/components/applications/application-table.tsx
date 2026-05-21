@@ -6,24 +6,24 @@ import { formatDate, formatSalary } from "@/lib/utils";
 
 export function ApplicationTable({ applications }: { applications: any[] }) {
   return (
-    <div className="bg-white rounded-lg border overflow-x-auto">
+    <div className="bg-white rounded-xl border border-slate-200/70 overflow-x-auto">
       <table className="w-full text-sm min-w-[480px]">
-        <thead className="bg-slate-50 border-b">
+        <thead className="bg-slate-50/70 border-b border-slate-200/70">
           <tr>
-            <th className="text-left px-3 sm:px-4 py-3 font-medium text-slate-600">Company</th>
-            <th className="text-left px-3 sm:px-4 py-3 font-medium text-slate-600 hidden sm:table-cell">Title</th>
-            <th className="text-left px-3 sm:px-4 py-3 font-medium text-slate-600">Status</th>
-            <th className="text-left px-3 sm:px-4 py-3 font-medium text-slate-600 hidden lg:table-cell">Location</th>
-            <th className="text-left px-3 sm:px-4 py-3 font-medium text-slate-600 hidden lg:table-cell">Salary</th>
-            <th className="text-left px-3 sm:px-4 py-3 font-medium text-slate-600 hidden md:table-cell">Match</th>
-            <th className="text-left px-3 sm:px-4 py-3 font-medium text-slate-600 hidden sm:table-cell">Date</th>
+            <th className="text-left px-3 sm:px-4 py-3 text-[11px] font-medium uppercase tracking-wide text-slate-500">Company</th>
+            <th className="text-left px-3 sm:px-4 py-3 text-[11px] font-medium uppercase tracking-wide text-slate-500 hidden sm:table-cell">Title</th>
+            <th className="text-left px-3 sm:px-4 py-3 text-[11px] font-medium uppercase tracking-wide text-slate-500">Status</th>
+            <th className="text-left px-3 sm:px-4 py-3 text-[11px] font-medium uppercase tracking-wide text-slate-500 hidden lg:table-cell">Location</th>
+            <th className="text-left px-3 sm:px-4 py-3 text-[11px] font-medium uppercase tracking-wide text-slate-500 hidden lg:table-cell">Salary</th>
+            <th className="text-left px-3 sm:px-4 py-3 text-[11px] font-medium uppercase tracking-wide text-slate-500 hidden md:table-cell">Match</th>
+            <th className="text-left px-3 sm:px-4 py-3 text-[11px] font-medium uppercase tracking-wide text-slate-500 hidden sm:table-cell">Date</th>
           </tr>
         </thead>
-        <tbody className="divide-y">
+        <tbody className="divide-y divide-slate-100">
           {applications.map((app) => (
-            <tr key={app.id} className="hover:bg-slate-50">
+            <tr key={app.id} className="hover:bg-emerald-50/40 transition-colors duration-100 cursor-pointer">
               <td className="px-3 sm:px-4 py-3">
-                <Link href={`/applications/${app.id}`} className="font-medium text-blue-600 hover:underline">
+                <Link href={`/applications/${app.id}`} className="font-medium text-slate-900 hover:text-emerald-700 transition-colors">
                   {app.companyName}
                 </Link>
                 {/* Mobile-only: show title under company since title column is hidden */}
