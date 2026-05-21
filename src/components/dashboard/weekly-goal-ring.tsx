@@ -2,53 +2,29 @@
 
 export function WeeklyGoalRing({ goal }: { goal: { target: number; achieved: number } }) {
   const percentage = goal.target > 0 ? Math.min((goal.achieved / goal.target) * 100, 100) : 0;
-  const radius = 44;
-  const circumference = 2 * Math.PI * radius;
-  const strokeDashoffset = circumference - (percentage / 100) * circumference;
+  const remaining = Math.max(0, goal.target - goal.achieved);
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200/70 p-4 sm:p-5 transition-all duration-150 hover:border-emerald-300 hover:shadow-sm">
-      <h2 className="text-[15px] font-semibold text-slate-900 mb-5">Weekly Goal</h2>
-      <div className="flex flex-col items-center">
-        <div className="relative">
-          <svg width="116" height="116" viewBox="0 0 116 116">
-            <circle
-              cx="58" cy="58" r={radius}
-              fill="none" stroke="#f1f5f9" strokeWidth="8"
-            />
-            <circle
-              cx="58" cy="58" r={radius}
-              fill="none"
-              stroke="url(#goalGradient)"
-              strokeWidth="8"
-              strokeLinecap="round"
-              strokeDasharray={circumference}
-              strokeDashoffset={strokeDashoffset}
-              transform="rotate(-90 58 58)"
-              className="transition-all duration-700 ease-out"
-            />
-            <defs>
-              <linearGradient id="goalGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#6366f1" />
-                <stop offset="100%" stopColor="#a855f7" />
-              </linearGradient>
-            </defs>
-            <text x="58" y="52" textAnchor="middle" className="text-[24px] font-bold" fill="#0f172a">
-              {goal.achieved}
-            </text>
-            <text x="58" y="72" textAnchor="middle" className="text-[11px] font-medium" fill="#94a3b8">
-              of {goal.target}
-            </text>
-          </svg>
+    <section className="rounded-xl border border-slate-200/70 bg-white">
+      <header className="flex items-center justify-between px-4 sm:px-5 py-3 border-b border-slate-100">
+        <h2 className="text-sm font-semibold text-slate-900">Weekly goal</h2>
+        <span className="text-xs text-slate-400 tabular-nums">{Math.round(percentage)}%</span>
+      </header>
+      <div className="px-4 sm:px-5 py-4">
+        <div className="flex items-baseline gap-2">
+          <span className="text-3xl font-semibold tracking-tight text-slate-900 tabular-nums">{goal.achieved}</span>
+          <span className="text-sm text-slate-400 tabular-nums">/ {goal.target}</span>
         </div>
-        <p className="text-xs text-slate-500 mt-3 font-medium">Applications this week</p>
-        <div className="w-full mt-3 bg-slate-100 rounded-full h-1.5 overflow-hidden">
+        <p className="text-xs text-slate-500 mt-1">
+          {remaining === 0 ? "Goal hit. Nice." : `${remaining} more to hit your weekly target.`}
+        </p>
+        <div className="mt-3 h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
           <div
-            className="bg-emerald-500 h-1.5 rounded-full transition-all duration-500"
+            className="h-full bg-emerald-500 rounded-full transition-all duration-700 ease-out"
             style={{ width: `${percentage}%` }}
           />
         </div>
       </div>
-    </div>
+    </section>
   );
 }
