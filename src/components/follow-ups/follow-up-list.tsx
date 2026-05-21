@@ -64,7 +64,7 @@ export function FollowUpList({ followUps, onMarkSent }: { followUps: any[]; onMa
         return (
           <div
             key={fu.id}
-            className={`bg-white border rounded-xl overflow-hidden card-hover ${isOverdue ? "border-red-200" : "border-slate-200"}`}
+            className={`bg-white border rounded-xl overflow-hidden transition-all duration-150 hover:shadow-sm ${isOverdue ? "border-red-200 hover:border-red-300" : "border-slate-200 hover:border-emerald-300"}`}
           >
             <div className="flex items-center gap-4 p-4">
               <div className={`p-2 rounded-lg ${fu.status === "sent" ? "bg-emerald-50" : "bg-slate-50"}`}>
