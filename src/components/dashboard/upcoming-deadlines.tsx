@@ -12,20 +12,20 @@ interface FollowUp {
 
 export function UpcomingDeadlines({ followUps }: { followUps: FollowUp[] }) {
   return (
-    <div className="bg-white rounded-2xl border border-slate-200/60 shadow-card p-4 sm:p-5">
+    <div className="bg-white rounded-xl border border-slate-200/70 p-4 sm:p-5 transition-all duration-150 hover:border-emerald-300 hover:shadow-sm">
       <h2 className="text-[15px] font-semibold text-slate-900 mb-4">Upcoming</h2>
       {followUps.length === 0 ? (
         <div className="text-center py-6">
-          <div className="w-11 h-11 rounded-xl bg-slate-100 flex items-center justify-center mx-auto mb-3">
+          <div className="w-11 h-11 rounded-md bg-slate-100 flex items-center justify-center mx-auto mb-3">
             <Calendar className="w-5 h-5 text-slate-400" />
           </div>
           <p className="text-sm font-medium text-slate-500">No upcoming follow-ups</p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-1">
           {followUps.map((fu) => (
-            <div key={fu.id} className="flex items-start gap-3 p-2.5 -mx-1 rounded-xl hover:bg-slate-50 transition-all">
-              <div className="p-1.5 rounded-lg bg-gradient-to-br from-amber-50 to-orange-50 flex-shrink-0 mt-0.5">
+            <div key={fu.id} className="flex items-start gap-3 p-2.5 -mx-1 rounded-md hover:bg-slate-50 transition-colors duration-100 cursor-pointer">
+              <div className="p-1.5 rounded-md bg-amber-50 flex-shrink-0 mt-0.5">
                 <Clock className="w-3.5 h-3.5 text-amber-500" />
               </div>
               <div className="min-w-0">
