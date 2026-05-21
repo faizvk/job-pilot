@@ -211,7 +211,7 @@ export function IntegrationsPanel() {
 
 function StatusBadge({ label, active }: { label: string; active: boolean }) {
   return (
-    <div className="flex items-center gap-2 border border-slate-100 rounded-lg px-3 py-2.5">
+    <div className={`flex items-center gap-2 border rounded-md px-3 py-2.5 transition-all duration-150 ${active ? "border-emerald-200/70 bg-emerald-50/40 hover:border-emerald-300 hover:bg-emerald-50" : "border-slate-100 hover:border-slate-200 hover:bg-slate-50/50"}`}>
       {active ? <CheckCircle className="w-4 h-4 text-emerald-500 shrink-0" /> : <XCircle className="w-4 h-4 text-slate-300 shrink-0" />}
       <span className={`text-xs font-medium ${active ? "text-slate-900" : "text-slate-400"}`}>{label}</span>
     </div>
