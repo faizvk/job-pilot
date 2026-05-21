@@ -23,14 +23,14 @@ export function ActivityFeed({ activities }: { activities: ActivityItem[] }) {
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200/60 shadow-card p-4 sm:p-5">
+    <div className="bg-white rounded-xl border border-slate-200/70 p-4 sm:p-5">
       <h2 className="text-[15px] font-semibold text-slate-900 mb-4">Recent Activity</h2>
-      <div className="space-y-1">
+      <div className="space-y-0.5">
         {activities.map((item) => (
           <Link
             key={item.id}
             href={`/applications/${item.applicationId}`}
-            className="flex items-start gap-3 p-2.5 -mx-1 rounded-xl hover:bg-slate-50 transition-all group"
+            className="flex items-start gap-3 p-2.5 -mx-1 rounded-md hover:bg-slate-50 transition-colors duration-100 group"
           >
             <div className="w-2 h-2 mt-1.5 rounded-full bg-gradient-to-br from-emerald-400 to-purple-400 flex-shrink-0" />
             <div className="flex-1 min-w-0">
