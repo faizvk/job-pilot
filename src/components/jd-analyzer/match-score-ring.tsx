@@ -4,11 +4,12 @@ export function MatchScoreRing({ score }: { score: number }) {
   const radius = 55;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (score / 100) * circumference;
-  const color = score >= 70 ? "#22c55e" : score >= 40 ? "#eab308" : "#ef4444";
+  // emerald-600 / amber-500 / rose-500
+  const color = score >= 70 ? "#059669" : score >= 40 ? "#f59e0b" : "#f43f5e";
 
   return (
-    <div className="flex flex-col items-center">
-      <svg width="140" height="140" viewBox="0 0 140 140">
+    <div className="flex flex-col items-center group">
+      <svg width="140" height="140" viewBox="0 0 140 140" className="transition-transform duration-200 group-hover:scale-105">
         <circle cx="70" cy="70" r={radius} fill="none" stroke="#e2e8f0" strokeWidth="10" />
         <circle
           cx="70" cy="70" r={radius}
