@@ -51,10 +51,10 @@ export function TopNav() {
         <div className="max-w-7xl mx-auto px-3 sm:px-6">
           <div className="flex items-center justify-between h-16 gap-3">
             {/* Logo + brand */}
-            <Link href="/dashboard" className="flex items-center gap-2 flex-shrink-0">
+            <Link href="/dashboard" className="flex items-center gap-2 flex-shrink-0 group">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/icon.svg" alt="Pursuit" width={32} height={32} />
-              <span className="text-base font-semibold tracking-[-0.01em] text-slate-900 hidden sm:inline">Pursuit</span>
+              <img src="/icon.svg" alt="Pursuit" width={32} height={32} className="transition-transform duration-200 group-hover:scale-105" />
+              <span className="text-base font-semibold tracking-[-0.01em] text-slate-900 hidden sm:inline group-hover:text-emerald-700 transition-colors">Pursuit</span>
             </Link>
 
             {/* Primary tabs — desktop */}
