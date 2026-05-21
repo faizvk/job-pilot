@@ -104,7 +104,7 @@ function LoginForm() {
       <button
         onClick={handleGoogle}
         disabled={googling}
-        className="w-full inline-flex items-center justify-center gap-2 border border-slate-200 bg-white text-slate-700 py-2.5 rounded-md text-sm font-medium hover:bg-slate-50 transition disabled:opacity-50"
+        className="w-full inline-flex items-center justify-center gap-2 border border-slate-200 bg-white text-slate-700 py-2.5 rounded-md text-sm font-medium hover:bg-slate-50 hover:border-slate-300 hover:shadow-sm transition-all duration-150 disabled:opacity-50"
       >
         {googling ? (
           <Loader2 className="w-4 h-4 animate-spin" />
