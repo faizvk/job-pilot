@@ -162,8 +162,8 @@ export function IntegrationsPanel() {
       <div className="border border-slate-200 rounded-xl p-4 sm:p-5 space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div className="flex items-start gap-3">
-            <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0">
-              <MessageCircle className="w-5 h-5 text-blue-500" />
+            <div className="w-10 h-10 bg-emerald-50 rounded-lg flex items-center justify-center flex-shrink-0">
+              <MessageCircle className="w-5 h-5 text-emerald-600" />
             </div>
             <div className="min-w-0">
               <h3 className="text-sm font-semibold text-slate-900">Telegram Notifications</h3>
