@@ -39,7 +39,7 @@ export function ResearchLinks({ links: linksJson, onChange }: { links: string; o
   const removeLink = (i: number) => save(links.filter((_, idx) => idx !== i));
 
   return (
-    <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs">
+    <div className="bg-white border border-slate-200/70 rounded-xl p-4 sm:p-5 shadow-xs transition-shadow duration-200 hover:shadow-sm">
       <div className="flex items-center gap-2 mb-3">
         <div className="w-7 h-7 bg-teal-50 rounded-lg flex items-center justify-center">
           <Link2 className="w-3.5 h-3.5 text-teal-600" />
