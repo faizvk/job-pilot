@@ -22,7 +22,7 @@ function CopyField({ label, value, isLink }: CopyFieldProps) {
   if (!value) return null;
 
   return (
-    <div className="flex items-center justify-between gap-3 py-2 px-3 rounded-lg hover:bg-slate-50 transition-all group">
+    <div className="flex items-center justify-between gap-3 py-2 px-3 rounded-md hover:bg-emerald-50/50 transition-colors duration-100 group cursor-pointer" onClick={handleCopy}>
       <div className="min-w-0">
         <p className="text-[11px] text-slate-400 font-medium uppercase tracking-wide">{label}</p>
         <p className="text-sm text-slate-800 truncate mt-0.5">{value}</p>
