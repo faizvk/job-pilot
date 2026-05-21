@@ -44,7 +44,7 @@ export function WeeklyGoalRing({ goal }: { goal: { target: number; achieved: num
         <p className="text-xs text-slate-500 mt-3 font-medium">Applications this week</p>
         <div className="w-full mt-3 bg-slate-100 rounded-full h-1.5 overflow-hidden">
           <div
-            className="bg-gradient-to-r from-emerald-500 to-purple-500 h-1.5 rounded-full transition-all duration-500"
+            className="bg-emerald-500 h-1.5 rounded-full transition-all duration-500"
             style={{ width: `${percentage}%` }}
           />
         </div>
