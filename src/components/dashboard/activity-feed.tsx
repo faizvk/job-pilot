@@ -32,10 +32,10 @@ export function ActivityFeed({ activities }: { activities: ActivityItem[] }) {
             href={`/applications/${item.applicationId}`}
             className="flex items-start gap-3 p-2.5 -mx-1 rounded-xl hover:bg-slate-50 transition-all group"
           >
-            <div className="w-2 h-2 mt-1.5 rounded-full bg-gradient-to-br from-indigo-400 to-purple-400 flex-shrink-0" />
+            <div className="w-2 h-2 mt-1.5 rounded-full bg-gradient-to-br from-emerald-400 to-purple-400 flex-shrink-0" />
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between gap-2">
-                <p className="text-sm font-medium text-slate-800 truncate group-hover:text-indigo-600 transition-colors">{item.jobTitle}</p>
+                <p className="text-sm font-medium text-slate-800 truncate group-hover:text-emerald-600 transition-colors">{item.jobTitle}</p>
                 <span className="text-[11px] text-slate-400 whitespace-nowrap flex-shrink-0">{timeAgo(item.changedAt)}</span>
               </div>
               <p className="text-xs text-slate-400 truncate">{item.companyName}</p>

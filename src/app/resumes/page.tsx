@@ -82,7 +82,7 @@ export default function ResumesPage() {
           </button>
           <Link
             href="/resumes/new"
-            className="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2.5 rounded-xl text-sm font-medium shadow-sm shadow-indigo-600/20 hover:bg-indigo-700 transition-all active:scale-[0.98]"
+            className="inline-flex items-center gap-2 bg-emerald-600 text-white px-4 py-2.5 rounded-xl text-sm font-medium shadow-sm shadow-emerald-600/20 hover:bg-emerald-700 transition-all active:scale-[0.98]"
           >
             <Plus className="w-4 h-4" /> New Resume
           </Link>
@@ -103,15 +103,15 @@ export default function ResumesPage() {
         </div>
       ) : resumes.length === 0 ? (
         <div className="text-center py-20">
-          <div className="w-16 h-16 rounded-2xl bg-indigo-50 flex items-center justify-center mx-auto mb-4">
-            <FileText className="w-7 h-7 text-indigo-400" />
+          <div className="w-16 h-16 rounded-2xl bg-emerald-50 flex items-center justify-center mx-auto mb-4">
+            <FileText className="w-7 h-7 text-emerald-400" />
           </div>
           <p className="text-lg font-semibold text-slate-900">No resumes yet</p>
           <p className="text-sm text-slate-500 mt-1.5 max-w-sm mx-auto">Upload your existing resume or create a new one from scratch</p>
           <div className="flex items-center justify-center gap-3 mt-5">
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="inline-flex items-center gap-2 bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-medium shadow-sm shadow-indigo-600/20 hover:bg-indigo-700 transition-all active:scale-[0.98]"
+              className="inline-flex items-center gap-2 bg-emerald-600 text-white px-5 py-2.5 rounded-xl text-sm font-medium shadow-sm shadow-emerald-600/20 hover:bg-emerald-700 transition-all active:scale-[0.98]"
             >
               <Upload className="w-4 h-4" /> Upload Resume
             </button>
@@ -129,12 +129,12 @@ export default function ResumesPage() {
           <button
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading}
-            className="border-2 border-dashed border-slate-200 rounded-xl p-5 hover:border-indigo-300 hover:bg-indigo-50/30 transition-all text-center group disabled:opacity-50"
+            className="border-2 border-dashed border-slate-200 rounded-xl p-5 hover:border-emerald-300 hover:bg-emerald-50/30 transition-all text-center group disabled:opacity-50"
           >
-            <div className="w-10 h-10 rounded-xl bg-slate-100 group-hover:bg-indigo-100 flex items-center justify-center mx-auto mb-3 transition-colors">
-              <Upload className="w-5 h-5 text-slate-400 group-hover:text-indigo-500 transition-colors" />
+            <div className="w-10 h-10 rounded-xl bg-slate-100 group-hover:bg-emerald-100 flex items-center justify-center mx-auto mb-3 transition-colors">
+              <Upload className="w-5 h-5 text-slate-400 group-hover:text-emerald-500 transition-colors" />
             </div>
-            <p className="text-sm font-medium text-slate-600 group-hover:text-indigo-700 transition-colors">Upload Resume</p>
+            <p className="text-sm font-medium text-slate-600 group-hover:text-emerald-700 transition-colors">Upload Resume</p>
             <p className="text-xs text-slate-400 mt-1">PDF, DOCX, or TXT</p>
           </button>
 
@@ -146,8 +146,8 @@ export default function ResumesPage() {
               className="bg-white border border-slate-200/80 rounded-xl p-5 shadow-card hover:shadow-card-hover transition-all card-hover"
             >
               <div className="flex items-start justify-between mb-3">
-                <div className="p-2 rounded-xl bg-indigo-50">
-                  <FileText className="w-5 h-5 text-indigo-600" />
+                <div className="p-2 rounded-xl bg-emerald-50">
+                  <FileText className="w-5 h-5 text-emerald-600" />
                 </div>
                 {resume.isBase && (
                   <span className="inline-flex items-center gap-1 text-[11px] bg-amber-50 text-amber-700 px-2 py-0.5 rounded-md font-medium ring-1 ring-inset ring-amber-600/10">
@@ -160,7 +160,7 @@ export default function ResumesPage() {
                 Updated {formatDate(resume.updatedAt)}
               </p>
               {resume.tailoredCopies?.length > 0 && (
-                <p className="text-[11px] text-indigo-500 font-medium mt-2">
+                <p className="text-[11px] text-emerald-500 font-medium mt-2">
                   {resume.tailoredCopies.length} tailored version{resume.tailoredCopies.length > 1 ? "s" : ""}
                 </p>
               )}

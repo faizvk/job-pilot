@@ -108,7 +108,7 @@ export default function CompanySearchPage() {
                 value={company}
                 onChange={(e) => setCompany(e.target.value)}
                 placeholder="e.g. Microsoft, Razorpay, Swiggy"
-                className="w-full border border-slate-200 rounded-xl pl-10 pr-3 py-2.5 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all"
+                className="w-full border border-slate-200 rounded-xl pl-10 pr-3 py-2.5 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400 transition-all"
                 autoFocus
               />
             </div>
@@ -122,7 +122,7 @@ export default function CompanySearchPage() {
               <select
                 value={state}
                 onChange={(e) => setState(e.target.value)}
-                className="w-full border border-slate-200 rounded-xl pl-10 pr-3 py-2.5 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all bg-white"
+                className="w-full border border-slate-200 rounded-xl pl-10 pr-3 py-2.5 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400 transition-all bg-white"
               >
                 <option value="">All India</option>
                 {INDIAN_STATES.map((s) => (
@@ -135,7 +135,7 @@ export default function CompanySearchPage() {
             <button
               type="submit"
               disabled={!company.trim() || loading}
-              className="inline-flex items-center justify-center gap-1.5 bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-medium shadow-sm shadow-indigo-600/20 hover:bg-indigo-700 hover:shadow-md disabled:opacity-50 transition-all active:scale-[0.98] w-full md:w-auto"
+              className="inline-flex items-center justify-center gap-1.5 bg-emerald-600 text-white px-5 py-2.5 rounded-xl text-sm font-medium shadow-sm shadow-emerald-600/20 hover:bg-emerald-700 hover:shadow-md disabled:opacity-50 transition-all active:scale-[0.98] w-full md:w-auto"
             >
               {loading ? (
                 <><Loader2 className="w-4 h-4 animate-spin" /> Searching...</>
@@ -211,7 +211,7 @@ export default function CompanySearchPage() {
                   {job.matchedSkills && job.matchedSkills.length > 0 && (
                     <div className="flex flex-wrap gap-1 mt-2">
                       {job.matchedSkills.slice(0, 8).map((s) => (
-                        <span key={s} className="text-[11px] bg-indigo-50/80 text-indigo-700 px-1.5 py-0.5 rounded font-medium">
+                        <span key={s} className="text-[11px] bg-emerald-50/80 text-emerald-700 px-1.5 py-0.5 rounded font-medium">
                           {s}
                         </span>
                       ))}

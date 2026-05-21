@@ -10,8 +10,8 @@ interface Question {
 }
 
 const CATEGORY_STYLES: Record<string, { label: string; color: string }> = {
-  technical: { label: "Technical", color: "bg-indigo-50 text-indigo-700 ring-1 ring-inset ring-indigo-600/10" },
-  behavioral: { label: "Behavioral", color: "bg-violet-50 text-violet-700 ring-1 ring-inset ring-violet-600/10" },
+  technical: { label: "Technical", color: "bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/10" },
+  behavioral: { label: "Behavioral", color: "bg-teal-50 text-teal-700 ring-1 ring-inset ring-teal-600/10" },
   situational: { label: "Situational", color: "bg-amber-50 text-amber-700 ring-1 ring-inset ring-amber-600/10" },
   company: { label: "Company", color: "bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/10" },
 };
@@ -73,7 +73,7 @@ export function QuestionList({ questions: questionsJson, onChange }: { questions
         </div>
         <button
           onClick={addQuestion}
-          className="inline-flex items-center gap-1 text-xs text-indigo-600 hover:text-indigo-700 font-medium"
+          className="inline-flex items-center gap-1 text-xs text-emerald-600 hover:text-emerald-700 font-medium"
         >
           <Plus className="w-3 h-3" /> Add
         </button>
@@ -118,14 +118,14 @@ export function QuestionList({ questions: questionsJson, onChange }: { questions
                           <input
                             value={q.question}
                             onChange={(e) => updateQuestion(i, "question", e.target.value)}
-                            className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm font-medium mt-2 shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all"
+                            className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm font-medium mt-2 shadow-xs focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400 transition-all"
                             placeholder="Question..."
                           />
                           <textarea
                             value={q.answer}
                             onChange={(e) => updateQuestion(i, "answer", e.target.value)}
                             rows={4}
-                            className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm resize-none shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all"
+                            className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm resize-none shadow-xs focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400 transition-all"
                             placeholder={cat === "behavioral" || cat === "situational" ? STAR_PROMPT : "Your answer..."}
                           />
                           <div className="flex justify-end">

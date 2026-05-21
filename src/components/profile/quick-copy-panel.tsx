@@ -33,7 +33,7 @@ function CopyField({ label, value, isLink }: CopyFieldProps) {
             href={value.startsWith("http") ? value : `https://${value}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="p-1.5 text-slate-300 hover:text-indigo-500 transition-colors"
+            className="p-1.5 text-slate-300 hover:text-emerald-500 transition-colors"
           >
             <ExternalLink className="w-3.5 h-3.5" />
           </a>
@@ -43,7 +43,7 @@ function CopyField({ label, value, isLink }: CopyFieldProps) {
           className={`p-1.5 rounded-md transition-all ${
             copied
               ? "bg-emerald-50 text-emerald-600"
-              : "text-slate-300 hover:text-indigo-500 hover:bg-indigo-50"
+              : "text-slate-300 hover:text-emerald-500 hover:bg-emerald-50"
           }`}
         >
           {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}

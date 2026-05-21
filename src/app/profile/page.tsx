@@ -118,7 +118,7 @@ export default function ProfilePage() {
             onClick={() => setShowCopyPanel(!showCopyPanel)}
             className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium transition-all ${
               showCopyPanel
-                ? "bg-indigo-600 text-white shadow-sm shadow-indigo-600/20"
+                ? "bg-emerald-600 text-white shadow-sm shadow-emerald-600/20"
                 : "border border-slate-200 text-slate-600 hover:bg-slate-50 shadow-xs"
             }`}
           >

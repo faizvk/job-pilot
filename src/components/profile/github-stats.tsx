@@ -21,7 +21,7 @@ interface GitHubData {
 const LANG_COLORS: Record<string, string> = {
   JavaScript: "bg-yellow-400", TypeScript: "bg-blue-500", Python: "bg-green-500", Java: "bg-red-500",
   "C++": "bg-pink-500", Go: "bg-cyan-500", Rust: "bg-orange-500", Ruby: "bg-red-600",
-  PHP: "bg-indigo-400", CSS: "bg-purple-500", HTML: "bg-orange-400", Shell: "bg-green-600",
+  PHP: "bg-emerald-400", CSS: "bg-purple-500", HTML: "bg-orange-400", Shell: "bg-green-600",
   Solidity: "bg-gray-600", Dart: "bg-blue-400",
 };
 
@@ -117,7 +117,7 @@ export function GitHubStats({ username }: { username: string | null }) {
               {data.repos.slice(0, 6).map((repo) => (
                 <div key={repo.name} className="border border-slate-100 rounded-lg p-3 hover:border-slate-200 transition-all">
                   <div className="flex items-center justify-between">
-                    <a href={repo.url} target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-indigo-600 hover:text-indigo-700 flex items-center gap-1">
+                    <a href={repo.url} target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-emerald-600 hover:text-emerald-700 flex items-center gap-1">
                       {repo.name} <ExternalLink className="w-3 h-3" />
                     </a>
                     <div className="flex items-center gap-2 text-xs text-slate-500">
@@ -135,7 +135,7 @@ export function GitHubStats({ username }: { username: string | null }) {
                   {repo.topics.length > 0 && (
                     <div className="flex flex-wrap gap-1 mt-1.5">
                       {repo.topics.slice(0, 5).map((t) => (
-                        <span key={t} className="text-[10px] px-1.5 py-0.5 bg-indigo-50 text-indigo-600 rounded-full">{t}</span>
+                        <span key={t} className="text-[10px] px-1.5 py-0.5 bg-emerald-50 text-emerald-600 rounded-full">{t}</span>
                       ))}
                     </div>
                   )}

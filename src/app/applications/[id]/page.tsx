@@ -230,7 +230,7 @@ export default function ApplicationDetailPage() {
               href={companyInfo.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-indigo-600 hover:text-indigo-700"
+              className="text-xs text-emerald-600 hover:text-emerald-700"
             >
               Wikipedia →
             </a>
@@ -258,7 +258,7 @@ export default function ApplicationDetailPage() {
               <button
                 onClick={handleAIAnalyze}
                 disabled={analyzing}
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-violet-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:from-indigo-700 hover:to-violet-700 disabled:opacity-50 shadow-sm transition-all active:scale-[0.98]"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:from-emerald-700 hover:to-teal-700 disabled:opacity-50 shadow-sm transition-all active:scale-[0.98]"
               >
                 {analyzing ? <><Loader2 className="w-4 h-4 animate-spin" /> Analyzing...</> : <><Sparkles className="w-4 h-4" /> Analyze with AI</>}
               </button>
@@ -267,10 +267,10 @@ export default function ApplicationDetailPage() {
           {aiAnalysis ? (
             <div className="space-y-4">
               <div className="flex flex-wrap gap-2">
-                <span className="text-xs font-medium px-2.5 py-1 rounded-md bg-indigo-50 text-indigo-700 ring-1 ring-inset ring-indigo-600/10">
+                <span className="text-xs font-medium px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/10">
                   {aiAnalysis.seniorityLevel} level
                 </span>
-                <span className="text-xs font-medium px-2.5 py-1 rounded-md bg-violet-50 text-violet-700 ring-1 ring-inset ring-violet-600/10">
+                <span className="text-xs font-medium px-2.5 py-1 rounded-md bg-teal-50 text-teal-700 ring-1 ring-inset ring-teal-600/10">
                   {aiAnalysis.roleType}
                 </span>
                 <span className="text-xs font-medium px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/10">
@@ -298,7 +298,7 @@ export default function ApplicationDetailPage() {
                   <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Key Responsibilities</p>
                   <ul className="text-sm text-slate-600 space-y-1">
                     {aiAnalysis.responsibilities.map((r: string, i: number) => (
-                      <li key={i} className="flex items-start gap-2"><span className="text-indigo-400 mt-1">•</span> {r}</li>
+                      <li key={i} className="flex items-start gap-2"><span className="text-emerald-400 mt-1">•</span> {r}</li>
                     ))}
                   </ul>
                 </div>
@@ -316,7 +316,7 @@ export default function ApplicationDetailPage() {
               {aiAnalysis.companyCulture?.length > 0 && (
                 <div className="flex flex-wrap gap-1.5">
                   {aiAnalysis.companyCulture.map((c: string) => (
-                    <span key={c} className="text-[11px] px-2 py-0.5 rounded-md bg-violet-50 text-violet-600">{c}</span>
+                    <span key={c} className="text-[11px] px-2 py-0.5 rounded-md bg-teal-50 text-teal-600">{c}</span>
                   ))}
                 </div>
               )}

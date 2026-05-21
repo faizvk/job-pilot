@@ -106,7 +106,7 @@ export default function ApplicationCoverLetterPage() {
         {generatedContent && (
           <button
             onClick={handleCopy}
-            className="inline-flex items-center gap-1.5 text-sm text-indigo-600 hover:text-indigo-700 font-medium self-start sm:self-auto"
+            className="inline-flex items-center gap-1.5 text-sm text-emerald-600 hover:text-emerald-700 font-medium self-start sm:self-auto"
           >
             {copied ? <><Check className="w-4 h-4" /> Copied</> : <><Copy className="w-4 h-4" /> Copy</>}
           </button>
@@ -124,7 +124,7 @@ export default function ApplicationCoverLetterPage() {
             <select
               value={selectedTemplateId}
               onChange={(e) => setSelectedTemplateId(e.target.value)}
-              className="flex-1 border border-slate-200 rounded-xl px-3 py-2 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
+              className="flex-1 border border-slate-200 rounded-xl px-3 py-2 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400"
             >
               <option value="">Select a template</option>
               {templates.map((t: any) => (
@@ -134,7 +134,7 @@ export default function ApplicationCoverLetterPage() {
             <button
               onClick={handleGenerate}
               disabled={!selectedTemplateId || generating}
-              className="bg-indigo-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-indigo-700 disabled:opacity-50 shadow-sm shadow-indigo-600/20 transition-all active:scale-[0.98] sm:flex-shrink-0"
+              className="bg-emerald-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-emerald-700 disabled:opacity-50 shadow-sm shadow-emerald-600/20 transition-all active:scale-[0.98] sm:flex-shrink-0"
             >
               {generating ? "Generating..." : "Generate"}
             </button>
@@ -151,7 +151,7 @@ export default function ApplicationCoverLetterPage() {
             <select
               value={aiTone}
               onChange={(e) => setAiTone(e.target.value as any)}
-              className="w-full sm:w-auto border border-slate-200 rounded-xl px-3 py-2 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
+              className="w-full sm:w-auto border border-slate-200 rounded-xl px-3 py-2 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400"
             >
               <option value="professional">Professional</option>
               <option value="technical">Technical</option>
@@ -160,7 +160,7 @@ export default function ApplicationCoverLetterPage() {
             <button
               onClick={handleAIGenerate}
               disabled={!aiAvailable || aiGenerating}
-              className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-violet-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:from-indigo-700 hover:to-violet-700 disabled:opacity-50 shadow-sm transition-all active:scale-[0.98]"
+              className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:from-emerald-700 hover:to-teal-700 disabled:opacity-50 shadow-sm transition-all active:scale-[0.98]"
             >
               <Sparkles className="w-4 h-4" />
               {aiGenerating ? "Writing..." : "Generate with AI"}
@@ -176,7 +176,7 @@ export default function ApplicationCoverLetterPage() {
             <textarea
               value={generatedContent}
               onChange={(e) => setGeneratedContent(e.target.value)}
-              className="w-full h-[400px] sm:h-[500px] border border-slate-200 rounded-xl p-3 sm:p-4 text-sm font-mono resize-none shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all"
+              className="w-full h-[400px] sm:h-[500px] border border-slate-200 rounded-xl p-3 sm:p-4 text-sm font-mono resize-none shadow-xs focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400 transition-all"
             />
           </div>
           <div>

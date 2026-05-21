@@ -241,7 +241,7 @@ export default function BatchApplyPage() {
         </div>
         {startTime && (
           <div className="sm:text-right bg-white border border-slate-200/80 rounded-xl shadow-card px-4 py-2.5 self-start sm:self-auto">
-            <div className="flex sm:justify-end items-center gap-2 text-lg font-mono font-bold text-indigo-600">
+            <div className="flex sm:justify-end items-center gap-2 text-lg font-mono font-bold text-emerald-600">
               <Clock className="w-4 h-4" />
               {formatTime(elapsedTime)}
             </div>
@@ -254,7 +254,7 @@ export default function BatchApplyPage() {
       {dailyStats && (
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
           {[
-            { label: "Today", value: dailyStats.todayCount, color: "text-indigo-600", accent: "border-l-indigo-400" },
+            { label: "Today", value: dailyStats.todayCount, color: "text-emerald-600", accent: "border-l-emerald-400" },
             { label: "Applied Today", value: dailyStats.todayApplied, color: "text-emerald-600", accent: "border-l-emerald-400" },
             { label: "Day Streak", value: dailyStats.currentStreak, color: "text-orange-600", accent: "border-l-orange-400", icon: true },
             { label: "Last 30 Days", value: dailyStats.totalLast30Days, color: "text-slate-900", accent: "border-l-gray-400" },
@@ -279,7 +279,7 @@ export default function BatchApplyPage() {
             <select
               value={selectedResumeId}
               onChange={(e) => setSelectedResumeId(e.target.value)}
-              className="border border-slate-200 rounded-xl px-3 py-1.5 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
+              className="border border-slate-200 rounded-xl px-3 py-1.5 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400"
             >
               <option value="">None</option>
               {resumes.map((r: any) => (
@@ -289,12 +289,12 @@ export default function BatchApplyPage() {
           </div>
 
           <label className="flex items-center gap-2 text-sm cursor-pointer">
-            <input type="checkbox" checked={autoAnalyze} onChange={(e) => setAutoAnalyze(e.target.checked)} className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500" />
+            <input type="checkbox" checked={autoAnalyze} onChange={(e) => setAutoAnalyze(e.target.checked)} className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500" />
             <span className="text-slate-600">Auto-Analyze JDs</span>
           </label>
 
           <label className="flex items-center gap-2 text-sm cursor-pointer">
-            <input type="checkbox" checked={autoTailor} onChange={(e) => setAutoTailor(e.target.checked)} className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500" disabled={!selectedResumeId} />
+            <input type="checkbox" checked={autoTailor} onChange={(e) => setAutoTailor(e.target.checked)} className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500" disabled={!selectedResumeId} />
             <span className="text-slate-600">Auto-Tailor Resumes</span>
           </label>
 
@@ -318,8 +318,8 @@ export default function BatchApplyPage() {
         {/* Bulk paste */}
         {showBulkInput && (
           <div className="border-t border-slate-100 pt-4 space-y-3">
-            <div className="text-sm text-slate-600 bg-indigo-50/50 border border-indigo-200/50 rounded-xl p-3">
-              <p className="font-medium text-indigo-900 mb-1.5 text-[13px]">Paste jobs in any format:</p>
+            <div className="text-sm text-slate-600 bg-emerald-50/50 border border-emerald-200/50 rounded-xl p-3">
+              <p className="font-medium text-emerald-900 mb-1.5 text-[13px]">Paste jobs in any format:</p>
               <ul className="list-disc list-inside text-xs space-y-1 text-slate-500">
                 <li><span className="font-medium text-slate-700">Pipe format:</span> Company | Job Title | URL | Location</li>
                 <li><span className="font-medium text-slate-700">Block format:</span> Job Title on line 1, Company on line 2, URL on any line</li>
@@ -331,7 +331,7 @@ export default function BatchApplyPage() {
               value={bulkText}
               onChange={(e) => setBulkText(e.target.value)}
               rows={10}
-              className="w-full border border-slate-200 rounded-xl p-3 text-sm font-mono resize-none shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all"
+              className="w-full border border-slate-200 rounded-xl p-3 text-sm font-mono resize-none shadow-xs focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400 transition-all"
               placeholder={`Google | Senior Frontend Engineer | https://linkedin.com/jobs/123 | Mountain View, CA
 We're looking for a Senior Frontend Engineer with 5+ years experience in React...
 
@@ -347,7 +347,7 @@ Join our team building next-gen cloud services. Requirements: Java, AWS, distrib
               <button
                 onClick={parseBulkJobs}
                 disabled={!bulkText.trim()}
-                className="bg-indigo-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-indigo-700 disabled:opacity-50 shadow-sm shadow-indigo-600/20 transition-all active:scale-[0.98] self-start sm:self-auto"
+                className="bg-emerald-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-emerald-700 disabled:opacity-50 shadow-sm shadow-emerald-600/20 transition-all active:scale-[0.98] self-start sm:self-auto"
               >
                 Parse & Add Jobs
               </button>
@@ -367,7 +367,7 @@ Join our team building next-gen cloud services. Requirements: Java, AWS, distrib
                   type="checkbox"
                   checked={selectedJobs.size === jobs.length && jobs.length > 0}
                   onChange={selectAll}
-                  className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                  className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
                 />
                 <span className="text-slate-600">Select All</span>
                 <span className="text-xs text-slate-400">({selectedJobs.size}/{jobs.length})</span>
@@ -390,7 +390,7 @@ Join our team building next-gen cloud services. Requirements: Java, AWS, distrib
                       const urls = jobs.filter((j) => selectedJobs.has(j.id) && j.jobUrl).map((j) => j.jobUrl);
                       urls.forEach((url) => window.open(url, "_blank"));
                     }}
-                    className="inline-flex items-center gap-1 text-indigo-600 px-2.5 py-1.5 rounded-lg text-xs hover:bg-indigo-50 border border-indigo-200 transition-all"
+                    className="inline-flex items-center gap-1 text-emerald-600 px-2.5 py-1.5 rounded-lg text-xs hover:bg-emerald-50 border border-emerald-200 transition-all"
                   >
                     <ExternalLink className="w-3 h-3" /> Open URLs
                   </button>
@@ -420,7 +420,7 @@ Join our team building next-gen cloud services. Requirements: Java, AWS, distrib
               <button
                 onClick={handleBatchImport}
                 disabled={processing || pendingCount === 0}
-                className="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-indigo-700 disabled:opacity-50 shadow-sm shadow-indigo-600/20 transition-all active:scale-[0.98]"
+                className="inline-flex items-center gap-2 bg-emerald-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-emerald-700 disabled:opacity-50 shadow-sm shadow-emerald-600/20 transition-all active:scale-[0.98]"
               >
                 {processing ? (
                   <><Loader2 className="w-4 h-4 animate-spin" /> Processing...</>
@@ -439,7 +439,7 @@ Join our team building next-gen cloud services. Requirements: Java, AWS, distrib
                 className={`bg-white border rounded-xl overflow-hidden transition-all duration-150 shadow-card ${
                   job.status === "error" ? "border-red-200" :
                   job.status === "applied" ? "border-emerald-200 bg-emerald-50/20" :
-                  job.status === "imported" || job.status === "tailored" ? "border-indigo-200" :
+                  job.status === "imported" || job.status === "tailored" ? "border-emerald-200" :
                   "border-slate-200/80"
                 }`}
               >
@@ -449,7 +449,7 @@ Join our team building next-gen cloud services. Requirements: Java, AWS, distrib
                       type="checkbox"
                       checked={selectedJobs.has(job.id)}
                       onChange={() => toggleSelect(job.id)}
-                      className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                      className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
                     />
                     <span className="text-[11px] text-slate-400 w-6 font-mono">{index + 1}</span>
                   </div>
@@ -460,25 +460,25 @@ Join our team building next-gen cloud services. Requirements: Java, AWS, distrib
                         value={job.companyName}
                         onChange={(e) => updateJob(job.id, { companyName: e.target.value })}
                         placeholder="Company"
-                        className="border border-slate-200 rounded-lg px-2.5 py-1.5 text-sm shadow-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 focus:outline-none transition-all"
+                        className="border border-slate-200 rounded-lg px-2.5 py-1.5 text-sm shadow-xs focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400 focus:outline-none transition-all"
                       />
                       <input
                         value={job.jobTitle}
                         onChange={(e) => updateJob(job.id, { jobTitle: e.target.value })}
                         placeholder="Job Title"
-                        className="border border-slate-200 rounded-lg px-2.5 py-1.5 text-sm shadow-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 focus:outline-none transition-all"
+                        className="border border-slate-200 rounded-lg px-2.5 py-1.5 text-sm shadow-xs focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400 focus:outline-none transition-all"
                       />
                       <input
                         value={job.jobUrl}
                         onChange={(e) => updateJob(job.id, { jobUrl: e.target.value, platform: detectPlatform(e.target.value) })}
                         placeholder="URL (optional)"
-                        className="border border-slate-200 rounded-lg px-2.5 py-1.5 text-sm shadow-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 focus:outline-none transition-all"
+                        className="border border-slate-200 rounded-lg px-2.5 py-1.5 text-sm shadow-xs focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400 focus:outline-none transition-all"
                       />
                       <input
                         value={job.location}
                         onChange={(e) => updateJob(job.id, { location: e.target.value })}
                         placeholder="Location"
-                        className="border border-slate-200 rounded-lg px-2.5 py-1.5 text-sm shadow-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 focus:outline-none transition-all"
+                        className="border border-slate-200 rounded-lg px-2.5 py-1.5 text-sm shadow-xs focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400 focus:outline-none transition-all"
                       />
                     </div>
                   ) : (
@@ -501,9 +501,9 @@ Join our team building next-gen cloud services. Requirements: Java, AWS, distrib
 
                   {/* Status */}
                   <div className="flex items-center gap-2 flex-shrink-0">
-                    {job.status === "importing" && <Loader2 className="w-4 h-4 animate-spin text-indigo-500" />}
-                    {job.status === "imported" && <span className="text-[11px] bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-md font-medium ring-1 ring-inset ring-indigo-600/10">Imported</span>}
-                    {job.status === "tailored" && <span className="text-[11px] bg-violet-50 text-violet-700 px-2 py-0.5 rounded-md font-medium ring-1 ring-inset ring-violet-600/10">Tailored</span>}
+                    {job.status === "importing" && <Loader2 className="w-4 h-4 animate-spin text-emerald-500" />}
+                    {job.status === "imported" && <span className="text-[11px] bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-md font-medium ring-1 ring-inset ring-emerald-600/10">Imported</span>}
+                    {job.status === "tailored" && <span className="text-[11px] bg-teal-50 text-teal-700 px-2 py-0.5 rounded-md font-medium ring-1 ring-inset ring-teal-600/10">Tailored</span>}
                     {job.status === "applied" && <span className="text-[11px] bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-md font-medium ring-1 ring-inset ring-emerald-600/10">Applied</span>}
                     {job.status === "error" && <span className="text-[11px] bg-red-50 text-red-700 px-2 py-0.5 rounded-md font-medium ring-1 ring-inset ring-red-600/10">Error</span>}
 
@@ -528,13 +528,13 @@ Join our team building next-gen cloud services. Requirements: Java, AWS, distrib
                     )}
 
                     {job.jobUrl && job.status !== "imported" && job.status !== "tailored" && (
-                      <a href={job.jobUrl} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-indigo-600 transition-colors">
+                      <a href={job.jobUrl} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-emerald-600 transition-colors">
                         <ExternalLink className="w-3.5 h-3.5" />
                       </a>
                     )}
 
                     {job.appId && (
-                      <a href={`/applications/${job.appId}`} className="text-xs text-indigo-600 hover:underline font-medium">View</a>
+                      <a href={`/applications/${job.appId}`} className="text-xs text-emerald-600 hover:underline font-medium">View</a>
                     )}
 
                     <button
@@ -558,7 +558,7 @@ Join our team building next-gen cloud services. Requirements: Java, AWS, distrib
                       onChange={(e) => updateJob(job.id, { jobDescription: e.target.value })}
                       rows={4}
                       placeholder="Paste job description here for better resume tailoring..."
-                      className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm resize-none shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all"
+                      className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm resize-none shadow-xs focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400 transition-all"
                     />
                     {job.error && <p className="text-xs text-red-500 mt-2">{job.error}</p>}
                   </div>
@@ -578,7 +578,7 @@ Join our team building next-gen cloud services. Requirements: Java, AWS, distrib
           <p className="text-lg font-semibold text-slate-900">Ready to speed up your applications?</p>
           <p className="text-sm text-slate-500 mt-1.5">Paste jobs in bulk or add them one by one</p>
           <div className="flex items-center justify-center gap-3 mt-5">
-            <button onClick={() => setShowBulkInput(true)} className="bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-indigo-700 shadow-sm shadow-indigo-600/20 transition-all active:scale-[0.98]">
+            <button onClick={() => setShowBulkInput(true)} className="bg-emerald-600 text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-emerald-700 shadow-sm shadow-emerald-600/20 transition-all active:scale-[0.98]">
               Bulk Paste Jobs
             </button>
             <button onClick={addJob} className="border border-slate-200 px-5 py-2.5 rounded-lg text-sm text-slate-600 hover:bg-slate-50 hover:border-slate-300 shadow-xs transition-all">

@@ -112,7 +112,7 @@ export function IntegrationsPanel() {
               <span className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full">
                 <CheckCircle className="w-3.5 h-3.5" /> Connected
               </span>
-              <a href="/api/gmail/auth" className="inline-flex items-center gap-1 text-xs text-indigo-600 hover:text-indigo-700 font-medium">
+              <a href="/api/gmail/auth" className="inline-flex items-center gap-1 text-xs text-emerald-600 hover:text-emerald-700 font-medium">
                 <RefreshCw className="w-3 h-3" /> Reconnect
               </a>
               <button
@@ -125,7 +125,7 @@ export function IntegrationsPanel() {
               </button>
             </div>
           ) : gmailConfigured ? (
-            <a href="/api/gmail/auth" className="inline-flex items-center gap-1.5 bg-indigo-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-indigo-700 shadow-sm shadow-indigo-600/20 transition-all active:scale-[0.98]">
+            <a href="/api/gmail/auth" className="inline-flex items-center gap-1.5 bg-emerald-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-emerald-700 shadow-sm shadow-emerald-600/20 transition-all active:scale-[0.98]">
               <ExternalLink className="w-4 h-4" /> Connect Google
             </a>
           ) : (
@@ -137,7 +137,7 @@ export function IntegrationsPanel() {
           <div className="border-t border-slate-100 pt-4 space-y-3">
             <h4 className="text-xs font-semibold text-slate-600 uppercase tracking-wide">Search Application Emails</h4>
             <div className="flex items-center gap-2">
-              <input type="text" value={searchCompany} onChange={(e) => setSearchCompany(e.target.value)} placeholder="Company name (optional)" className="flex-1 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400" />
+              <input type="text" value={searchCompany} onChange={(e) => setSearchCompany(e.target.value)} placeholder="Company name (optional)" className="flex-1 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400" />
               <button onClick={handleSearchEmails} disabled={searching} className="inline-flex items-center gap-1.5 bg-slate-900 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-slate-800 disabled:opacity-50 transition-all active:scale-[0.98]">
                 {searching ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
                 Search
@@ -175,7 +175,7 @@ export function IntegrationsPanel() {
               <span className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full">
                 <CheckCircle className="w-3.5 h-3.5" /> Connected
               </span>
-              <button onClick={handleTestTelegram} disabled={testingTelegram} className="inline-flex items-center gap-1 text-xs text-indigo-600 hover:text-indigo-700 font-medium">
+              <button onClick={handleTestTelegram} disabled={testingTelegram} className="inline-flex items-center gap-1 text-xs text-emerald-600 hover:text-emerald-700 font-medium">
                 {testingTelegram ? <Loader2 className="w-3 h-3 animate-spin" /> : <Send className="w-3 h-3" />}
                 Test
               </button>

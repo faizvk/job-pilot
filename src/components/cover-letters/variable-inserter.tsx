@@ -29,7 +29,7 @@ export function VariableInserter({ onInsert }: { onInsert: (variable: string) =>
             key={v.key}
             type="button"
             onClick={() => onInsert(v.key)}
-            className="px-2 py-1 text-[11px] bg-indigo-50 text-indigo-700 rounded-md hover:bg-indigo-100 transition-colors font-mono ring-1 ring-inset ring-indigo-600/10"
+            className="px-2 py-1 text-[11px] bg-emerald-50 text-emerald-700 rounded-md hover:bg-emerald-100 transition-colors font-mono ring-1 ring-inset ring-emerald-600/10"
             title={`Insert {{${v.key}}}`}
           >
             {v.label}
@@ -37,7 +37,7 @@ export function VariableInserter({ onInsert }: { onInsert: (variable: string) =>
         ))}
       </div>
       <p className="text-[10px] text-slate-400 mt-2">
-        Use <code className="font-mono text-indigo-600">{`{{#var}}...{{/var}}`}</code> for conditional sections (shown only when variable has a value)
+        Use <code className="font-mono text-emerald-600">{`{{#var}}...{{/var}}`}</code> for conditional sections (shown only when variable has a value)
       </p>
     </div>
   );

@@ -79,7 +79,7 @@ export default function JobAlertsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <h1 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-            <BellRing className="w-5 h-5 text-indigo-500" />
+            <BellRing className="w-5 h-5 text-emerald-500" />
             Job Alerts
           </h1>
           <p className="text-sm text-slate-500 mt-0.5">Automated job searches with notifications</p>
@@ -95,7 +95,7 @@ export default function JobAlertsPage() {
           </button>
           <button
             onClick={() => setShowForm(!showForm)}
-            className="inline-flex items-center gap-1.5 bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-medium hover:bg-indigo-700 transition-all active:scale-[0.98]"
+            className="inline-flex items-center gap-1.5 bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-medium hover:bg-emerald-700 transition-all active:scale-[0.98]"
           >
             <Plus className="w-3.5 h-3.5" />
             New Alert
@@ -112,24 +112,24 @@ export default function JobAlertsPage() {
               placeholder="Alert name (e.g. React Jobs)"
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
-              className="col-span-2 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
+              className="col-span-2 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400"
             />
             <input
               placeholder="Keywords (comma-separated: react, frontend, javascript)"
               value={form.keywords}
               onChange={(e) => setForm({ ...form, keywords: e.target.value })}
-              className="col-span-2 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
+              className="col-span-2 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400"
             />
             <input
               placeholder="Location (optional)"
               value={form.location}
               onChange={(e) => setForm({ ...form, location: e.target.value })}
-              className="border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
+              className="border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400"
             />
             <select
               value={form.frequency}
               onChange={(e) => setForm({ ...form, frequency: e.target.value })}
-              className="border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
+              className="border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400"
             >
               <option value="hourly">Hourly</option>
               <option value="daily">Daily</option>
@@ -143,7 +143,7 @@ export default function JobAlertsPage() {
             <button
               onClick={handleCreate}
               disabled={creating || !form.name || !form.keywords}
-              className="inline-flex items-center gap-1.5 bg-indigo-600 text-white px-4 py-1.5 rounded-xl text-xs font-medium hover:bg-indigo-700 disabled:opacity-50 transition-all"
+              className="inline-flex items-center gap-1.5 bg-emerald-600 text-white px-4 py-1.5 rounded-xl text-xs font-medium hover:bg-emerald-700 disabled:opacity-50 transition-all"
             >
               {creating ? <Loader2 className="w-3 h-3 animate-spin" /> : null}
               Create Alert
@@ -169,7 +169,7 @@ export default function JobAlertsPage() {
                 <div className="flex flex-wrap items-center gap-2">
                   <h3 className="text-sm font-semibold text-slate-900">{alert.name}</h3>
                   {alert.newJobCount > 0 && (
-                    <span className="bg-indigo-100 text-indigo-700 text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                    <span className="bg-emerald-100 text-emerald-700 text-[10px] font-bold px-1.5 py-0.5 rounded-full">
                       {alert.newJobCount} new
                     </span>
                   )}
@@ -192,7 +192,7 @@ export default function JobAlertsPage() {
                 <button
                   onClick={() => handleRun(alert.id)}
                   disabled={runningId === alert.id}
-                  className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-indigo-600 transition-all"
+                  className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-emerald-600 transition-all"
                   title="Run now"
                 >
                   {runningId === alert.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4" />}

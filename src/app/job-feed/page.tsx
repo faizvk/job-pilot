@@ -61,7 +61,7 @@ const DEFAULT_PREFS: SearchPrefs = {
 
 const PLATFORM_COLORS: Record<string, string> = {
   LinkedIn: "bg-blue-50 text-blue-700 ring-1 ring-inset ring-blue-600/10",
-  Indeed: "bg-violet-50 text-violet-700 ring-1 ring-inset ring-violet-600/10",
+  Indeed: "bg-teal-50 text-teal-700 ring-1 ring-inset ring-teal-600/10",
   Glassdoor: "bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/10",
   ZipRecruiter: "bg-teal-50 text-teal-700 ring-1 ring-inset ring-teal-600/10",
   Naukri: "bg-sky-50 text-sky-700 ring-1 ring-inset ring-sky-600/10",
@@ -330,7 +330,7 @@ export default function JobFeedPage() {
             onClick={() => setShowCopyPanel(!showCopyPanel)}
             className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm transition-all ${
               showCopyPanel
-                ? "bg-indigo-600 text-white shadow-sm shadow-indigo-600/20"
+                ? "bg-emerald-600 text-white shadow-sm shadow-emerald-600/20"
                 : "border border-slate-200 text-slate-600 hover:bg-slate-50 shadow-xs"
             }`}
           >
@@ -345,7 +345,7 @@ export default function JobFeedPage() {
           <button
             onClick={fetchJobs}
             disabled={fetching}
-            className="inline-flex items-center gap-1.5 bg-indigo-600 text-white px-4 py-2 rounded-xl text-sm font-medium shadow-sm shadow-indigo-600/20 hover:bg-indigo-700 hover:shadow-md disabled:opacity-50 transition-all active:scale-[0.98]"
+            className="inline-flex items-center gap-1.5 bg-emerald-600 text-white px-4 py-2 rounded-xl text-sm font-medium shadow-sm shadow-emerald-600/20 hover:bg-emerald-700 hover:shadow-md disabled:opacity-50 transition-all active:scale-[0.98]"
           >
             {fetching ? (
               <><Loader2 className="w-4 h-4 animate-spin" /> Fetching Jobs...</>
@@ -378,7 +378,7 @@ export default function JobFeedPage() {
                 value={prefs.jobTitles.join("\n")}
                 onChange={(e) => setPrefs({ ...prefs, jobTitles: e.target.value.split("\n").filter((t) => t.trim()) })}
                 rows={4}
-                className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm mt-1.5 shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all"
+                className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm mt-1.5 shadow-xs focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400 transition-all"
                 placeholder="Junior Software Engineer&#10;Software Developer&#10;Frontend Developer"
               />
             </div>
@@ -388,7 +388,7 @@ export default function JobFeedPage() {
                 value={prefs.locations.join("\n")}
                 onChange={(e) => setPrefs({ ...prefs, locations: e.target.value.split("\n").filter((t) => t.trim()) })}
                 rows={4}
-                className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm mt-1.5 shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all"
+                className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm mt-1.5 shadow-xs focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400 transition-all"
                 placeholder="Kerala, India&#10;Bangalore, India&#10;Remote"
               />
             </div>
@@ -409,7 +409,7 @@ export default function JobFeedPage() {
                           : prefs.workTypes.filter((t) => t !== type);
                         setPrefs({ ...prefs, workTypes: wt });
                       }}
-                      className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                      className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
                     />
                     {type.charAt(0).toUpperCase() + type.slice(1)}
                   </label>
@@ -425,7 +425,7 @@ export default function JobFeedPage() {
                   max={20}
                   value={prefs.experienceMin}
                   onChange={(e) => setPrefs({ ...prefs, experienceMin: parseInt(e.target.value) || 0 })}
-                  className="w-16 border border-slate-200 rounded-lg px-2 py-1.5 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
+                  className="w-16 border border-slate-200 rounded-lg px-2 py-1.5 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400"
                 />
                 <span className="text-slate-400 text-sm">to</span>
                 <input
@@ -434,7 +434,7 @@ export default function JobFeedPage() {
                   max={20}
                   value={prefs.experienceMax}
                   onChange={(e) => setPrefs({ ...prefs, experienceMax: parseInt(e.target.value) || 0 })}
-                  className="w-16 border border-slate-200 rounded-lg px-2 py-1.5 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
+                  className="w-16 border border-slate-200 rounded-lg px-2 py-1.5 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400"
                 />
                 <span className="text-xs text-slate-400">years</span>
               </div>
@@ -446,7 +446,7 @@ export default function JobFeedPage() {
                 value={prefs.salaryMin || ""}
                 onChange={(e) => setPrefs({ ...prefs, salaryMin: e.target.value ? parseInt(e.target.value) : null })}
                 placeholder="e.g. 300000"
-                className="w-full border border-slate-200 rounded-xl px-3 py-1.5 text-sm mt-1.5 shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
+                className="w-full border border-slate-200 rounded-xl px-3 py-1.5 text-sm mt-1.5 shadow-xs focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400"
               />
             </div>
           </div>
@@ -457,7 +457,7 @@ export default function JobFeedPage() {
               <input
                 value={prefs.keywords}
                 onChange={(e) => setPrefs({ ...prefs, keywords: e.target.value })}
-                className="w-full border border-slate-200 rounded-xl px-3 py-1.5 text-sm mt-1.5 shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
+                className="w-full border border-slate-200 rounded-xl px-3 py-1.5 text-sm mt-1.5 shadow-xs focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400"
                 placeholder="javascript, react, node, python"
               />
             </div>
@@ -466,7 +466,7 @@ export default function JobFeedPage() {
               <input
                 value={prefs.excludeKeywords}
                 onChange={(e) => setPrefs({ ...prefs, excludeKeywords: e.target.value })}
-                className="w-full border border-slate-200 rounded-xl px-3 py-1.5 text-sm mt-1.5 shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
+                className="w-full border border-slate-200 rounded-xl px-3 py-1.5 text-sm mt-1.5 shadow-xs focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400"
                 placeholder="senior, staff, principal"
               />
             </div>
@@ -488,7 +488,7 @@ export default function JobFeedPage() {
             </button>
             <button
               onClick={savePreferences}
-              className="bg-indigo-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-indigo-700 shadow-sm shadow-indigo-600/20 transition-all active:scale-[0.98]"
+              className="bg-emerald-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-emerald-700 shadow-sm shadow-emerald-600/20 transition-all active:scale-[0.98]"
             >
               Save Preferences
             </button>
@@ -505,7 +505,7 @@ export default function JobFeedPage() {
                 type="checkbox"
                 checked={selectedJobs.size === listings.length && listings.length > 0}
                 onChange={selectAll}
-                className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
               />
               <span className="text-slate-600">Select All</span>
               <span className="text-xs text-slate-400">({selectedJobs.size}/{listings.length})</span>
@@ -526,7 +526,7 @@ export default function JobFeedPage() {
                 </button>
                 <button
                   onClick={sendToBatchApply}
-                  className="inline-flex items-center gap-1 text-indigo-600 px-2.5 py-1.5 rounded-lg text-xs hover:bg-indigo-50 border border-indigo-200 transition-all"
+                  className="inline-flex items-center gap-1 text-emerald-600 px-2.5 py-1.5 rounded-lg text-xs hover:bg-emerald-50 border border-emerald-200 transition-all"
                 >
                   <Send className="w-3 h-3" /> Batch Apply
                 </button>
@@ -542,7 +542,7 @@ export default function JobFeedPage() {
 
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className={`inline-flex items-center gap-1.5 text-sm px-2.5 py-1.5 rounded-lg transition-all ${showFilters ? "bg-indigo-50 text-indigo-600" : "text-slate-500 hover:bg-slate-100"}`}
+            className={`inline-flex items-center gap-1.5 text-sm px-2.5 py-1.5 rounded-lg transition-all ${showFilters ? "bg-emerald-50 text-emerald-600" : "text-slate-500 hover:bg-slate-100"}`}
           >
             <Filter className="w-3.5 h-3.5" /> Filters
           </button>
@@ -557,7 +557,7 @@ export default function JobFeedPage() {
             <select
               value={filterPlatform}
               onChange={(e) => setFilterPlatform(e.target.value)}
-              className="border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
+              className="border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs shadow-xs focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400"
             >
               <option value="">All Platforms</option>
               <option value="LinkedIn">LinkedIn</option>
@@ -574,7 +574,7 @@ export default function JobFeedPage() {
             <select
               value={filterWorkType}
               onChange={(e) => setFilterWorkType(e.target.value)}
-              className="border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
+              className="border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs shadow-xs focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400"
             >
               <option value="">All</option>
               <option value="remote">Remote</option>
@@ -590,7 +590,7 @@ export default function JobFeedPage() {
               max={100}
               value={filterMinScore}
               onChange={(e) => setFilterMinScore(parseInt(e.target.value) || 0)}
-              className="w-16 border border-slate-200 rounded-lg px-2 py-1.5 text-xs shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
+              className="w-16 border border-slate-200 rounded-lg px-2 py-1.5 text-xs shadow-xs focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400"
             />
             <span className="text-xs text-slate-400">%</span>
           </div>
@@ -600,7 +600,7 @@ export default function JobFeedPage() {
       {/* Job listings */}
       {loading ? (
         <div className="text-center py-16">
-          <Loader2 className="w-7 h-7 animate-spin text-indigo-500 mx-auto" />
+          <Loader2 className="w-7 h-7 animate-spin text-emerald-500 mx-auto" />
           <p className="text-sm text-slate-500 mt-3">Loading jobs...</p>
         </div>
       ) : listings.length > 0 ? (
@@ -609,7 +609,7 @@ export default function JobFeedPage() {
             <div
               key={job.id}
               className={`bg-white border rounded-xl overflow-hidden transition-all duration-150 shadow-card hover:shadow-card-hover ${
-                selectedJobs.has(job.id) ? "border-indigo-300 ring-1 ring-indigo-200/50" : "border-slate-200/80"
+                selectedJobs.has(job.id) ? "border-emerald-300 ring-1 ring-emerald-200/50" : "border-slate-200/80"
               }`}
               style={{ animationDelay: `${index * 30}ms` }}
             >
@@ -618,7 +618,7 @@ export default function JobFeedPage() {
                   type="checkbox"
                   checked={selectedJobs.has(job.id)}
                   onChange={() => toggleSelect(job.id)}
-                  className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 mt-1 flex-shrink-0"
+                  className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 mt-1 flex-shrink-0"
                 />
 
                 <div className="flex-1 min-w-0">
@@ -665,7 +665,7 @@ export default function JobFeedPage() {
                   {job.skills && (
                     <div className="flex flex-wrap gap-1 mt-2.5">
                       {(JSON.parse(job.skills) as string[]).slice(0, 8).map((skill) => (
-                        <span key={skill} className="text-[11px] bg-indigo-50/80 text-indigo-700 px-1.5 py-0.5 rounded font-medium">
+                        <span key={skill} className="text-[11px] bg-emerald-50/80 text-emerald-700 px-1.5 py-0.5 rounded font-medium">
                           {skill}
                         </span>
                       ))}
@@ -720,7 +720,7 @@ export default function JobFeedPage() {
                       if (trimmed.startsWith("\u2022 ")) {
                         return (
                           <div key={i} className="flex gap-2.5 pl-2 py-0.5">
-                            <span className="text-indigo-400 flex-shrink-0 mt-0.5">&#8226;</span>
+                            <span className="text-emerald-400 flex-shrink-0 mt-0.5">&#8226;</span>
                             <span className="leading-relaxed">{trimmed.replace("\u2022 ", "")}</span>
                           </div>
                         );
@@ -735,14 +735,14 @@ export default function JobFeedPage() {
         </div>
       ) : (
         <div className="text-center py-20">
-          <div className="w-16 h-16 rounded-2xl bg-indigo-50 flex items-center justify-center mx-auto mb-4">
-            <Search className="w-7 h-7 text-indigo-400" />
+          <div className="w-16 h-16 rounded-2xl bg-emerald-50 flex items-center justify-center mx-auto mb-4">
+            <Search className="w-7 h-7 text-emerald-400" />
           </div>
           <p className="text-lg font-semibold text-slate-900">No jobs yet</p>
           <p className="text-sm text-slate-500 mt-1.5 max-w-sm mx-auto">Set your preferences and click &ldquo;Fetch 50+ Jobs&rdquo; to get started</p>
           <button
             onClick={() => { setShowPrefs(true); }}
-            className="mt-5 bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-indigo-700 shadow-sm shadow-indigo-600/20 transition-all active:scale-[0.98]"
+            className="mt-5 bg-emerald-600 text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-emerald-700 shadow-sm shadow-emerald-600/20 transition-all active:scale-[0.98]"
           >
             Set Up Preferences
           </button>

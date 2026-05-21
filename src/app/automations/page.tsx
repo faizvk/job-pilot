@@ -42,7 +42,7 @@ const automations = [
     title: "Daily Digest",
     description: "Send a Telegram summary with follow-ups, interviews, new jobs, and stale applications",
     icon: MessageCircle,
-    iconBg: "from-blue-500 to-indigo-500",
+    iconBg: "from-blue-500 to-emerald-500",
     endpoint: "/api/automations/daily-digest",
     resultKey: (data: any) =>
       data.sent

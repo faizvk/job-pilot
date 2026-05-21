@@ -5,9 +5,9 @@ import { formatDate } from "@/lib/utils";
 import { Check, Clock, Mail, Copy, ChevronDown, ChevronRight, Send, Loader2 } from "lucide-react";
 
 const TYPE_CONFIG: Record<string, { label: string; color: string }> = {
-  follow_up: { label: "Follow Up", color: "bg-indigo-50 text-indigo-700 ring-1 ring-inset ring-indigo-600/10" },
+  follow_up: { label: "Follow Up", color: "bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/10" },
   thank_you: { label: "Thank You", color: "bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/10" },
-  check_in: { label: "Check In", color: "bg-violet-50 text-violet-700 ring-1 ring-inset ring-violet-600/10" },
+  check_in: { label: "Check In", color: "bg-teal-50 text-teal-700 ring-1 ring-inset ring-teal-600/10" },
 };
 
 export function FollowUpList({ followUps, onMarkSent }: { followUps: any[]; onMarkSent: (id: string) => void }) {
@@ -115,7 +115,7 @@ export function FollowUpList({ followUps, onMarkSent }: { followUps: any[]; onMa
                   <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Email Draft</span>
                   <button
                     onClick={() => handleCopy(fu.emailDraft, fu.id)}
-                    className="inline-flex items-center gap-1 text-xs text-indigo-600 hover:text-indigo-700 font-medium"
+                    className="inline-flex items-center gap-1 text-xs text-emerald-600 hover:text-emerald-700 font-medium"
                   >
                     {copiedId === fu.id ? (
                       <><Check className="w-3 h-3" /> Copied</>
@@ -136,12 +136,12 @@ export function FollowUpList({ followUps, onMarkSent }: { followUps: any[]; onMa
                       placeholder="Recipient email (e.g. hr@company.com)"
                       value={emailTo[fu.id] || ""}
                       onChange={(e) => setEmailTo({ ...emailTo, [fu.id]: e.target.value })}
-                      className="flex-1 border border-slate-200 rounded-xl px-3 py-1.5 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all"
+                      className="flex-1 border border-slate-200 rounded-xl px-3 py-1.5 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400 transition-all"
                     />
                     <button
                       onClick={() => handleSendEmail(fu)}
                       disabled={!emailTo[fu.id] || sendingId === fu.id}
-                      className="inline-flex items-center gap-1.5 bg-indigo-600 text-white px-4 py-1.5 rounded-xl text-sm font-medium hover:bg-indigo-700 disabled:opacity-50 shadow-sm shadow-indigo-600/20 transition-all active:scale-[0.98]"
+                      className="inline-flex items-center gap-1.5 bg-emerald-600 text-white px-4 py-1.5 rounded-xl text-sm font-medium hover:bg-emerald-700 disabled:opacity-50 shadow-sm shadow-emerald-600/20 transition-all active:scale-[0.98]"
                     >
                       {sentEmailId === fu.id ? (
                         <><Check className="w-3.5 h-3.5" /> Sent!</>

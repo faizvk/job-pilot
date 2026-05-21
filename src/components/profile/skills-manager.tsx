@@ -62,8 +62,8 @@ export function SkillsManager({ skills, onRefresh }: { skills: any[]; onRefresh:
   }, {} as Record<string, any[]>);
 
   const categoryColors: Record<string, string> = {
-    technical: "bg-indigo-50 text-indigo-700 ring-1 ring-inset ring-indigo-600/10",
-    soft: "bg-violet-50 text-violet-700 ring-1 ring-inset ring-violet-600/10",
+    technical: "bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/10",
+    soft: "bg-teal-50 text-teal-700 ring-1 ring-inset ring-teal-600/10",
     language: "bg-amber-50 text-amber-700 ring-1 ring-inset ring-amber-600/10",
     tool: "bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/10",
   };
@@ -104,7 +104,7 @@ export function SkillsManager({ skills, onRefresh }: { skills: any[]; onRefresh:
               onChange={(e) => setBulkText(e.target.value)}
               rows={3}
               placeholder="Paste skills separated by commas or new lines:&#10;JavaScript, React, Node.js, TypeScript, Python, Git, Docker..."
-              className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 resize-none transition-all"
+              className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400 resize-none transition-all"
             />
             <div className="flex flex-wrap items-center gap-3">
               <div className="flex items-center gap-2">
@@ -140,7 +140,7 @@ export function SkillsManager({ skills, onRefresh }: { skills: any[]; onRefresh:
               <button
                 onClick={handleBulkAdd}
                 disabled={!bulkText.trim() || bulkLoading}
-                className="bg-indigo-600 text-white px-3 py-1.5 rounded-xl text-xs font-medium hover:bg-indigo-700 disabled:opacity-50 shadow-sm transition-all active:scale-[0.98] ml-auto sm:ml-0"
+                className="bg-emerald-600 text-white px-3 py-1.5 rounded-xl text-xs font-medium hover:bg-emerald-700 disabled:opacity-50 shadow-sm transition-all active:scale-[0.98] ml-auto sm:ml-0"
               >
                 {bulkLoading ? "Adding..." : "Add All"}
               </button>
@@ -153,7 +153,7 @@ export function SkillsManager({ skills, onRefresh }: { skills: any[]; onRefresh:
               <input
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
-                className="w-full border border-slate-200 rounded-lg px-2.5 py-1.5 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
+                className="w-full border border-slate-200 rounded-lg px-2.5 py-1.5 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400"
                 required
               />
             </div>
@@ -180,7 +180,7 @@ export function SkillsManager({ skills, onRefresh }: { skills: any[]; onRefresh:
               </div>
             </div>
             <div className="flex gap-2">
-              <button type="submit" className="bg-indigo-600 text-white px-3 py-1.5 rounded-xl text-sm font-medium hover:bg-indigo-700 shadow-sm transition-all flex-1 sm:flex-initial">Add</button>
+              <button type="submit" className="bg-emerald-600 text-white px-3 py-1.5 rounded-xl text-sm font-medium hover:bg-emerald-700 shadow-sm transition-all flex-1 sm:flex-initial">Add</button>
               <button type="button" onClick={() => setAdding(false)} className="border border-slate-200 px-3 py-1.5 rounded-lg text-sm text-slate-600 hover:bg-slate-50 shadow-xs transition-all flex-1 sm:flex-initial">Cancel</button>
             </div>
           </form>
@@ -188,7 +188,7 @@ export function SkillsManager({ skills, onRefresh }: { skills: any[]; onRefresh:
           <div className="flex items-center gap-2">
             <button
               onClick={() => setBulkMode(true)}
-              className="inline-flex items-center gap-1.5 text-sm text-indigo-600 hover:text-indigo-700 font-medium"
+              className="inline-flex items-center gap-1.5 text-sm text-emerald-600 hover:text-emerald-700 font-medium"
             >
               <Zap className="w-4 h-4" /> Bulk Add Skills
             </button>

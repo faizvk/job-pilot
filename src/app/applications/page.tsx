@@ -65,7 +65,7 @@ export default function ApplicationsPage() {
           </div>
           <Link
             href="/applications/new"
-            className="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2.5 rounded-xl text-sm font-medium shadow-sm shadow-indigo-600/20 hover:bg-indigo-700 hover:shadow-md transition-all active:scale-[0.98]"
+            className="inline-flex items-center gap-2 bg-emerald-600 text-white px-4 py-2.5 rounded-xl text-sm font-medium shadow-sm shadow-emerald-600/20 hover:bg-emerald-700 hover:shadow-md transition-all active:scale-[0.98]"
           >
             <Plus className="w-4 h-4" />
             Add Application

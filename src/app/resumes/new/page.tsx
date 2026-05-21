@@ -88,7 +88,7 @@ export default function NewResumePage() {
         <button
           onClick={handleSave}
           disabled={!name || !content || saving}
-          className="bg-indigo-600 text-white px-4 py-2.5 rounded-xl text-sm font-medium shadow-sm shadow-indigo-600/20 hover:bg-indigo-700 disabled:opacity-50 transition-all active:scale-[0.98] self-start sm:self-auto"
+          className="bg-emerald-600 text-white px-4 py-2.5 rounded-xl text-sm font-medium shadow-sm shadow-emerald-600/20 hover:bg-emerald-700 disabled:opacity-50 transition-all active:scale-[0.98] self-start sm:self-auto"
         >
           {saving ? "Saving..." : "Save Resume"}
         </button>
@@ -107,18 +107,18 @@ export default function NewResumePage() {
         <button
           onClick={() => fileInputRef.current?.click()}
           disabled={uploading}
-          className="w-full p-4 sm:p-6 border-b border-dashed border-slate-200 hover:bg-indigo-50/30 transition-all group disabled:opacity-50"
+          className="w-full p-4 sm:p-6 border-b border-dashed border-slate-200 hover:bg-emerald-50/30 transition-all group disabled:opacity-50"
         >
           <div className="flex flex-col items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-slate-100 group-hover:bg-indigo-100 flex items-center justify-center transition-colors">
+            <div className="w-12 h-12 rounded-2xl bg-slate-100 group-hover:bg-emerald-100 flex items-center justify-center transition-colors">
               {uploading ? (
-                <Loader2 className="w-6 h-6 text-indigo-500 animate-spin" />
+                <Loader2 className="w-6 h-6 text-emerald-500 animate-spin" />
               ) : (
-                <FileUp className="w-6 h-6 text-slate-400 group-hover:text-indigo-500 transition-colors" />
+                <FileUp className="w-6 h-6 text-slate-400 group-hover:text-emerald-500 transition-colors" />
               )}
             </div>
             <div>
-              <p className="text-sm font-medium text-slate-700 group-hover:text-indigo-700 transition-colors">
+              <p className="text-sm font-medium text-slate-700 group-hover:text-emerald-700 transition-colors">
                 {uploading ? "Processing file..." : "Click to upload your resume"}
               </p>
               <p className="text-xs text-slate-400 mt-0.5">
@@ -141,14 +141,14 @@ export default function NewResumePage() {
             placeholder="Resume name (e.g., 'Full-Stack Developer Resume')"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="flex-1 border border-slate-200 rounded-xl px-3 py-2 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all"
+            className="flex-1 border border-slate-200 rounded-xl px-3 py-2 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-400 transition-all"
           />
           <label className="flex items-center gap-2 text-sm cursor-pointer whitespace-nowrap">
             <input
               type="checkbox"
               checked={isBase}
               onChange={(e) => setIsBase(e.target.checked)}
-              className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+              className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
             />
             <span className="text-slate-600">Base Resume</span>
           </label>

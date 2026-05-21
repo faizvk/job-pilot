@@ -14,7 +14,7 @@ export function TemplatePreview({ content }: { content: string }) {
     // Regular variables
     .replace(
       /\{\{(\w+)\}\}/g,
-      '<span class="bg-indigo-50 text-indigo-700 px-1.5 py-0.5 rounded text-[11px] font-mono ring-1 ring-inset ring-indigo-600/10">$1</span>'
+      '<span class="bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded text-[11px] font-mono ring-1 ring-inset ring-emerald-600/10">$1</span>'
     );
 
   return (

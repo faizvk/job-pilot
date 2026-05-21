@@ -133,7 +133,7 @@ export default function InterviewPrepPage() {
           <button
             onClick={handleAIGenerate}
             disabled={!aiAvailable || aiGenerating}
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-violet-600 text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:from-indigo-700 hover:to-violet-700 disabled:opacity-50 shadow-sm transition-all active:scale-[0.98]"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:from-emerald-700 hover:to-teal-700 disabled:opacity-50 shadow-sm transition-all active:scale-[0.98]"
           >
             <Sparkles className="w-4 h-4" />
             {aiGenerating ? "AI Generating..." : "Generate with AI"}
