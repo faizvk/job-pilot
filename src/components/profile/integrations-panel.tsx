@@ -185,7 +185,7 @@ export function IntegrationsPanel() {
 
         {!telegramStatus?.connected && (
           <div className="border-t border-slate-100 pt-4 space-y-3">
-            <div className="bg-blue-50 rounded-lg p-3 text-xs text-blue-800 space-y-1">
+            <div className="bg-emerald-50/60 border border-emerald-100 rounded-md p-3 text-xs text-emerald-900 space-y-1">
               <p className="font-medium">Setup Instructions:</p>
               <ol className="list-decimal ml-4 space-y-0.5">
                 <li>Search <b>@BotFather</b> on Telegram and create a bot with /newbot</li>
