@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import {
   LayoutDashboard, Search, Briefcase, Zap, Layers, FileText,
-  BarChart3, User, BellRing, Bot, Building2, TrendingUp,
+  User, BellRing, Bot, Building2, TrendingUp,
   Menu, X, ChevronDown,
 } from "lucide-react";
 import { UserMenu } from "@/components/layout/user-menu";
