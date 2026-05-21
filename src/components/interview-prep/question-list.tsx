@@ -95,7 +95,7 @@ export function QuestionList({ questions: questionsJson, onChange }: { questions
                 </div>
                 <div className="space-y-2">
                   {items.map(({ originalIndex: i, ...q }) => (
-                    <div key={i} className="border border-slate-200 rounded-lg overflow-hidden">
+                    <div key={i} className="border border-slate-200 rounded-md overflow-hidden transition-colors duration-150 hover:border-emerald-300">
                       <button
                         onClick={() => setExpandedIdx(expandedIdx === i ? null : i)}
                         className="w-full flex items-center gap-2 px-3 py-2.5 text-left hover:bg-slate-50 transition-all"
