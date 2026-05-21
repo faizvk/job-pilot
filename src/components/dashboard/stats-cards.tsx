@@ -44,7 +44,7 @@ export function StatsCards({ stats }: { stats: DashboardStats }) {
       {cards.map((card) => (
         <div
           key={card.label}
-          className="group bg-white rounded-2xl border border-slate-200/60 shadow-card p-4 sm:p-5 card-hover relative overflow-hidden"
+          className="group bg-white rounded-xl border border-slate-200/70 p-4 sm:p-5 transition-all duration-150 hover:border-emerald-300 hover:shadow-sm relative overflow-hidden"
         >
           {/* Subtle gradient glow on hover */}
           <div className={`absolute -top-12 -right-12 w-24 h-24 rounded-full ${card.bgGlow} opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-2xl`} />
