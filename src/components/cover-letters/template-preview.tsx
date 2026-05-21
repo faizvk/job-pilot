@@ -19,7 +19,7 @@ export function TemplatePreview({ content }: { content: string }) {
 
   return (
     <div
-      className="bg-white border border-slate-200 rounded-xl p-6 h-[400px] overflow-y-auto prose prose-sm max-w-none shadow-xs"
+      className="bg-white border border-slate-200 rounded-md p-4 sm:p-6 h-[300px] sm:h-[400px] overflow-y-auto prose prose-sm max-w-none shadow-xs transition-colors duration-150 hover:border-slate-300"
       dangerouslySetInnerHTML={{
         __html: rendered.replace(/\n/g, "<br />"),
       }}
