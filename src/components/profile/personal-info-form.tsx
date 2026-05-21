@@ -63,7 +63,7 @@ export function PersonalInfoForm({ profile, onSave }: { profile: any; onSave: (d
       <button
         type="submit"
         disabled={saving}
-        className="bg-emerald-600 text-white px-4 py-2.5 rounded-xl text-sm font-medium shadow-sm shadow-emerald-600/20 hover:bg-emerald-700 disabled:opacity-50 transition-all active:scale-[0.98]"
+        className="bg-emerald-600 text-white px-5 py-2.5 rounded-md text-sm font-medium shadow-sm shadow-emerald-600/15 hover:bg-emerald-700 hover:shadow-md hover:shadow-emerald-600/25 disabled:opacity-50 transition-all duration-150 active:scale-[0.98]"
       >
         {saving ? "Saving..." : "Save Profile"}
       </button>
