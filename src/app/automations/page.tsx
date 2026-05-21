@@ -136,7 +136,7 @@ export default function AutomationsPage() {
       </div>
 
       {/* Automation Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 stagger-children">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {automations.map((auto) => {
           const Icon = auto.icon;
           const result = results[auto.id];
