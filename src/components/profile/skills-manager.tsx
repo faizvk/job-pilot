@@ -75,9 +75,9 @@ export function SkillsManager({ skills, onRefresh }: { skills: any[]; onRefresh:
           <h3 className="text-[13px] font-semibold text-slate-700 mb-2 capitalize">{cat} Skills</h3>
           <div className="flex flex-wrap gap-1.5">
             {grouped[cat]?.map((skill) => (
-              <span key={skill.id} className={`inline-flex items-center gap-1 text-[11px] font-medium px-2 py-1 rounded-md ${categoryColors[cat]}`}>
+              <span key={skill.id} className={`group inline-flex items-center gap-1 text-[11px] font-medium px-2 py-1 rounded-md transition-all duration-100 hover:-translate-y-px ${categoryColors[cat]}`}>
                 {skill.name}
-                <button onClick={() => handleDelete(skill.id)} className="hover:opacity-60 transition-opacity">
+                <button onClick={() => handleDelete(skill.id)} className="opacity-50 group-hover:opacity-100 hover:text-red-500 transition-all duration-150">
                   <X className="w-3 h-3" />
                 </button>
               </span>
