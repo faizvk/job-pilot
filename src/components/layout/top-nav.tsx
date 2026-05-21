@@ -124,7 +124,7 @@ export function TopNav() {
 
             {/* Mobile menu button */}
             <button
-              className="lg:hidden ml-auto mr-2 p-2 hover:bg-slate-100 rounded-md transition-colors"
+              className="lg:hidden ml-auto mr-2 p-2 hover:bg-emerald-50 hover:text-emerald-700 rounded-md transition-colors duration-150"
               onClick={() => setMobileOpen(true)}
               aria-label="Open menu"
             >
