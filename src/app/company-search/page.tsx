@@ -182,7 +182,7 @@ export default function CompanySearchPage() {
           {jobs.map((job, i) => (
             <div
               key={job.externalId || `${job.company}-${i}`}
-              className="bg-white border border-slate-200/80 rounded-xl shadow-card hover:shadow-card-hover transition-all p-4"
+              className="bg-white border border-slate-200/80 rounded-xl p-4 transition-all duration-150 hover:border-emerald-300 hover:shadow-md hover:-translate-y-px"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0 flex-1">
