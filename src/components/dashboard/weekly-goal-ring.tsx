@@ -7,7 +7,7 @@ export function WeeklyGoalRing({ goal }: { goal: { target: number; achieved: num
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200/60 shadow-card p-4 sm:p-5">
+    <div className="bg-white rounded-xl border border-slate-200/70 p-4 sm:p-5 transition-all duration-150 hover:border-emerald-300 hover:shadow-sm">
       <h2 className="text-[15px] font-semibold text-slate-900 mb-5">Weekly Goal</h2>
       <div className="flex flex-col items-center">
         <div className="relative">
