@@ -7,7 +7,17 @@ async function handle() {
     const results = await jobAlertService.runDueAlerts();
     for (const result of results) {
       if (result.newJobs > 0) {
-        await notifyNewJobs(result.name, result.newJobs).catch(console.error);
+        const jobs = result.jobs.map((j) => ({
+          title: j.title,
+          company: j.company,
+          location: j.location,
+          workType: j.workType,
+          salary: j.salary,
+          matchScore: j.matchScore,
+          platform: j.platform,
+          url: j.url,
+        }));
+        await notifyNewJobs(result.name, result.newJobs, jobs).catch(console.error);
       }
     }
     return NextResponse.json({ ran: results.length, results });
