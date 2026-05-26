@@ -27,7 +27,17 @@ async function handle(req: NextRequest) {
 
     for (const r of alertResults) {
       if (r.newJobs > 0) {
-        await notifyNewJobs(r.name, r.newJobs).catch(console.error);
+        const jobs = r.jobs.map((j) => ({
+          title: j.title,
+          company: j.company,
+          location: j.location,
+          workType: j.workType,
+          salary: j.salary,
+          matchScore: j.matchScore,
+          platform: j.platform,
+          url: j.url,
+        }));
+        await notifyNewJobs(r.name, r.newJobs, jobs).catch(console.error);
       }
     }
   } catch (e: any) {
