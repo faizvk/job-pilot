@@ -305,6 +305,9 @@ Best regards`;
 // 3. Daily Telegram Digest
 // ──────────────────────────────────────────────
 
+const esc = (s: string) =>
+  String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
 export async function sendDailyDigest(): Promise<{ sent: boolean; sections: string[] }> {
   const chatId = await getChatId();
   if (!chatId) return { sent: false, sections: [] };
