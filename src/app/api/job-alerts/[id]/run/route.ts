@@ -12,7 +12,17 @@ export async function POST(_req: NextRequest, { params }: { params: Promise<{ id
     if (result.newJobs > 0) {
       const alert = await prisma.jobAlert.findUnique({ where: { id } });
       if (alert) {
-        await notifyNewJobs(alert.name, result.newJobs).catch(console.error);
+        const jobs = result.jobs.map((j) => ({
+          title: j.title,
+          company: j.company,
+          location: j.location,
+          workType: j.workType,
+          salary: j.salary,
+          matchScore: j.matchScore,
+          platform: j.platform,
+          url: j.url,
+        }));
+        await notifyNewJobs(alert.name, result.newJobs, jobs).catch(console.error);
       }
     }
 
