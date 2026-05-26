@@ -331,7 +331,8 @@ export async function sendDailyDigest(): Promise<{ sent: boolean; sections: stri
     sections.push("follow-ups");
     lines.push(`⏰ <b>Follow-ups Due Today (${dueFollowUps.length})</b>`);
     for (const fu of dueFollowUps) {
-      lines.push(`  • ${fu.application.companyName} — ${fu.application.jobTitle} (${fu.type.replace("_", " ")})`);
+      const appLink = telegram.appUrl(`/applications/${fu.applicationId}`);
+      lines.push(`  • <a href="${appLink}"><b>${esc(fu.application.companyName)}</b></a> — ${esc(fu.application.jobTitle)} <i>(${fu.type.replace("_", " ")})</i>`);
     }
     lines.push("");
   }
@@ -348,21 +349,46 @@ export async function sendDailyDigest(): Promise<{ sent: boolean; sections: stri
     sections.push("interviews");
     lines.push(`📅 <b>Active Interviews (${interviews.length})</b>`);
     for (const app of interviews) {
-      lines.push(`  • ${app.companyName} — ${app.jobTitle}`);
+      const appLink = telegram.appUrl(`/applications/${app.id}`);
+      const prepLink = telegram.appUrl(`/applications/${app.id}/interview-prep`);
+      lines.push(`  • <a href="${appLink}"><b>${esc(app.companyName)}</b></a> — ${esc(app.jobTitle)}`);
+      lines.push(`     <a href="${prepLink}">prep notes →</a>`);
     }
     lines.push("");
   }
 
-  // 3. New job alert matches (last 24 hours)
-  const recentJobs = await prisma.jobListing.count({
+  // 3. New job alert matches (last 24 hours) — with titles + apply links
+  const recentJobs = await prisma.jobListing.findMany({
     where: {
       fetchedAt: { gte: new Date(now.getTime() - 86400000) },
+      hidden: false,
+      imported: false,
     },
+    orderBy: [{ matchScore: "desc" }, { fetchedAt: "desc" }],
+    take: 8,
+  });
+  const totalRecentJobs = await prisma.jobListing.count({
+    where: { fetchedAt: { gte: new Date(now.getTime() - 86400000) }, hidden: false, imported: false },
   });
 
-  if (recentJobs > 0) {
+  if (recentJobs.length > 0) {
     sections.push("new-jobs");
-    lines.push(`🔍 <b>New Job Matches: ${recentJobs}</b> in the last 24 hours`);
+    lines.push(`🔍 <b>New Jobs in the last 24h (${totalRecentJobs})</b>`);
+    for (const job of recentJobs) {
+      lines.push(telegram.formatJobBlock({
+        title: job.title,
+        company: job.company,
+        location: job.location,
+        workType: job.workType,
+        salary: job.salary,
+        matchScore: job.matchScore,
+        platform: job.platform,
+        url: job.url,
+      }));
+    }
+    if (totalRecentJobs > recentJobs.length) {
+      lines.push(`  <i>+ ${totalRecentJobs - recentJobs.length} more in <a href="${telegram.appUrl("/job-feed")}">Job Feed</a></i>`);
+    }
     lines.push("");
   }
 
@@ -380,9 +406,10 @@ export async function sendDailyDigest(): Promise<{ sent: boolean; sections: stri
     sections.push("stale");
     lines.push(`⚠️ <b>Needs Attention (${staleApps.length})</b> — No response for 14+ days`);
     for (const app of staleApps.slice(0, 5)) {
-      lines.push(`  • ${app.companyName} — ${app.jobTitle}`);
+      const appLink = telegram.appUrl(`/applications/${app.id}`);
+      lines.push(`  • <a href="${appLink}"><b>${esc(app.companyName)}</b></a> — ${esc(app.jobTitle)}`);
     }
-    if (staleApps.length > 5) lines.push(`  ... and ${staleApps.length - 5} more`);
+    if (staleApps.length > 5) lines.push(`  <i>+ ${staleApps.length - 5} more in <a href="${telegram.appUrl("/insights")}">Insights</a></i>`);
     lines.push("");
   }
 
