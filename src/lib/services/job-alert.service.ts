@@ -24,7 +24,7 @@ export const jobAlertService = {
 
   async run(id: string) {
     const alert = await prisma.jobAlert.findUnique({ where: { id } });
-    if (!alert || !alert.isActive) return { newJobs: 0 };
+    if (!alert || !alert.isActive) return { newJobs: 0, total: 0, jobs: [] as Awaited<ReturnType<typeof prisma.jobListing.findMany>> };
 
     const keywords = alert.keywords.split(",").map((k) => k.trim()).filter(Boolean);
 
