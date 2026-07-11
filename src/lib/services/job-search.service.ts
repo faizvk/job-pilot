@@ -44,7 +44,86 @@ export interface FetchedJob {
   platform: string;
 }
 
+// Fallback skill profile used only when we can't derive anything from the
+// user's résumé/profile — keeps early-stage users from seeing every job at 0%.
+const DEFAULT_DEV_SKILLS: { name: string; category: string }[] = [
+  { name: "JavaScript", category: "technical" },
+  { name: "TypeScript", category: "technical" },
+  { name: "React", category: "technical" },
+  { name: "Node.js", category: "technical" },
+  { name: "Python", category: "technical" },
+  { name: "HTML", category: "technical" },
+  { name: "CSS", category: "technical" },
+  { name: "Git", category: "tool" },
+  { name: "SQL", category: "technical" },
+  { name: "REST API", category: "technical" },
+  { name: "Next.js", category: "technical" },
+  { name: "MongoDB", category: "technical" },
+  { name: "PostgreSQL", category: "technical" },
+  { name: "Docker", category: "tool" },
+  { name: "AWS", category: "tool" },
+];
+
+/**
+ * Clean up messy location strings coming from job APIs, e.g. JSearch builds
+ * "City, State Country" and often leaves a dangling comma / double spaces when
+ * state or country is missing ("Bengaluru,  ", "Remote, "). Used for both the
+ * stored listing and the Telegram/UI display.
+ */
+export function cleanLocation(raw?: string | null): string {
+  if (!raw) return "";
+  return raw
+    .replace(/\s+/g, " ")
+    .replace(/\s*,\s*/g, ", ")
+    .replace(/(,\s*)+$/g, "")
+    .replace(/^(,\s*)+/g, "")
+    .replace(/,\s*,/g, ",")
+    .trim();
+}
+
 export const jobSearchService = {
+  /**
+   * Build the set of skills that represents what the user can actually do,
+   * combining their explicit profile skills with skills detected in their base
+   * résumé, professional summary, and work-history descriptions. This is what
+   * makes job match scores reflect the résumé/profile rather than only the
+   * handful of skills someone bothered to type in.
+   */
+  async getProfileSkillSignals(userId?: string): Promise<{ name: string; category: string }[]> {
+    const uid = userId || (await getPrimaryUserId());
+    const user = await prisma.user.findUnique({
+      where: { id: uid },
+      include: { skills: true, workHistory: true },
+    });
+
+    const byKey = new Map<string, { name: string; category: string }>();
+    const add = (name: string, category: string) => {
+      const key = name.trim().toLowerCase();
+      if (key && !byKey.has(key)) byKey.set(key, { name: name.trim(), category });
+    };
+
+    for (const s of user?.skills || []) add(s.name, s.category);
+
+    const baseResume = await prisma.resume.findFirst({
+      where: { userId: uid, isBase: true },
+      orderBy: { updatedAt: "desc" },
+    });
+
+    const text = [
+      baseResume?.content || "",
+      user?.summary || "",
+      ...(user?.workHistory || []).map((w) => `${w.title} ${w.description}`),
+    ]
+      .join("\n")
+      .trim();
+
+    if (text.length > 20) {
+      for (const name of jdAnalyzerService.extractSkillsFromText(text)) add(name, "technical");
+    }
+
+    return Array.from(byKey.values());
+  },
+
   /**
    * Save search preferences
    */
@@ -92,12 +171,21 @@ export const jobSearchService = {
 
     if (!pref) return null;
 
+    const safeArray = (raw: string): string[] => {
+      try {
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    };
+
     return {
       ...pref,
-      jobTitles: JSON.parse(pref.jobTitles) as string[],
-      locations: JSON.parse(pref.locations) as string[],
-      workTypes: JSON.parse(pref.workTypes) as string[],
-      platforms: JSON.parse(pref.platforms) as string[],
+      jobTitles: safeArray(pref.jobTitles),
+      locations: safeArray(pref.locations),
+      workTypes: safeArray(pref.workTypes),
+      platforms: safeArray(pref.platforms),
     };
   },
 
@@ -318,11 +406,11 @@ export const jobSearchService = {
     let excludes: string[] = [];
 
     if (userId) {
-      const [user, prefs] = await Promise.all([
-        prisma.user.findUnique({ where: { id: userId }, include: { skills: true } }),
+      const [signals, prefs] = await Promise.all([
+        this.getProfileSkillSignals(userId),
         prisma.searchPreference.findUnique({ where: { userId } }),
       ]);
-      userSkills = user?.skills.map((s) => ({ name: s.name, category: s.category })) || [];
+      userSkills = signals;
       if (prefs) {
         experienceMax = prefs.experienceMax ?? 99;
         if (prefs.excludeKeywords) {
@@ -356,18 +444,9 @@ export const jobSearchService = {
       });
     }
 
-    // Score each job against user skills (fall back to common dev skills if profile empty)
-    const skillsForScoring = userSkills.length > 0 ? userSkills : [
-      { name: "JavaScript", category: "technical" },
-      { name: "TypeScript", category: "technical" },
-      { name: "React", category: "technical" },
-      { name: "Node.js", category: "technical" },
-      { name: "Python", category: "technical" },
-      { name: "HTML", category: "technical" },
-      { name: "CSS", category: "technical" },
-      { name: "SQL", category: "technical" },
-      { name: "Git", category: "tool" },
-    ];
+    // Score each job against the résumé/profile signals (fall back to common
+    // dev skills only if the profile is completely empty).
+    const skillsForScoring = userSkills.length > 0 ? userSkills : DEFAULT_DEV_SKILLS;
 
     const scored: ScoredFetchedJob[] = filtered.map((job) => {
       let matchScore: number | null = null;
@@ -453,7 +532,11 @@ export const jobSearchService = {
         externalId: `jsearch-${job.job_id}`,
         title: job.job_title || "",
         company: job.employer_name || "",
-        location: job.job_city ? `${job.job_city}, ${job.job_state || ""} ${job.job_country || ""}`.trim() : job.job_country || "",
+        location: cleanLocation(
+          job.job_city
+            ? `${job.job_city}, ${job.job_state || ""} ${job.job_country || ""}`
+            : job.job_country || ""
+        ),
         workType: job.job_is_remote ? "remote" : "onsite",
         description: this.stripHtml(job.job_description || ""),
         url: job.job_apply_link || job.job_google_link || "",
@@ -713,27 +796,43 @@ export const jobSearchService = {
   },
 
   /**
-   * Score and store fetched jobs in the database
+   * Score and store fetched jobs in the database.
+   *
+   * Returns which listings were newly created vs. already existed so callers
+   * (e.g. job alerts) can act on genuinely new jobs instead of guessing from
+   * row-count deltas. Pass `opts.alertId` to attribute newly created jobs to a
+   * saved alert at creation time.
    */
-  async storeAndScoreJobs(fetchedJobs: FetchedJob[]) {
-    // Get user skills for match scoring
-    const user = await prisma.user.findUnique({
-      where: { id: (await getPrimaryUserId()) },
-      include: { skills: true },
-    });
-    const userSkills = user?.skills.map((s) => ({ name: s.name, category: s.category })) || [];
+  async storeAndScoreJobs(
+    fetchedJobs: FetchedJob[],
+    opts?: { alertId?: string },
+  ): Promise<{
+    created: Awaited<ReturnType<typeof prisma.jobListing.create>>[];
+    existing: Awaited<ReturnType<typeof prisma.jobListing.create>>[];
+    all: Awaited<ReturnType<typeof prisma.jobListing.create>>[];
+  }> {
+    // Score against what the user can actually do (profile skills + résumé +
+    // work history), falling back to a sensible dev profile only when empty.
+    const profileSkills = await this.getProfileSkillSignals();
+    const skillsForScoring = profileSkills.length > 0 ? profileSkills : DEFAULT_DEV_SKILLS;
 
-    const stored = [];
+    const created: Awaited<ReturnType<typeof prisma.jobListing.create>>[] = [];
+    const existing: Awaited<ReturnType<typeof prisma.jobListing.create>>[] = [];
 
     for (const job of fetchedJobs) {
       try {
-        // Check if already exists
+        // Check if already exists — refresh fetchedAt so still-active jobs stay
+        // in the "last 24h" feed window instead of silently ageing out.
         if (job.externalId) {
-          const existing = await prisma.jobListing.findUnique({
+          const found = await prisma.jobListing.findUnique({
             where: { externalId: job.externalId },
           });
-          if (existing) {
-            stored.push(existing);
+          if (found) {
+            const refreshed = await prisma.jobListing.update({
+              where: { id: found.id },
+              data: { fetchedAt: new Date() },
+            });
+            existing.push(refreshed);
             continue;
           }
         }
@@ -743,26 +842,6 @@ export const jobSearchService = {
         let detectedSkills: string | null = null;
 
         if (job.description && job.description.length >= 30) {
-          // Use user skills if available, otherwise use default junior dev skills
-          const skillsForScoring = userSkills.length > 0
-            ? userSkills
-            : [
-                { name: "JavaScript", category: "technical" },
-                { name: "TypeScript", category: "technical" },
-                { name: "React", category: "technical" },
-                { name: "Node.js", category: "technical" },
-                { name: "Python", category: "technical" },
-                { name: "HTML", category: "technical" },
-                { name: "CSS", category: "technical" },
-                { name: "Git", category: "tool" },
-                { name: "SQL", category: "technical" },
-                { name: "REST API", category: "technical" },
-                { name: "Next.js", category: "technical" },
-                { name: "MongoDB", category: "technical" },
-                { name: "PostgreSQL", category: "technical" },
-                { name: "Docker", category: "tool" },
-                { name: "AWS", category: "tool" },
-              ];
           const analysis = jdAnalyzerService.analyze(job.description, skillsForScoring);
           matchScore = analysis.matchScore;
           detectedSkills = JSON.stringify(analysis.extractedSkills);
@@ -773,7 +852,7 @@ export const jobSearchService = {
             externalId: job.externalId || null,
             title: job.title,
             company: job.company,
-            location: job.location || null,
+            location: cleanLocation(job.location) || null,
             workType: job.workType || null,
             description: job.description || null,
             url: job.url,
@@ -783,17 +862,18 @@ export const jobSearchService = {
             platform: job.platform,
             skills: detectedSkills,
             matchScore,
+            alertId: opts?.alertId ?? null,
           },
         });
 
-        stored.push(listing);
+        created.push(listing);
       } catch (e: any) {
         // Skip duplicates or errors
         console.error("Store job error:", e.message);
       }
     }
 
-    return stored;
+    return { created, existing, all: [...created, ...existing] };
   },
 
   /**

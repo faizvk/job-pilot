@@ -27,13 +27,13 @@ export async function POST(req: NextRequest) {
     });
 
     // Store and score them
-    const stored = await jobSearchService.storeAndScoreJobs(fetchedJobs);
+    const { all } = await jobSearchService.storeAndScoreJobs(fetchedJobs);
 
     return NextResponse.json({
       fetched: fetchedJobs.length,
-      stored: stored.length,
+      stored: all.length,
       sources,
-      listings: stored.sort((a, b) => (b.matchScore || 0) - (a.matchScore || 0)),
+      listings: all.sort((a, b) => (b.matchScore || 0) - (a.matchScore || 0)),
     });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
