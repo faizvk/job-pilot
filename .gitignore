@@ -27,6 +27,7 @@ yarn-error.log*
 
 # local env files
 .env*.local
+/.env.*
 
 # database
 *.db
@@ -47,4 +48,3 @@ next-env.d.ts
 # claude code (personal config — not for team)
 .claude/settings.local.json
 .claude/hooks/
-config.bat
