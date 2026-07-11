@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jobAlertService } from "@/lib/services/job-alert.service";
 import { runAllAutomations } from "@/lib/services/automation.service";
-import { notifyNewJobs } from "@/lib/services/telegram.service";
 
 // Single daily cron — fetches new jobs via alerts, then runs automations
 // (gmail scan, auto follow-ups, daily digest, interview sync).
+// New jobs are surfaced once, in the consolidated Daily Digest, rather than as
+// a separate per-alert message per alert (which duplicated the same listings).
 // Wire in vercel.json -> { "crons": [{ "path": "/api/cron/daily", "schedule": "30 3 * * *" }] }
 // 03:30 UTC = 09:00 IST.
 
@@ -22,24 +23,13 @@ async function handle(req: NextRequest) {
   const summary: any = { startedAt: new Date().toISOString() };
 
   try {
+    // Fetch + store new jobs from due alerts. The Daily Digest (below) reports
+    // them in one place, so we don't send a separate message per alert here.
     const alertResults = await jobAlertService.runDueAlerts();
-    summary.alerts = { ran: alertResults.length, results: alertResults };
-
-    for (const r of alertResults) {
-      if (r.newJobs > 0) {
-        const jobs = r.jobs.map((j) => ({
-          title: j.title,
-          company: j.company,
-          location: j.location,
-          workType: j.workType,
-          salary: j.salary,
-          matchScore: j.matchScore,
-          platform: j.platform,
-          url: j.url,
-        }));
-        await notifyNewJobs(r.name, r.newJobs, jobs).catch(console.error);
-      }
-    }
+    summary.alerts = {
+      ran: alertResults.length,
+      newJobs: alertResults.reduce((n, r) => n + r.newJobs, 0),
+    };
   } catch (e: any) {
     summary.alertsError = e.message;
   }

@@ -1,8 +1,10 @@
 import prisma from "@/lib/db";
 import { getPrimaryUserId } from "@/lib/services/primary-user";
+import { cleanLocation } from "@/lib/services/job-search.service";
 
 const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const APP_BASE_URL = (process.env.NEXTAUTH_URL || "https://pursuits.in").replace(/\/+$/, "");
+const TELEGRAM_LIMIT = 4096;
 
 export function isTelegramConfigured(): boolean {
   return !!BOT_TOKEN;
@@ -13,6 +15,47 @@ export async function isUserTelegramConnected(): Promise<boolean> {
   return !!user?.telegramChatId;
 }
 
+// Truncate on a line boundary so we never cut through an HTML tag/entity
+// (which would make Telegram reject the whole message as malformed).
+function truncateForTelegram(text: string): string {
+  if (text.length <= TELEGRAM_LIMIT) return text;
+  const slice = text.slice(0, TELEGRAM_LIMIT - 20);
+  const lastNewline = slice.lastIndexOf("\n");
+  const cut = lastNewline > TELEGRAM_LIMIT * 0.6 ? slice.slice(0, lastNewline) : slice;
+  return cut + "\n…";
+}
+
+// Downgrade our HTML to readable plain text for the fallback send.
+function htmlToPlainText(html: string): string {
+  return html
+    .replace(/<a\s+href="([^"]*)"[^>]*>([\s\S]*?)<\/a>/gi, "$2 ($1)")
+    .replace(/<[^>]+>/g, "")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">");
+}
+
+async function postToTelegram(
+  chatId: string,
+  text: string,
+  parseMode: string | undefined,
+  disableWebPagePreview: boolean,
+): Promise<boolean> {
+  const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      chat_id: chatId,
+      text,
+      ...(parseMode ? { parse_mode: parseMode } : {}),
+      disable_web_page_preview: disableWebPagePreview,
+    }),
+  });
+  const data = await res.json();
+  if (data.ok !== true) console.error("Telegram API error:", data.description);
+  return data.ok === true;
+}
+
 export async function sendMessage(
   chatId: string,
   text: string,
@@ -21,22 +64,15 @@ export async function sendMessage(
 ): Promise<boolean> {
   if (!BOT_TOKEN) return false;
 
-  // Telegram caps messages at 4096 chars — truncate safely if we go over.
-  const safe = text.length > 4090 ? text.slice(0, 4080) + "\n…" : text;
+  const safe = truncateForTelegram(text);
 
   try {
-    const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        chat_id: chatId,
-        text: safe,
-        parse_mode: parseMode,
-        disable_web_page_preview: disableWebPagePreview,
-      }),
-    });
-    const data = await res.json();
-    return data.ok === true;
+    const ok = await postToTelegram(chatId, safe, parseMode, disableWebPagePreview);
+    if (ok || !parseMode) return ok;
+
+    // A formatting error (e.g. an entity clipped by truncation) makes Telegram
+    // reject the message. Retry as plain text so the content still arrives.
+    return await postToTelegram(chatId, htmlToPlainText(safe), undefined, disableWebPagePreview);
   } catch (e) {
     console.error("Telegram send error:", e);
     return false;
@@ -52,6 +88,8 @@ async function getUserChatId(): Promise<string | null> {
 
 const escapeHtml = (s: string) =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+const titleCase = (s: string) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s);
 
 export function appUrl(path: string): string {
   if (!path.startsWith("/")) path = "/" + path;
@@ -77,10 +115,13 @@ export function formatJobBlock(job: JobForTelegram): string {
   parts.push(`• <a href="${escapeHtml(job.url)}"><b>${title}</b></a> @ ${company}`);
 
   const meta: string[] = [];
-  if (job.location) meta.push(escapeHtml(String(job.location)));
-  if (job.workType) meta.push(String(job.workType));
+  const location = cleanLocation(job.location);
+  if (location) meta.push(escapeHtml(location));
+  if (job.workType) meta.push(titleCase(String(job.workType)));
   if (job.salary) meta.push(escapeHtml(String(job.salary)));
-  if (job.matchScore != null) meta.push(`${job.matchScore}% match`);
+  // Only surface a match score when it's meaningful — a "0% match" line just
+  // looks broken and adds noise.
+  if (job.matchScore != null && job.matchScore > 0) meta.push(`${job.matchScore}% match`);
   if (job.platform) meta.push(String(job.platform));
   if (meta.length > 0) parts.push(`   ${meta.join(" · ")}`);
 
