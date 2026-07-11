@@ -36,7 +36,6 @@ export const resumeService = {
     if (!app) throw new Error("Application not found");
 
     const jdSkills: string[] = app.extractedSkills ? JSON.parse(app.extractedSkills) : [];
-    const jdText = (app.jobDescription || "").toLowerCase();
 
     // Extract keywords from JD
     const resumeContent = resume.content.toLowerCase();
@@ -52,18 +51,38 @@ export const resumeService = {
       }
     }
 
-    // Build tailored content
-    let tailoredContent = resume.content;
-
-    // Add Key Skills section at the top if there are matched skills
-    if (matched.length > 0) {
-      const skillsSection = `## Key Skills for This Role\n${matched.join(" | ")}\n\n`;
-      tailoredContent = skillsSection + tailoredContent;
+    // Prefer a real AI rewrite (reorders/emphasises relevant experience for the
+    // role) when a provider is configured. Fall back to the lightweight
+    // keyword-annotation approach only when AI is unavailable or fails — the old
+    // behaviour just prepended a header + an HTML comment, which barely tailored
+    // anything.
+    let tailoredContent: string | null = null;
+    try {
+      const { tailorResumeWithAI } = await import("./ai/resume-ai");
+      const ai = await tailorResumeWithAI({
+        resumeContent: resume.content,
+        jobTitle: app.jobTitle,
+        companyName: app.companyName,
+        jobDescription: app.jobDescription || "",
+        matchedSkills: matched,
+        missingSkills: missing,
+      });
+      if (ai && ai.trim().length > 50) tailoredContent = ai.trim();
+    } catch {
+      // fall through to keyword-based tailoring
     }
 
-    // Add missing skills note
-    if (missing.length > 0) {
-      tailoredContent += `\n\n<!-- Skills to consider adding: ${missing.join(", ")} -->`;
+    if (!tailoredContent) {
+      tailoredContent = resume.content;
+      // Add Key Skills section at the top if there are matched skills
+      if (matched.length > 0) {
+        const skillsSection = `## Key Skills for This Role\n${matched.join(" | ")}\n\n`;
+        tailoredContent = skillsSection + tailoredContent;
+      }
+      // Add missing skills note
+      if (missing.length > 0) {
+        tailoredContent += `\n\n<!-- Skills to consider adding: ${missing.join(", ")} -->`;
+      }
     }
 
     // Upsert tailored resume

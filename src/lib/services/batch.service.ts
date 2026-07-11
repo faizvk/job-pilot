@@ -31,14 +31,13 @@ export const batchService = {
   ): Promise<BatchResult> {
     const result: BatchResult = { total: jobs.length, created: 0, tailored: 0, errors: [], applications: [] };
 
-    // Get user skills for analysis
+    // Score against the full résumé/profile signal (same basis as the job feed)
+    // so imported applications get a match score consistent with what the user
+    // saw when they picked the job.
     let userSkills: { name: string; category: string }[] = [];
     if (options.autoAnalyze) {
-      const user = await prisma.user.findUnique({
-        where: { id: userId },
-        include: { skills: true },
-      });
-      userSkills = user?.skills.map((s) => ({ name: s.name, category: s.category })) || [];
+      const { jobSearchService } = await import("./job-search.service");
+      userSkills = await jobSearchService.getProfileSkillSignals(userId);
     }
 
     for (const job of jobs) {
