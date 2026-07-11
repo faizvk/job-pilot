@@ -252,7 +252,7 @@ export default function BatchApplyPage() {
 
       {/* Daily Stats */}
       {dailyStats && (
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
           {[
             { label: "Today", value: dailyStats.todayCount, color: "text-emerald-600", accent: "border-l-emerald-400" },
             { label: "Applied Today", value: dailyStats.todayApplied, color: "text-emerald-600", accent: "border-l-emerald-400" },

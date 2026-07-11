@@ -649,7 +649,7 @@ export default function JobFeedPage() {
                     </div>
 
                     <div className="flex items-center gap-2 flex-shrink-0">
-                      {job.matchScore != null && (
+                      {job.matchScore != null && job.matchScore > 0 && (
                         <div className={`flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-lg ${getScoreBg(job.matchScore)} ${getScoreColor(job.matchScore)}`}>
                           <Star className="w-3 h-3" />
                           {job.matchScore}%

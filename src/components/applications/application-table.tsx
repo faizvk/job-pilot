@@ -7,7 +7,7 @@ import { formatDate, formatSalary } from "@/lib/utils";
 export function ApplicationTable({ applications }: { applications: any[] }) {
   return (
     <div className="bg-white rounded-xl border border-slate-200/70 overflow-x-auto">
-      <table className="w-full text-sm min-w-[480px]">
+      <table className="w-full text-sm">
         <thead className="bg-slate-50/70 border-b border-slate-200/70">
           <tr>
             <th className="text-left px-3 sm:px-4 py-3 text-[11px] font-medium uppercase tracking-wide text-slate-500">Company</th>
