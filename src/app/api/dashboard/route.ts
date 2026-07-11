@@ -13,16 +13,16 @@ export async function GET() {
       weeklyGoalService.getCurrent(userId),
       followUpService.list(userId, { status: "pending" }),
       prisma.statusChange.findMany({
+        where: { application: { userId } },
         take: 10,
         orderBy: { changedAt: "desc" },
         include: {
-          application: { select: { companyName: true, jobTitle: true, userId: true } },
+          application: { select: { companyName: true, jobTitle: true } },
         },
       }),
     ]);
 
     const recentActivity = recentChanges
-      .filter((c) => c.application.userId === userId)
       .map((c) => ({
         id: c.id,
         applicationId: c.applicationId,
