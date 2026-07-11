@@ -28,45 +28,39 @@ export const jobAlertService = {
 
     const keywords = alert.keywords.split(",").map((k) => k.trim()).filter(Boolean);
 
-    // Use existing job search service
     const { jobSearchService } = await import("@/lib/services/job-search.service");
+
+    // Honour the user's saved search preferences (experience level, work types,
+    // must/exclude keywords, fallback locations) instead of hardcoding a junior
+    // 0–2yr search that ignored the profile.
+    const prefs = await jobSearchService.getPreferences();
+    const locations = alert.location ? [alert.location] : prefs?.locations || [];
+
     const { jobs: fetchedJobs } = await jobSearchService.fetchJobs({
       jobTitles: keywords,
-      locations: alert.location ? [alert.location] : [],
-      workTypes: [],
-      experienceMin: 0,
-      experienceMax: 2,
+      locations,
+      workTypes: prefs?.workTypes || [],
+      experienceMin: prefs?.experienceMin ?? 0,
+      experienceMax: prefs?.experienceMax ?? 5,
+      keywords: prefs?.keywords || undefined,
+      excludeKeywords: prefs?.excludeKeywords || undefined,
       page: 1,
     });
 
-    // Store and score, then count new ones
-    const before = await prisma.jobListing.count();
-    await jobSearchService.storeAndScoreJobs(fetchedJobs);
-    const after = await prisma.jobListing.count();
-    const newCount = after - before;
-
-    // Tag new jobs with alertId and collect them for return
-    let taggedNewJobs: Awaited<ReturnType<typeof prisma.jobListing.findMany>> = [];
-    if (newCount > 0) {
-      taggedNewJobs = await prisma.jobListing.findMany({
-        where: { alertId: null },
-        orderBy: [{ matchScore: "desc" }, { fetchedAt: "desc" }],
-        take: newCount,
-      });
-      for (const job of taggedNewJobs) {
-        await prisma.jobListing.update({
-          where: { id: job.id },
-          data: { alertId: alert.id },
-        });
-      }
-    }
+    // Store + score, attributing genuinely-new listings to this alert at
+    // creation time. (The old count-delta + `alertId: null` heuristic grabbed
+    // arbitrary previously-untagged jobs and mis-reported them as new.)
+    const { created } = await jobSearchService.storeAndScoreJobs(fetchedJobs, { alertId: alert.id });
+    const newJobs = [...created].sort(
+      (a, b) => (b.matchScore ?? -1) - (a.matchScore ?? -1),
+    );
 
     await prisma.jobAlert.update({
       where: { id },
-      data: { lastRunAt: new Date(), newJobCount: newCount },
+      data: { lastRunAt: new Date(), newJobCount: newJobs.length },
     });
 
-    return { newJobs: newCount, total: fetchedJobs.length, jobs: taggedNewJobs };
+    return { newJobs: newJobs.length, total: fetchedJobs.length, jobs: newJobs };
   },
 
   async runDueAlerts() {
