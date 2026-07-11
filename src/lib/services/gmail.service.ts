@@ -61,7 +61,12 @@ async function getGmailClient() {
     throw new Error("Gmail not connected. Please authorize first.");
   }
 
-  const tokens = JSON.parse(user.gmailTokens);
+  let tokens: Record<string, unknown>;
+  try {
+    tokens = JSON.parse(user.gmailTokens);
+  } catch {
+    throw new Error("Stored Google credentials are corrupted. Please reconnect Google in Profile → Integrations.");
+  }
   const oauth2 = getOAuth2Client();
   oauth2.setCredentials(tokens);
 

@@ -86,7 +86,13 @@ async function getGmailClient() {
   const user = await prisma.user.findUnique({ where: { id: (await getPrimaryUserId()) } });
   if (!user?.gmailTokens) return null;
 
-  const tokens = JSON.parse(user.gmailTokens);
+  let tokens: Record<string, unknown>;
+  try {
+    tokens = JSON.parse(user.gmailTokens);
+  } catch {
+    console.error("Gmail tokens corrupted — skipping Gmail automation until reconnected.");
+    return null;
+  }
   const oauth2 = getOAuth2Client();
   oauth2.setCredentials(tokens);
 

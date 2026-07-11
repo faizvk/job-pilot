@@ -14,8 +14,15 @@ async function getAuthedClient() {
   const user = await prisma.user.findUnique({ where: { id: (await getPrimaryUserId()) } });
   if (!user?.gmailTokens) throw new Error("Google not connected. Connect via Gmail integration first.");
 
+  let tokens: unknown;
+  try {
+    tokens = JSON.parse(user.gmailTokens);
+  } catch {
+    throw new Error("Stored Google credentials are corrupted. Please reconnect Google in Profile → Integrations.");
+  }
+
   const oauth2 = getOAuth2Client();
-  oauth2.setCredentials(JSON.parse(user.gmailTokens));
+  oauth2.setCredentials(tokens as Record<string, unknown>);
   return oauth2;
 }
 
